@@ -143,23 +143,7 @@ namespace VorodKhoroj
             {
                 string filter = "1=1"; // برای اینکه بشه شرط‌ها رو بهش اضافه کرد
 
-                //    if (!string.IsNullOrWhiteSpace(fromDate))
-                //filter += $" AND DateTime >= '{DateTime.Parse(fromDate):yyyy/MM/dd HH:mm:ss}'";
-
-                //filter += $" AND DateTime <= '{DateTime.Parse(toDate):yyyy/MM/dd HH:mm:ss}'";
-
-                //filter += $" AND User = '{userid}'";
-
-
-                if (!string.IsNullOrWhiteSpace(fromDate))
-                {
-                    filter += $" AND DateTime >= '{DateTime.Parse(fromDate):yyyy/MM/dd HH:mm:ss}'";
-                }
-
-                if (!string.IsNullOrWhiteSpace(toDate))
-                {
-                    filter += $" AND DateTime <= '{DateTime.Parse(toDate):yyyy/MM/dd HH:mm:ss}'";
-                }
+                filter += $" AND DateTime >= '{DateTime.Parse(fromDate):yyyy/MM/dd HH:mm:ss}' AND DateTime <= '{DateTime.Parse(toDate):yyyy/MM/dd HH:mm:ss}'";
 
                 if (!string.IsNullOrWhiteSpace(userid))
                 {
@@ -171,7 +155,7 @@ namespace VorodKhoroj
             }
             catch (Exception ex)
             {
-                MessageBox.Show($@"خطا در فیلتر کردن داده‌ها: {"\n"} {ex.Message}");
+                MessageBox.Show($@"خطا در فیلتر کردن داده‌ها: {'\n'} {ex.Message}");
             }
 
         }
@@ -186,6 +170,11 @@ namespace VorodKhoroj
         private void Frm_Main_Load(object sender, EventArgs e)
         {
             toDateTime_txtbox.Text = PersianCalenderDateNow();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

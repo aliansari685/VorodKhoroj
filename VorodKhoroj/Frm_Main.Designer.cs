@@ -48,7 +48,7 @@
             // button1
             // 
             button1.Font = new Font("IRANSans", 8.249999F);
-            button1.Location = new Point(13, 36);
+            button1.Location = new Point(13, 50);
             button1.Margin = new Padding(4);
             button1.Name = "button1";
             button1.Size = new Size(47, 29);
@@ -166,6 +166,7 @@
             button2.TabIndex = 11;
             button2.Text = "محاسبه";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // btn_clear
             // 
