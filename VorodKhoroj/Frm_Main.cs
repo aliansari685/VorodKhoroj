@@ -7,7 +7,7 @@ namespace VorodKhoroj
     public partial class Frm_Main : Form
     {
         public OpenFileDialog OpenFile { get; set; }
-        public DataTable table = new DataTable();
+        public DataTable table = new();
         public string FileAddress;
 
         enum LoginType
@@ -78,6 +78,17 @@ namespace VorodKhoroj
             }
         }
 
+        private string PersianCalenderDateNow()
+        {
+            PersianCalendar persianCalendar = new();
+
+            int year = persianCalendar.GetYear(DateTime.Now);
+            int month = persianCalendar.GetMonth(DateTime.Now);
+            int day = persianCalendar.GetDayOfMonth(DateTime.Now);
+
+            return $"{year}/{month:D2}/{day:D2}";
+        }
+
         public string ConvertToShamsi(string inputDateTime)
         {
             var persianCulture = new CultureInfo("fa-IR")
@@ -112,6 +123,7 @@ namespace VorodKhoroj
 
         private void button1_Click(object sender, EventArgs e)
         {
+
         }
 
         private void btn_applyfilter_Click(object sender, EventArgs e)
@@ -120,26 +132,60 @@ namespace VorodKhoroj
         }
         private void ApplyFromDateFilter()
         {
-            if (string.IsNullOrEmpty(FromDateTime_txtbox.Text)) return; // اگر مقدار وارد نشده، هیچی انجام نده
 
-            var fromDate = FromDateTime_txtbox.Text; // مقدار فیلد ورودی
-            using (var dv = new DataView(table))
+            var fromDate = FromDateTime_txtbox.Text;
+            var toDate = toDateTime_txtbox.Text;
+            var userid = userid_txtbox.Text;
+
+            var dv = new DataView(table);
+
+            try
             {
-                try
+                string filter = "1=1"; // برای اینکه بشه شرط‌ها رو بهش اضافه کرد
+
+                //    if (!string.IsNullOrWhiteSpace(fromDate))
+                //filter += $" AND DateTime >= '{DateTime.Parse(fromDate):yyyy/MM/dd HH:mm:ss}'";
+
+                //filter += $" AND DateTime <= '{DateTime.Parse(toDate):yyyy/MM/dd HH:mm:ss}'";
+
+                //filter += $" AND User = '{userid}'";
+
+
+                if (!string.IsNullOrWhiteSpace(fromDate))
                 {
-                    dv.RowFilter = $"DateTime >= '{fromDate}'"; // اعمال فیلتر
-                    dataGridView1.DataSource = dv; // نمایش داده‌های فیلتر `شده
+                    filter += $" AND DateTime >= '{DateTime.Parse(fromDate):yyyy/MM/dd HH:mm:ss}'";
                 }
-                catch (Exception ex)
+
+                if (!string.IsNullOrWhiteSpace(toDate))
                 {
-                    MessageBox.Show("خطا در فیلتر کردن داده‌ها: " + ex.Message);
+                    filter += $" AND DateTime <= '{DateTime.Parse(toDate):yyyy/MM/dd HH:mm:ss}'";
                 }
+
+                if (!string.IsNullOrWhiteSpace(userid))
+                {
+                    filter += $" AND User = '{userid}'";
+                }
+
+                dv.RowFilter = filter;
+                dataGridView1.DataSource = dv;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"خطا در فیلتر کردن داده‌ها: {"\n"} {ex.Message}");
+            }
+
         }
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
+            FromDateTime_txtbox.Text = userid_txtbox.Text = "";
+            toDateTime_txtbox.Text = PersianCalenderDateNow();
             dataGridView1.DataSource = table;
+        }
+
+        private void Frm_Main_Load(object sender, EventArgs e)
+        {
+            toDateTime_txtbox.Text = PersianCalenderDateNow();
         }
     }
 }
