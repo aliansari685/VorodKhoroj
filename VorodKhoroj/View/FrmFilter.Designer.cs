@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             btn_clear = new Button();
-            userid_txtbox = new MaskedTextBox();
             label3 = new Label();
             btn_applyfilter = new Button();
             label2 = new Label();
             toDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             FromDateTime_txtbox = new MaskedTextBox();
+            userid_txtbox = new ComboBox();
             SuspendLayout();
             // 
             // btn_clear
@@ -49,16 +49,7 @@
             btn_clear.Size = new Size(45, 39);
             btn_clear.TabIndex = 20;
             btn_clear.UseVisualStyleBackColor = false;
-            // 
-            // userid_txtbox
-            // 
-            userid_txtbox.Location = new Point(94, 100);
-            userid_txtbox.Margin = new Padding(3, 4, 3, 4);
-            userid_txtbox.Mask = "00000";
-            userid_txtbox.Name = "userid_txtbox";
-            userid_txtbox.Size = new Size(69, 26);
-            userid_txtbox.TabIndex = 19;
-            userid_txtbox.ValidatingType = typeof(int);
+            btn_clear.Click += btn_clear_Click;
             // 
             // label3
             // 
@@ -121,14 +112,25 @@
             FromDateTime_txtbox.TabIndex = 13;
             FromDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
+            // userid_txtbox
+            // 
+            userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            userid_txtbox.DisplayMember = "userid";
+            userid_txtbox.FormattingEnabled = true;
+            userid_txtbox.Location = new Point(106, 101);
+            userid_txtbox.Name = "userid_txtbox";
+            userid_txtbox.Size = new Size(57, 27);
+            userid_txtbox.TabIndex = 21;
+            // 
             // FrmFilter
             // 
             AcceptButton = btn_applyfilter;
             AutoScaleDimensions = new SizeF(7F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(244, 207);
-            Controls.Add(btn_clear);
             Controls.Add(userid_txtbox);
+            Controls.Add(btn_clear);
             Controls.Add(label3);
             Controls.Add(btn_applyfilter);
             Controls.Add(label2);
@@ -139,6 +141,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmFilter";
             Text = "FrmFilter";
+            Load += FrmFilter_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -146,12 +149,12 @@
         #endregion
 
         private Button btn_clear;
-        private MaskedTextBox userid_txtbox;
         private Label label3;
         private Button btn_applyfilter;
         private Label label2;
-        private MaskedTextBox toDateTime_txtbox;
         private Label label1;
-        private MaskedTextBox FromDateTime_txtbox;
+        public MaskedTextBox toDateTime_txtbox;
+        public MaskedTextBox FromDateTime_txtbox;
+        public ComboBox userid_txtbox;
     }
 }

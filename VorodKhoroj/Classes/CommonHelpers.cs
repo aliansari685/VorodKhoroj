@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VorodKhoroj.Model;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace VorodKhoroj.Classes
 {
@@ -21,17 +16,13 @@ namespace VorodKhoroj.Classes
             return $"{year}/{month:D2}/{day:D2}";
         }
 
-        public static string ConvertToShamsi(string inputDateTime)
+        public static DateTime ConvertToShamsi(string inputDateTime)
         {
-            var persianCulture = new CultureInfo("fa-IR")
-            {
-                DateTimeFormat =
-                {
-                    Calendar = new PersianCalendar()
-                }
-            };
-            Thread.CurrentThread.CurrentCulture = persianCulture;
-            Thread.CurrentThread.CurrentUICulture = persianCulture;
+            //Set config for all region pc
+            var persianCulture = new CultureInfo("fa-IR");
+            persianCulture.DateTimeFormat.Calendar = new PersianCalendar();
+            Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture = persianCulture;
+
             var dateTime = DateTime.Parse(inputDateTime, CultureInfo.InvariantCulture);
             var persianCalendar = new PersianCalendar();
 
@@ -40,11 +31,15 @@ namespace VorodKhoroj.Classes
             int month = persianCalendar.GetMonth(dateTime);
             int day = persianCalendar.GetDayOfMonth(dateTime);
 
-            // فرمت نهایی
-            string formattedDate = $"{year}/{month:D2}/{day:D2}"; // D2 برای دو رقمی شدن ماه و روز
-            string time = dateTime.ToString("HH:mm:ss"); // ساعت بدون تغییر
+            return new DateTime(year, month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, persianCalendar);
+            //return: 11:11:11 19/02/1398
 
-            return $"{formattedDate} {time}";
+        }
+
+        public static string ConvertToShamsiString(DateTime dateTime)
+        {
+            var persianCalendar = new PersianCalendar();
+            return $"{persianCalendar.GetYear(dateTime)}/{persianCalendar.GetMonth(dateTime):D2}/{persianCalendar.GetDayOfMonth(dateTime):D2} {dateTime:HH:mm:ss}";
         }
 
         public static string ConvertToLoginType(string number)
@@ -52,5 +47,7 @@ namespace VorodKhoroj.Classes
             int num = int.Parse(number);
             return ((DataConfiguration.LoginType)num).ToString();
         }
+
+
     }
 }
