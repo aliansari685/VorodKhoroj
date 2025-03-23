@@ -63,7 +63,7 @@
             بازکردنفایلToolStripMenuItem.Name = "بازکردنفایلToolStripMenuItem";
             بازکردنفایلToolStripMenuItem.Size = new Size(82, 24);
             بازکردنفایلToolStripMenuItem.Text = "باز کردن فایل";
-            بازکردنفایلToolStripMenuItem.Click += بازکردنفایلToolStripMenuItem_Click;
+            بازکردنفایلToolStripMenuItem.Click += OpenFileToolStripMenuItem_Click;
             // 
             // گزارشToolStripMenuItem
             // 
@@ -78,7 +78,7 @@
             مجموعToolStripMenuItem.Name = "مجموعToolStripMenuItem";
             مجموعToolStripMenuItem.Size = new Size(160, 24);
             مجموعToolStripMenuItem.Text = "مجموع و اختلاف ";
-            مجموعToolStripMenuItem.Click += مجموعToolStripMenuItem_Click;
+            مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -126,7 +126,7 @@
             btn_applyfilter.TabIndex = 7;
             btn_applyfilter.Text = "اعمال فیلتر";
             btn_applyfilter.UseVisualStyleBackColor = true;
-            btn_applyfilter.Click += btn_applyfilter_Click;
+            btn_applyfilter.Click += Btn_ApplyFilter_Click;
             // 
             // label3
             // 
@@ -174,7 +174,7 @@
             dataView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataView.Size = new Size(895, 526);
             dataView.TabIndex = 14;
-            dataView.ColumnHeaderMouseClick += dataView_ColumnHeaderMouseClick;
+            dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
             // Frm_Main
@@ -199,6 +199,7 @@
             Margin = new Padding(4);
             Name = "Frm_Main";
             Text = "Main";
+            FormClosing += Frm_Main_FormClosing;
             Load += Frm_Main_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

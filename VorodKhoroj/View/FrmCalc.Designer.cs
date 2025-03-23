@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tabControl1 = new TabControl();
             tabpage_detailvorodkhoroj = new TabPage();
+            btn_exportExcel = new Button();
             panel1 = new Panel();
             label6 = new Label();
             lbl_avgtimework = new Label();
@@ -56,30 +56,17 @@
             lbl_user = new Label();
             label1 = new Label();
             dataView_calender = new DataGridView();
-            tabPage2 = new TabPage();
-            tabControl1.SuspendLayout();
+            tabControl1 = new TabControl();
             tabpage_detailvorodkhoroj.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).BeginInit();
+            tabControl1.SuspendLayout();
             SuspendLayout();
-            // 
-            // tabControl1
-            // 
-            tabControl1.Controls.Add(tabpage_detailvorodkhoroj);
-            tabControl1.Controls.Add(tabPage2);
-            tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 0);
-            tabControl1.Margin = new Padding(3, 4, 3, 4);
-            tabControl1.Name = "tabControl1";
-            tabControl1.RightToLeft = RightToLeft.Yes;
-            tabControl1.RightToLeftLayout = true;
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1053, 699);
-            tabControl1.TabIndex = 0;
             // 
             // tabpage_detailvorodkhoroj
             // 
             tabpage_detailvorodkhoroj.BackColor = Color.Transparent;
+            tabpage_detailvorodkhoroj.Controls.Add(btn_exportExcel);
             tabpage_detailvorodkhoroj.Controls.Add(panel1);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_FromTo);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_user);
@@ -93,8 +80,20 @@
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
+            // btn_exportExcel
+            // 
+            btn_exportExcel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btn_exportExcel.Location = new Point(5, 107);
+            btn_exportExcel.Name = "btn_exportExcel";
+            btn_exportExcel.Size = new Size(37, 30);
+            btn_exportExcel.TabIndex = 1;
+            btn_exportExcel.Text = "S";
+            btn_exportExcel.UseVisualStyleBackColor = true;
+            btn_exportExcel.Click += btn_exportExcel_Click;
+            // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel1.Controls.Add(label6);
             panel1.Controls.Add(lbl_avgtimework);
             panel1.Controls.Add(lbl_minEntry);
@@ -116,7 +115,6 @@
             panel1.Controls.Add(label9);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(lbl_avgentry);
-            panel1.Dock = DockStyle.Bottom;
             panel1.Location = new Point(3, 29);
             panel1.Name = "panel1";
             panel1.Size = new Size(1039, 77);
@@ -170,7 +168,7 @@
             // lbl_sumOff
             // 
             lbl_sumOff.AutoSize = true;
-            lbl_sumOff.Location = new Point(479, 41);
+            lbl_sumOff.Location = new Point(478, 41);
             lbl_sumOff.Name = "lbl_sumOff";
             lbl_sumOff.Size = new Size(16, 20);
             lbl_sumOff.TabIndex = 21;
@@ -346,8 +344,8 @@
             // 
             dataView_calender.AllowUserToAddRows = false;
             dataView_calender.AllowUserToDeleteRows = false;
+            dataView_calender.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_calender.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_calender.Dock = DockStyle.Bottom;
             dataView_calender.Location = new Point(3, 106);
             dataView_calender.Name = "dataView_calender";
             dataView_calender.ReadOnly = true;
@@ -358,16 +356,18 @@
             dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
             dataView_calender.RowPrePaint += dataView_calender_RowPrePaint;
             // 
-            // tabPage2
+            // tabControl1
             // 
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Margin = new Padding(3, 4, 3, 4);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3, 4, 3, 4);
-            tabPage2.Size = new Size(1045, 671);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "tabPage2";
-            tabPage2.UseVisualStyleBackColor = true;
+            tabControl1.Controls.Add(tabpage_detailvorodkhoroj);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(0, 0);
+            tabControl1.Margin = new Padding(3, 4, 3, 4);
+            tabControl1.Name = "tabControl1";
+            tabControl1.RightToLeft = RightToLeft.Yes;
+            tabControl1.RightToLeftLayout = true;
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(1053, 699);
+            tabControl1.TabIndex = 0;
             // 
             // FrmCalc
             // 
@@ -382,45 +382,45 @@
             Name = "FrmCalc";
             Text = "FrmCalc";
             Load += FrmCalc_Load;
-            tabControl1.ResumeLayout(false);
             tabpage_detailvorodkhoroj.ResumeLayout(false);
             tabpage_detailvorodkhoroj.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).EndInit();
+            tabControl1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private TabControl tabControl1;
         private TabPage tabpage_detailvorodkhoroj;
-        private TabPage tabPage2;
-        private DataGridView dataView_calender;
-        private Label label1;
-        private Label lbl_user;
-        private Label label2;
-        private Label lbl_sumdayworker;
-        private Label lbl_sumhour;
-        private Label label5;
-        private Label lbl_summinute;
-        private Label label7;
-        private Label lbl_avgentry;
-        private Label label9;
-        private Label lbl_avgexit;
-        private Label label11;
-        private Label lbl_sumentryDelay;
-        private Label label13;
-        private Button btn_submit;
-        private MaskedTextBox txtbox_lade;
-        private Label label3;
-        private Label lbl_FromTo;
+        private Button btn_exportExcel;
         private Panel panel1;
-        private Label label4;
-        private Label lbl_sumOff;
-        private Label lbl_minEntry;
-        private Label label8;
         private Label label6;
         private Label lbl_avgtimework;
+        private Label lbl_minEntry;
+        private Label label8;
+        private Label label4;
+        private Label lbl_sumOff;
+        private Label label13;
+        private Label label2;
+        private MaskedTextBox txtbox_lade;
+        private Label lbl_sumdayworker;
+        private Label label3;
+        private Label label5;
+        private Button btn_submit;
+        private Label lbl_sumhour;
+        private Label lbl_sumentryDelay;
+        private Label label7;
+        private Label lbl_summinute;
+        private Label lbl_avgexit;
+        private Label label9;
+        private Label label11;
+        private Label lbl_avgentry;
+        private Label lbl_FromTo;
+        private Label lbl_user;
+        private Label label1;
+        private DataGridView dataView_calender;
+        private TabControl tabControl1;
     }
 }

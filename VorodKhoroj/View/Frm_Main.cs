@@ -1,14 +1,10 @@
-﻿using System.Windows.Forms;
-
-namespace VorodKhoroj
+﻿namespace VorodKhoroj
 {
     public partial class Frm_Main : Form
     {
-        public OpenFileDialog OpenFile { get; set; }
-
-        public static DataTable Data = new();
-
-        private Structure[] array;
+        internal AppServices Services { get; set; }
+        private Structure[] _array;
+        private DataTable _temp;
 
         public Frm_Main()
         {
@@ -17,95 +13,103 @@ namespace VorodKhoroj
 
         private void Frm_Main_Load(object sender, EventArgs e)
         {
-            toDateTime_txtbox.Text = CommonHelpers.PersianCalenderDateNow();
+            TextBoxClear();
+            Services = new AppServices();
         }
-
-        private void بازکردنفایلToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile = new OpenFileDialog
+            using (var OpenFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" })
             {
-                Filter = @"Output Files|*.txt;*.dat;*"
-            };
-            try
-            {
-                if (OpenFile.ShowDialog() == DialogResult.OK)
+                try
                 {
-                    DataConfiguration.LoadDataFromFile(OpenFile.FileName);
-                    FillDataGrid();
-                    array = DataConfiguration.Records.DistinctBy(x => x.UserId).ToArray();
-                    userid_txtbox.Items.AddRange(array);
+                    if (OpenFile.ShowDialog() == DialogResult.OK)
+                    {
+                        Services.LoadRecordsFromFile(OpenFile.FileName);
+                        userid_txtbox.Items.AddRange(_array = Services.Records.DistinctBy(x => x.UserId).ToArray());
+
+                        DataGridConfig();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CommonHelper.ShowMessage(ex);
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
         }
 
-        private void FillDataGrid()
+        private void DataGridConfig()
         {
-            dataView.DataSource = Data.Rows.Count == 0
-                ? Data = DataConfiguration.ConvertToDataTable(DataConfiguration.Records)
-                : Data;
-            dataView.Columns[0].HeaderText = "کاربر";
-            dataView.Columns[1].HeaderText = "تاریخ و زمان";
-            dataView.Columns[2].HeaderText = "ساعت نوع ورود";
+            dataView.DataSource = _temp?.Rows?.Count == 0 || _temp == null
+                ? _temp = Services.Records.ToDataTable()
+                : _temp;
+            DataGridViewConfig();
+        }
 
+        private void DataGridViewConfig()
+        {
+            dataView.Columns[0].HeaderText = "کاربر";
+            dataView.Columns[1].HeaderText = "تاریخ و زمان ورود";
+            dataView.Columns[2].HeaderText = " نوع ورود";
             dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
         }
 
-        private void btn_applyfilter_Click(object sender, EventArgs e)
+        private void Btn_ApplyFilter_Click(object sender, EventArgs e)
         {
             if (dataView.Rows.Count == 0) return;
 
             try
             {
-                var Filtered = DataManager.ApplyFilter(FromDateTime_txtbox.Text, toDateTime_txtbox.Text,
-                   int.Parse(userid_txtbox.Text));
-                dataView.DataSource = null;
-                dataView.DataSource = DataConfiguration.ConvertToDataTable(Filtered);
-                dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+                dataView.DataSource = DataFilterService.ApplyFilter(Services.Records, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, int.Parse(userid_txtbox.Text)).ToDataTable();
+                DataGridViewConfig();
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                CommonHelper.ShowMessage(ex);
             }
         }
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
-            FromDateTime_txtbox.Text = userid_txtbox.Text = "";
-            toDateTime_txtbox.Text = CommonHelpers.PersianCalenderDateNow();
-            FillDataGrid();
+            TextBoxClear();
+            DataGridConfig();
         }
 
-        private void مجموعToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TextBoxClear()
+        {
+            FromDateTime_txtbox.Text = userid_txtbox.Text = "";
+            toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
+        }
+
+        private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (dataView.Rows.Count == 0)
             {
                 MessageBox.Show("داده ای وجود ندارد");
                 return;
             }
-            using (FrmFilter frm = new())
+            using (FrmFilter frm = new(Services))
             {
                 frm.FromDateTime_txtbox.Text = this.FromDateTime_txtbox.Text;
                 frm.toDateTime_txtbox.Text = this.toDateTime_txtbox.Text;
-                frm.userid_txtbox.Items.AddRange(array);
+                frm.userid_txtbox.Items.AddRange(_array);
                 frm.ShowDialog();
             }
         }
-
-        private void dataView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-
-        }
-
         private void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
+        }
 
+        private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", "خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                Services?.Dispose();
+            }
         }
     }
 }

@@ -2,17 +2,9 @@ global using Serilog;
 global using VorodKhoroj.Classes;
 global using VorodKhoroj.Model;
 global using VorodKhoroj.View;
-global using System;
-global using System.Collections.Generic;
 global using System.Data;
 global using System.Globalization;
-global using System.Linq;
-global using System.Text;
-global using System.Threading.Tasks;
-global using System.Windows.Forms;
-global using VorodKhoroj.Model;
-global using System.Diagnostics;
-
+global using OfficeOpenXml;
 
 namespace VorodKhoroj
 {

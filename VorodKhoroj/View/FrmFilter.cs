@@ -1,11 +1,12 @@
-﻿using System.Data;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmFilter : Form
     {
-        public FrmFilter()
+        private readonly AppServices _services;
+
+        public FrmFilter(AppServices service)
         {
+            _services = service;
             InitializeComponent();
         }
 
@@ -13,7 +14,7 @@ namespace VorodKhoroj.View
         {
             try
             {
-                using (FrmCalc frm=new())
+                using (FrmCalc frm = new(_services))
                 {
                     frm.userid = userid_txtbox.Text;
                     frm.FromDateTime = FromDateTime_txtbox.Text;
@@ -24,19 +25,14 @@ namespace VorodKhoroj.View
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                CommonHelper.ShowMessage(ex);
             }
-        }
-
-        private void FrmFilter_Load(object sender, EventArgs e)
-        {
         }
 
         private void btn_clear_Click(object sender, EventArgs e)
         {
             FromDateTime_txtbox.Text = userid_txtbox.Text = "";
-            toDateTime_txtbox.Text = CommonHelpers.PersianCalenderDateNow();
+            toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
         }
     }
 }

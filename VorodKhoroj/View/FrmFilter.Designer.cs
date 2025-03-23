@@ -47,7 +47,7 @@
             btn_clear.Margin = new Padding(3, 4, 3, 4);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(45, 39);
-            btn_clear.TabIndex = 20;
+            btn_clear.TabIndex = 4;
             btn_clear.UseVisualStyleBackColor = false;
             btn_clear.Click += btn_clear_Click;
             // 
@@ -67,7 +67,7 @@
             btn_applyfilter.Margin = new Padding(3, 4, 3, 4);
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(151, 39);
-            btn_applyfilter.TabIndex = 17;
+            btn_applyfilter.TabIndex = 3;
             btn_applyfilter.Text = "اعمال فیلتر";
             btn_applyfilter.UseVisualStyleBackColor = true;
             btn_applyfilter.Click += btn_applyfilter_Click;
@@ -89,7 +89,7 @@
             toDateTime_txtbox.Mask = "1000/00/00";
             toDateTime_txtbox.Name = "toDateTime_txtbox";
             toDateTime_txtbox.Size = new Size(127, 26);
-            toDateTime_txtbox.TabIndex = 15;
+            toDateTime_txtbox.TabIndex = 1;
             toDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label1
@@ -109,7 +109,7 @@
             FromDateTime_txtbox.Mask = "1000/00/00";
             FromDateTime_txtbox.Name = "FromDateTime_txtbox";
             FromDateTime_txtbox.Size = new Size(127, 26);
-            FromDateTime_txtbox.TabIndex = 13;
+            FromDateTime_txtbox.TabIndex = 0;
             FromDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
             // userid_txtbox
@@ -121,7 +121,7 @@
             userid_txtbox.Location = new Point(106, 101);
             userid_txtbox.Name = "userid_txtbox";
             userid_txtbox.Size = new Size(57, 27);
-            userid_txtbox.TabIndex = 21;
+            userid_txtbox.TabIndex = 2;
             // 
             // FrmFilter
             // 
@@ -138,10 +138,10 @@
             Controls.Add(label1);
             Controls.Add(FromDateTime_txtbox);
             Font = new Font("IRANSans", 8.249999F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmFilter";
             Text = "FrmFilter";
-            Load += FrmFilter_Load;
             ResumeLayout(false);
             PerformLayout();
         }
