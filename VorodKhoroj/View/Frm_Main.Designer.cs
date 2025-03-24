@@ -29,12 +29,11 @@
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
-            بازکردنفایلToolStripMenuItem = new ToolStripMenuItem();
+            SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             گزارشToolStripMenuItem = new ToolStripMenuItem();
             مجموعToolStripMenuItem = new ToolStripMenuItem();
             SettingToolStripMenuItem = new ToolStripMenuItem();
             DBConfigToolStripMenuItem = new ToolStripMenuItem();
-            SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             FromDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             label2 = new Label();
@@ -44,6 +43,7 @@
             btn_clear = new Button();
             userid_txtbox = new ComboBox();
             dataView = new DataGridView();
+            راهاندازیمجددToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -51,7 +51,7 @@
             // menuStrip1
             // 
             menuStrip1.Font = new Font("IRANSans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { بازکردنفایلToolStripMenuItem, گزارشToolStripMenuItem, SettingToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { SwitchDataSourceToolStripMenuItem, گزارشToolStripMenuItem, SettingToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(6, 3, 0, 3);
@@ -60,13 +60,13 @@
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
-            // بازکردنفایلToolStripMenuItem
+            // SwitchDataSourceToolStripMenuItem
             // 
-            بازکردنفایلToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            بازکردنفایلToolStripMenuItem.Name = "بازکردنفایلToolStripMenuItem";
-            بازکردنفایلToolStripMenuItem.Size = new Size(82, 26);
-            بازکردنفایلToolStripMenuItem.Text = "باز کردن فایل";
-            بازکردنفایلToolStripMenuItem.Click += OpenFileToolStripMenuItem_Click;
+            SwitchDataSourceToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SwitchDataSourceToolStripMenuItem.Name = "SwitchDataSourceToolStripMenuItem";
+            SwitchDataSourceToolStripMenuItem.Size = new Size(103, 26);
+            SwitchDataSourceToolStripMenuItem.Text = "انتخاب منبع داده";
+            SwitchDataSourceToolStripMenuItem.Click += SwitchDataSourceToolStripMenuItem_Click;
             // 
             // گزارشToolStripMenuItem
             // 
@@ -85,7 +85,7 @@
             // 
             // SettingToolStripMenuItem
             // 
-            SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, SwitchDataSourceToolStripMenuItem });
+            SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, راهاندازیمجددToolStripMenuItem });
             SettingToolStripMenuItem.Name = "SettingToolStripMenuItem";
             SettingToolStripMenuItem.Size = new Size(67, 26);
             SettingToolStripMenuItem.Text = "تنظیمات";
@@ -96,13 +96,6 @@
             DBConfigToolStripMenuItem.Size = new Size(180, 26);
             DBConfigToolStripMenuItem.Text = "عملیات پایگاه داده";
             DBConfigToolStripMenuItem.Click += DBConfigToolStripMenuItem_Click;
-            // 
-            // SwitchDataSourceToolStripMenuItem
-            // 
-            SwitchDataSourceToolStripMenuItem.Name = "SwitchDataSourceToolStripMenuItem";
-            SwitchDataSourceToolStripMenuItem.Size = new Size(180, 26);
-            SwitchDataSourceToolStripMenuItem.Text = "انتخاب منبع داده";
-            SwitchDataSourceToolStripMenuItem.Click += SwitchDataSourceToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -201,6 +194,13 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
+            // راهاندازیمجددToolStripMenuItem
+            // 
+            راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
+            راهاندازیمجددToolStripMenuItem.Size = new Size(180, 26);
+            راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
+            راهاندازیمجددToolStripMenuItem.Click += راهاندازیمجددToolStripMenuItem_Click;
+            // 
             // Frm_Main
             // 
             AcceptButton = btn_applyfilter;
@@ -234,7 +234,7 @@
 
         #endregion
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem بازکردنفایلToolStripMenuItem;
+        private ToolStripMenuItem SwitchDataSourceToolStripMenuItem;
         private MaskedTextBox FromDateTime_txtbox;
         private Label label1;
         private Label label2;
@@ -248,6 +248,6 @@
         private DataGridView dataView;
         private ToolStripMenuItem SettingToolStripMenuItem;
         private ToolStripMenuItem DBConfigToolStripMenuItem;
-        private ToolStripMenuItem SwitchDataSourceToolStripMenuItem;
+        private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;
     }
 }

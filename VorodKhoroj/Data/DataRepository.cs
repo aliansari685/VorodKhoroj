@@ -17,28 +17,21 @@
         public List<Attendance> GetRecordsFromFile(string FileAddress)
         {
             List<Attendance> _records = new();
-            try
+            foreach (var line in File.ReadAllLines(FileAddress))
             {
-                foreach (var line in File.ReadAllLines(FileAddress))
+                var values = line.Split('\t');
+                if (values.Length == 6)
                 {
-                    var values = line.Split('\t');
-                    if (values.Length == 6)
+                    _records.Add(new()
                     {
-                        _records.Add(new()
-                        {
-                            UserId = int.Parse(values[0]),
-                            DateTime = PersianDateHelper.ConvertToShamsi(values[1]),
-                            LoginType = LoginType_String(values[4])
-                        });
-                    }
+                        UserId = int.Parse(values[0]),
+                        DateTime = PersianDateHelper.ConvertToShamsi(values[1]),
+                        LoginType = LoginType_String(values[4])
+                    });
                 }
+            }
 
-                return _records;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return _records;
         }
 
         public List<Attendance> GetRecordsFromDB(AppDbContext _context)

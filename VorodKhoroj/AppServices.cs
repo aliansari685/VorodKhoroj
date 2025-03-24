@@ -2,8 +2,13 @@
 {
     public class AppServices : IDisposable
     {
-        public AppDbContext dbContext { get; set; }
-        public AppDbContext dbContext_master { get; set; }
+        public enum DataTypes
+        {
+            Text, DataBase
+        }
+        public DataTypes DataType { get; set; }
+        public AppDbContext DbContext { get; set; }
+        public AppDbContext DbContextMaster { get; set; }
         public List<Attendance> Records { get; set; }
 
         private readonly DataRepository _repository;
@@ -19,42 +24,56 @@
             Records = _repository.GetRecordsFromFile(fileName);
         }
 
-        public void SetDBContext(string _servername, string dbname, AppDbContext.DataBaseLocation databaseLocation)
+        public void LoadRecordsFromDb()
         {
-            dbContext?.Dispose();
-            dbContext = new(_servername, dbname, databaseLocation);
+            Records = _repository.GetRecordsFromDB(DbContext);
         }
 
-        public void SetDBContext_Master(string _servername)
+        public void InitializeDbContext(string _servername, string dbname, AppDbContext.DataBaseLocation databaseLocation)
         {
-            dbContext_master?.Dispose();
-            dbContext_master = new(_servername, "master", AppDbContext.DataBaseLocation.InternalDataBase);
+            DbContext?.Dispose();
+            DbContext = new(_servername, dbname, databaseLocation);
+        }
+
+        public void InitializeDbContext_Master(string _servername)
+        {
+            DbContextMaster?.Dispose();
+            DbContextMaster = new(_servername, "master", AppDbContext.DataBaseLocation.InternalDataBase);
         }
 
         public void HandleCreateDatabase(string filepath)
         {
-            _dataBaseManager.CreateDatabase(filepath, dbContext_master);
+            _dataBaseManager.CreateDatabase(filepath, DbContextMaster);
         }
         public void HandleCreateTables()
         {
-            _dataBaseManager.CreateTables(dbContext);
+            _dataBaseManager.CreateTables(DbContext);
         }
         public void HandleDetachDatabase(string filepath)
         {
-            _dataBaseManager.DetachDatabase(filepath, dbContext_master);
+            _dataBaseManager.DetachDatabase(filepath, DbContextMaster);
         }
         public void AddAttendancesRecord(List<Attendance> rec)
         {
-            _repository.AddAttendances(rec, dbContext);
+            _repository.AddAttendances(rec, DbContext);
         }
         public void AddAttendancesRecord(Attendance rec)
         {
-            _repository.AddAttendances(new List<Attendance> { rec }, dbContext);
+            _repository.AddAttendances(new List<Attendance> { rec }, DbContext);
         }
 
+
+
+        public bool TestServerName(string servername)
+        {
+            InitializeDbContext_Master(servername);
+            DbContextMaster.Database.ExecuteSqlRaw("SELECT 1");
+            return true;
+        }
         public void Dispose()
         {
-            dbContext?.Dispose();
+            DbContextMaster?.Dispose();
+            DbContext?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

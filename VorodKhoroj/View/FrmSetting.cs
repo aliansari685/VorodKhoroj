@@ -1,66 +1,62 @@
-﻿namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View;
+
+public partial class FrmSetting : Form
 {
-    public partial class FrmSetting : Form
+    private bool _flag;
+    private readonly AppServices _service;
+
+    public FrmSetting(AppServices services)
     {
-        private bool _flag = false;
-        private readonly AppServices _service;
-        public FrmSetting(AppServices services)
-        {
-            InitializeComponent();
-            _service = services;
-        }
+        InitializeComponent();
+        _service = services;
+    }
 
-        private void Btn_testdb_Click(object sender, EventArgs e)
+    private void Btn_testdb_Click(object sender, EventArgs e)
+    {
+        try
         {
-            try
+            if (_service.TestServerName(txt_ServerName.Text))
             {
-                _service.SetDBContext_Master(txt_ServerName.Text);
-                _service.dbContext_master.Database.ExecuteSqlRaw("SELECT 1");
-                CommonHelper.ShowMessage(@"اتصال با موفقیت انجام شد");
                 _flag = true;
-
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
+                CommonHelper.ShowMessage(@"اتصال با موفقیت انجام شد");
             }
         }
-
-        private void btn_CreateDatabase_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            try
+            CommonHelper.ShowMessage(ex);
+        }
+    }
+
+
+    private void btn_CreateDatabase_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            if (_flag == false) throw new Exception("نام سرور پایگاه داده معتبر نیس");
+
+            using (SaveFileDialog _saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" })
             {
-                if (_flag == false)
+                if (_saveFile.ShowDialog() == DialogResult.OK)
                 {
-                    throw new Exception("نام سرور پایگاه داده معتبر نیس");
-                }
+                    var dbname = Path.GetFileNameWithoutExtension(_saveFile.FileName);
 
-                using (SaveFileDialog _saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" })
-                {
-                    if (_saveFile.ShowDialog() == DialogResult.OK)
-                    {
-                        string dbname = Path.GetFileNameWithoutExtension(_saveFile.FileName);
+                    _service.InitializeDbContext(txt_ServerName.Text, dbname, AppDbContext.DataBaseLocation.InternalDataBase);
 
-                        _service.SetDBContext(txt_ServerName.Text, dbname, AppDbContext.DataBaseLocation.InternalDataBase);
+                    _service.HandleCreateDatabase(_saveFile.FileName);
 
-                        _service.HandleCreateDatabase(_saveFile.FileName);
+                    _service.HandleCreateTables();
 
-                        _service.HandleCreateTables();
+                    _service.AddAttendancesRecord(_service.Records);
 
-                        _service.AddAttendancesRecord(_service.Records);
+                    _service.HandleDetachDatabase(_saveFile.FileName);
 
-                        _service.HandleDetachDatabase(_saveFile.FileName);
-
-                        CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
-
-                    }
+                    CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
                 }
             }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
         }
     }
 }

@@ -12,10 +12,10 @@
         private readonly string? _connectionString = typeDataBaseLocation switch
         {
             DataBaseLocation.AttachDbFilename =>
-                $@"Data Source={servername};Integrated Security=True;AttachDbFilename={dbname};TrustServerCertificate=True;Encrypt=False;Connection Timeout=3;User Instance=True;",
+                $@"Data Source={servername};Integrated Security=True;AttachDbFilename={dbname};TrustServerCertificate=True;Encrypt=False;Connection Timeout=5;User Instance=True;",
 
             DataBaseLocation.InternalDataBase =>
-                $@"Data Source={servername};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=3;",
+                $@"Data Source={servername};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=5;",
 
             _ => throw new ArgumentException("نوع کانفیگ دیتابیس نامعتبر است.")
         };

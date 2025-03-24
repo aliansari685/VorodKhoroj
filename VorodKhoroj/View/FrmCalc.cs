@@ -1,23 +1,24 @@
-﻿using VorodKhoroj.Data;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
-    public string FromDateTime, toDateTime, userid;
-    TimeSpan tm;
+    private readonly string _fromDateTime, _toDateTime, _userid;
+    private TimeSpan tm = new(08, 30, 00);
     private readonly AppServices _service;
 
-    public FrmCalc(AppServices services)
+    public FrmCalc(AppServices services, string fromDateTime, string toDateTime, string userid)
     {
         _service = services;
+        this._fromDateTime = fromDateTime;
+        this._toDateTime = toDateTime;
+        this._userid = userid;
         InitializeComponent();
     }
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        lbl_FromTo.Text = @$"{FromDateTime} تا {toDateTime}";
-        lbl_user.Text = userid;
+        lbl_FromTo.Text = @$"{_fromDateTime} تا {_toDateTime}";
+        lbl_user.Text = _userid;
         DataGridConfig();
     }
 
@@ -37,7 +38,8 @@ public partial class FrmCalc : Form
     private void CalculatorData()
     {
         var dataFiltered
-            = DataFilterService.ApplyFilter(_service.Records, FromDateTime, toDateTime, int.Parse(userid));
+            = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
+        if (dataFiltered.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
         var groupedData = dataFiltered
             .GroupBy(x => (x.UserId, x.DateTime.Date))
@@ -93,7 +95,7 @@ public partial class FrmCalc : Form
 
         //مجموع غیبت
         lbl_sumOff.Text =
-            CalculateAbsenceDays(DateTime.Parse(FromDateTime), DateTime.Parse(toDateTime), groupedData.Count)
+            CalculateAbsenceDays(DateTime.Parse(_fromDateTime), DateTime.Parse(_toDateTime), groupedData.Count)
                 .ToString();
 
         //زودترین ورود
@@ -108,7 +110,7 @@ public partial class FrmCalc : Form
         dataView_calender.DataSource = groupedData.ToDataTable();
     }
 
-    int CalculateAbsenceDays(DateTime startDate, DateTime endDate, int workDays)
+    private int CalculateAbsenceDays(DateTime startDate, DateTime endDate, int workDays)
     {
         var totalDays = (endDate - startDate).Days + 1;
 
@@ -118,8 +120,7 @@ public partial class FrmCalc : Form
             .Count(date => date.DayOfWeek == DayOfWeek.Friday);
 
         var totalCountedDays = workDays + fridaysCount;
-        return (totalDays - totalCountedDays);
-
+        return totalDays - totalCountedDays;
     }
 
     private void DataGridViewConfig()
@@ -148,7 +149,6 @@ public partial class FrmCalc : Form
     {
         if (dataView_calender.Rows[e.RowIndex].Cells["IsLate"].Value is true)
             dataView_calender.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-
     }
 
     private void btn_exportExcel_Click(object sender, EventArgs e)

@@ -1,20 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿namespace VorodKhoroj.View;
 
-namespace VorodKhoroj.View
+public partial class FrmSetSource : Form
 {
-    public partial class FrmSetSource: Form
+    private readonly AppServices _services;
+
+    public FrmSetSource(AppServices services)
     {
-        public FrmSetSource()
+        InitializeComponent();
+        _services = services;
+    }
+
+    private void btn_submit_Click(object sender, EventArgs e)
+    {
+        try
         {
-            InitializeComponent();
+            if (radiobtn_textfile.Checked)
+                using (var OpenFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" })
+                {
+                    if (OpenFile.ShowDialog() == DialogResult.OK)
+                    {
+                        _services.LoadRecordsFromFile(OpenFile.FileName);
+                        _services.DataType = AppServices.DataTypes.Text;
+                        Close();
+                    }
+                }
+
+            if (radiobtn_database.Checked)
+            {
+                if (!CommonHelper.Validation(txt_ServerName.Text) ||
+                    !_services.TestServerName(txt_ServerName.Text))
+                    throw new ArgumentNullException("خطا در نام سرور پایگاه داده");
+
+                using (var OpenFile = new OpenFileDialog { Filter = @"DB Files|*.mdf" })
+                {
+                    if (OpenFile.ShowDialog() == DialogResult.OK)
+                    {
+                        var dbname = Path.GetFileNameWithoutExtension(OpenFile.FileName);
+                        _services.InitializeDbContext(txt_ServerName.Text, OpenFile.FileName,
+                            AppDbContext.DataBaseLocation.AttachDbFilename);
+                        _services.LoadRecordsFromDb();
+                        _services.DataType = AppServices.DataTypes.DataBase;
+                        Close();
+                    }
+                }
+            }
         }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+    }
+
+    private void radiobtn_database_CheckedChanged(object sender, EventArgs e)
+    {
+        txt_ServerName.Enabled = radiobtn_database.Checked;
     }
 }

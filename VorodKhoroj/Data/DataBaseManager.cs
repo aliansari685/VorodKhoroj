@@ -2,14 +2,13 @@
 {
     public class DataBaseManager
     {
+      
         public void CreateDatabase(string filePath, AppDbContext _dbContext)
         {
-            try
-            {
-                string fileName = Path.GetFileNameWithoutExtension(filePath);
-                string logFile = Path.ChangeExtension(filePath, "ldf");
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            string logFile = Path.ChangeExtension(filePath, "ldf");
 
-                string createDbQuery = $@"
+            string createDbQuery = $@"
             CREATE DATABASE {fileName}
             ON PRIMARY (
                 NAME = '{fileName}_Data',
@@ -22,14 +21,7 @@
                 SIZE = 5MB
             );";
 
-                _dbContext.Database.ExecuteSqlRaw(createDbQuery);
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            _dbContext.Database.ExecuteSqlRaw(createDbQuery);
         }
 
         public void CreateTables(AppDbContext _dbContext)
@@ -39,26 +31,18 @@
 
         public void DetachDatabase(string fileName, AppDbContext _dbContext)
         {
-            try
-            {
-                var dbname = Path.GetFileNameWithoutExtension(fileName);
+            var dbname = Path.GetFileNameWithoutExtension(fileName);
 
-                var qur = $@" DECLARE @kill VARCHAR(MAX) = '';
+            var qur = $@" DECLARE @kill VARCHAR(MAX) = '';
                               SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR(5)) + ';'
                               FROM sys.dm_exec_sessions
                               WHERE database_id = DB_ID('{dbname}');
                               EXEC(@kill);";
-                _dbContext.Database.ExecuteSqlRaw(qur);
+            _dbContext.Database.ExecuteSqlRaw(qur);
 
-                var detachDbQuery = $"EXEC sp_detach_db '{dbname}', 'true';";
+            var detachDbQuery = $"EXEC sp_detach_db '{dbname}', 'true';";
 
-                _dbContext.Database.ExecuteSqlRaw(detachDbQuery);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            _dbContext.Database.ExecuteSqlRaw(detachDbQuery);
         }
     }
 
