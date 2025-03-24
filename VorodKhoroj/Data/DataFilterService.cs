@@ -1,8 +1,8 @@
-﻿namespace VorodKhoroj.Model
+﻿namespace VorodKhoroj.Data
 {
     public class DataFilterService
     {
-        public static List<Structure> ApplyFilter(IList<Structure>_records ,string fromDate, string toDate, int userid)
+        public static List<Attendance> ApplyFilter(IList<Attendance>_records ,string fromDate, string toDate, int userid)
         {
             try
             {

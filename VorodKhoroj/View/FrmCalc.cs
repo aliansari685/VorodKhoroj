@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Data;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {

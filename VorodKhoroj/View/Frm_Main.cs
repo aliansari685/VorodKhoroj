@@ -1,9 +1,11 @@
-﻿namespace VorodKhoroj
+﻿using VorodKhoroj.Data;
+
+namespace VorodKhoroj
 {
     public partial class Frm_Main : Form
     {
         internal AppServices Services { get; set; }
-        private Structure[] _array;
+        private Attendance[] _array;
         private DataTable _temp;
 
         public Frm_Main()
@@ -82,18 +84,23 @@
 
         private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataView.Rows.Count == 0)
+            try
             {
-                MessageBox.Show("داده ای وجود ندارد");
-                return;
+                if (dataView.Rows.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+
+                using (FrmFilter frm = new(Services))
+                {
+                    frm.FromDateTime_txtbox.Text = this.FromDateTime_txtbox.Text;
+                    frm.toDateTime_txtbox.Text = this.toDateTime_txtbox.Text;
+                    frm.userid_txtbox.Items.AddRange(_array);
+                    frm.ShowDialog();
+                }
             }
-            using (FrmFilter frm = new(Services))
+            catch (Exception ex)
             {
-                frm.FromDateTime_txtbox.Text = this.FromDateTime_txtbox.Text;
-                frm.toDateTime_txtbox.Text = this.toDateTime_txtbox.Text;
-                frm.userid_txtbox.Items.AddRange(_array);
-                frm.ShowDialog();
+                CommonHelper.ShowMessage(ex);
             }
+
         }
         private void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
@@ -110,6 +117,29 @@
             {
                 Services?.Dispose();
             }
+        }
+
+        private void DBConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataView.Rows.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+
+                using (FrmSetting frm = new(Services))
+                {
+                    frm.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+
+        }
+
+        private void SwitchDataSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

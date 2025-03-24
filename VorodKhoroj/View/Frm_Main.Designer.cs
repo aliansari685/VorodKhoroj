@@ -32,6 +32,9 @@
             بازکردنفایلToolStripMenuItem = new ToolStripMenuItem();
             گزارشToolStripMenuItem = new ToolStripMenuItem();
             مجموعToolStripMenuItem = new ToolStripMenuItem();
+            SettingToolStripMenuItem = new ToolStripMenuItem();
+            DBConfigToolStripMenuItem = new ToolStripMenuItem();
+            SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             FromDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             label2 = new Label();
@@ -48,12 +51,12 @@
             // menuStrip1
             // 
             menuStrip1.Font = new Font("IRANSans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { بازکردنفایلToolStripMenuItem, گزارشToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { بازکردنفایلToolStripMenuItem, گزارشToolStripMenuItem, SettingToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(6, 3, 0, 3);
             menuStrip1.RightToLeft = RightToLeft.Yes;
-            menuStrip1.Size = new Size(895, 30);
+            menuStrip1.Size = new Size(895, 32);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -61,7 +64,7 @@
             // 
             بازکردنفایلToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             بازکردنفایلToolStripMenuItem.Name = "بازکردنفایلToolStripMenuItem";
-            بازکردنفایلToolStripMenuItem.Size = new Size(82, 24);
+            بازکردنفایلToolStripMenuItem.Size = new Size(82, 26);
             بازکردنفایلToolStripMenuItem.Text = "باز کردن فایل";
             بازکردنفایلToolStripMenuItem.Click += OpenFileToolStripMenuItem_Click;
             // 
@@ -70,7 +73,7 @@
             گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
-            گزارشToolStripMenuItem.Size = new Size(59, 24);
+            گزارشToolStripMenuItem.Size = new Size(59, 26);
             گزارشToolStripMenuItem.Text = "گزارشات";
             // 
             // مجموعToolStripMenuItem
@@ -79,6 +82,27 @@
             مجموعToolStripMenuItem.Size = new Size(160, 24);
             مجموعToolStripMenuItem.Text = "مجموع و اختلاف ";
             مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
+            // 
+            // SettingToolStripMenuItem
+            // 
+            SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, SwitchDataSourceToolStripMenuItem });
+            SettingToolStripMenuItem.Name = "SettingToolStripMenuItem";
+            SettingToolStripMenuItem.Size = new Size(67, 26);
+            SettingToolStripMenuItem.Text = "تنظیمات";
+            // 
+            // DBConfigToolStripMenuItem
+            // 
+            DBConfigToolStripMenuItem.Name = "DBConfigToolStripMenuItem";
+            DBConfigToolStripMenuItem.Size = new Size(180, 26);
+            DBConfigToolStripMenuItem.Text = "عملیات پایگاه داده";
+            DBConfigToolStripMenuItem.Click += DBConfigToolStripMenuItem_Click;
+            // 
+            // SwitchDataSourceToolStripMenuItem
+            // 
+            SwitchDataSourceToolStripMenuItem.Name = "SwitchDataSourceToolStripMenuItem";
+            SwitchDataSourceToolStripMenuItem.Size = new Size(180, 26);
+            SwitchDataSourceToolStripMenuItem.Text = "انتخاب منبع داده";
+            SwitchDataSourceToolStripMenuItem.Click += SwitchDataSourceToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -222,5 +246,8 @@
         private ToolStripMenuItem مجموعToolStripMenuItem;
         private ComboBox userid_txtbox;
         private DataGridView dataView;
+        private ToolStripMenuItem SettingToolStripMenuItem;
+        private ToolStripMenuItem DBConfigToolStripMenuItem;
+        private ToolStripMenuItem SwitchDataSourceToolStripMenuItem;
     }
 }
