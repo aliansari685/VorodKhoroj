@@ -101,7 +101,7 @@ namespace VorodKhoroj.Classes
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ex ;
             }
         }
     }

@@ -76,14 +76,14 @@
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(1045, 666);
+            tabpage_detailvorodkhoroj.Size = new Size(1274, 611);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
             // btn_exportExcel
             // 
             btn_exportExcel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btn_exportExcel.Location = new Point(5, 107);
+            btn_exportExcel.Location = new Point(3, 105);
             btn_exportExcel.Name = "btn_exportExcel";
             btn_exportExcel.Size = new Size(37, 30);
             btn_exportExcel.TabIndex = 1;
@@ -93,7 +93,7 @@
             // 
             // panel1
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            panel1.Anchor = AnchorStyles.Top;
             panel1.Controls.Add(label6);
             panel1.Controls.Add(lbl_avgtimework);
             panel1.Controls.Add(lbl_minEntry);
@@ -115,9 +115,9 @@
             panel1.Controls.Add(label9);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(lbl_avgentry);
-            panel1.Location = new Point(3, 29);
+            panel1.Location = new Point(6, 27);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1039, 77);
+            panel1.Size = new Size(1265, 72);
             panel1.TabIndex = 21;
             // 
             // label6
@@ -344,14 +344,14 @@
             // 
             dataView_calender.AllowUserToAddRows = false;
             dataView_calender.AllowUserToDeleteRows = false;
-            dataView_calender.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataView_calender.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_calender.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_calender.Location = new Point(3, 106);
+            dataView_calender.Location = new Point(3, 105);
             dataView_calender.Name = "dataView_calender";
             dataView_calender.ReadOnly = true;
             dataView_calender.RightToLeft = RightToLeft.No;
             dataView_calender.RowHeadersWidth = 70;
-            dataView_calender.Size = new Size(1039, 556);
+            dataView_calender.Size = new Size(1268, 502);
             dataView_calender.TabIndex = 0;
             dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
             dataView_calender.RowPrePaint += dataView_calender_RowPrePaint;
@@ -366,7 +366,7 @@
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1053, 699);
+            tabControl1.Size = new Size(1282, 644);
             tabControl1.TabIndex = 0;
             // 
             // FrmCalc
@@ -374,7 +374,7 @@
             AcceptButton = btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1053, 699);
+            ClientSize = new Size(1282, 644);
             Controls.Add(tabControl1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;

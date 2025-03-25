@@ -20,7 +20,7 @@ public partial class Frm_Main : Form
     public void DataGridConfig()
     {
         dataView.DataSource = _temp?.Rows?.Count == 0 || _temp == null
-            ? _temp = _services.Records.ToDataTable()
+            ? _temp = _services?.Records?.ToDataTable() 
             : _temp;
         DataGridViewConfig();
         userid_txtbox.Items.AddRange(Array = _services.Records.DistinctBy(x => x.UserId).ToArray());
@@ -66,7 +66,7 @@ public partial class Frm_Main : Form
     {
         try
         {
-            if (_services.Records.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+            if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
             using (FrmFilter frm = new(_services))
             {
