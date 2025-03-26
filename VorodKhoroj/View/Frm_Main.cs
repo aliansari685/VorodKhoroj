@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
+﻿
 namespace VorodKhoroj;
 
 public partial class Frm_Main : Form
@@ -41,7 +40,7 @@ public partial class Frm_Main : Form
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
     {
-        if (dataView.Rows.Count == 0) return;
+        if (_services.Records == null) return;
 
         try
         {

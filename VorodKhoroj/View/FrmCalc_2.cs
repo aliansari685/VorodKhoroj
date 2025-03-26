@@ -1,0 +1,47 @@
+﻿namespace VorodKhoroj.View;
+
+public partial class FrmCalc
+{
+
+    //TabPage 2 Qeybatha:
+
+    private void Part2_Load()
+    {
+        radioButton_CheckedChanged(null, null);
+    }
+
+    private void DataGridViewConfig1()
+    {
+        dataView_lade.Columns[0].HeaderText = "روز در هفته";
+        dataView_lade.Columns[1].HeaderText = "تاریخ";
+
+    }
+    private void radioButton_CheckedChanged(object? sender, EventArgs? e)
+    {
+        try
+        {
+            if (radioButton_qeybat.Checked)
+                dataView_lade.DataSource = _qeybathaDaysList.Select(g => new
+                {
+                    DayOfWeek = g.Date.ToString("dddd"),
+                    Date = g.Date.ToString("yyyy/MM/dd")
+                }).ToList().ToDataTable();
+
+
+            if (radioButton_holidays.Checked)
+                dataView_lade.DataSource = _holidaysDaysList.Select(g => new
+                {
+                    DayOfWeek = g.Date.ToString("dddd"),
+                    Date = g.Date.ToString("yyyy/MM/dd")
+                }).ToList().ToDataTable();
+
+            DataGridViewConfig1();
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+
+    }
+
+}

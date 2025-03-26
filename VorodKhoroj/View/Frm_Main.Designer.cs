@@ -34,6 +34,7 @@
             مجموعToolStripMenuItem = new ToolStripMenuItem();
             SettingToolStripMenuItem = new ToolStripMenuItem();
             DBConfigToolStripMenuItem = new ToolStripMenuItem();
+            راهاندازیمجددToolStripMenuItem = new ToolStripMenuItem();
             FromDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             label2 = new Label();
@@ -43,7 +44,11 @@
             btn_clear = new Button();
             userid_txtbox = new ComboBox();
             dataView = new DataGridView();
-            راهاندازیمجددToolStripMenuItem = new ToolStripMenuItem();
+            گزارشماهانهToolStripMenuItem = new ToolStripMenuItem();
+            گزارشماهانهToolStripMenuItem1 = new ToolStripMenuItem();
+            ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
+            ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
+            ویرایشکاربرانToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -51,12 +56,12 @@
             // menuStrip1
             // 
             menuStrip1.Font = new Font("IRANSans", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { SwitchDataSourceToolStripMenuItem, گزارشToolStripMenuItem, SettingToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { SwitchDataSourceToolStripMenuItem, گزارشToolStripMenuItem, ویرایشردیفهایناقصToolStripMenuItem, SettingToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(6, 3, 0, 3);
             menuStrip1.RightToLeft = RightToLeft.Yes;
-            menuStrip1.Size = new Size(895, 32);
+            menuStrip1.Size = new Size(895, 30);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -70,7 +75,7 @@
             // 
             // گزارشToolStripMenuItem
             // 
-            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem });
+            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem, گزارشماهانهToolStripMenuItem, گزارشماهانهToolStripMenuItem1 });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
             گزارشToolStripMenuItem.Size = new Size(59, 26);
@@ -79,15 +84,16 @@
             // مجموعToolStripMenuItem
             // 
             مجموعToolStripMenuItem.Name = "مجموعToolStripMenuItem";
-            مجموعToolStripMenuItem.Size = new Size(160, 24);
+            مجموعToolStripMenuItem.Size = new Size(180, 24);
             مجموعToolStripMenuItem.Text = "مجموع و اختلاف ";
             مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
             // 
             // SettingToolStripMenuItem
             // 
             SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, راهاندازیمجددToolStripMenuItem });
+            SettingToolStripMenuItem.Font = new Font("IRANSans", 9F);
             SettingToolStripMenuItem.Name = "SettingToolStripMenuItem";
-            SettingToolStripMenuItem.Size = new Size(67, 26);
+            SettingToolStripMenuItem.Size = new Size(60, 24);
             SettingToolStripMenuItem.Text = "تنظیمات";
             // 
             // DBConfigToolStripMenuItem
@@ -96,6 +102,13 @@
             DBConfigToolStripMenuItem.Size = new Size(180, 26);
             DBConfigToolStripMenuItem.Text = "عملیات پایگاه داده";
             DBConfigToolStripMenuItem.Click += DBConfigToolStripMenuItem_Click;
+            // 
+            // راهاندازیمجددToolStripMenuItem
+            // 
+            راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
+            راهاندازیمجددToolStripMenuItem.Size = new Size(180, 26);
+            راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
+            راهاندازیمجددToolStripMenuItem.Click += راهاندازیمجددToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -119,16 +132,16 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(562, 41);
+            label2.Location = new Point(588, 41);
             label2.Name = "label2";
             label2.RightToLeft = RightToLeft.Yes;
-            label2.Size = new Size(47, 20);
+            label2.Size = new Size(19, 20);
             label2.TabIndex = 6;
-            label2.Text = "تاریخ تا:";
+            label2.Text = "تا:";
             // 
             // toDateTime_txtbox
             // 
-            toDateTime_txtbox.Location = new Point(446, 38);
+            toDateTime_txtbox.Location = new Point(470, 38);
             toDateTime_txtbox.Mask = "1000/00/00";
             toDateTime_txtbox.Name = "toDateTime_txtbox";
             toDateTime_txtbox.Size = new Size(112, 28);
@@ -137,7 +150,7 @@
             // 
             // btn_applyfilter
             // 
-            btn_applyfilter.Location = new Point(163, 37);
+            btn_applyfilter.Location = new Point(192, 33);
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(125, 30);
             btn_applyfilter.TabIndex = 7;
@@ -148,7 +161,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(391, 41);
+            label3.Location = new Point(412, 41);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
             label3.Size = new Size(47, 20);
@@ -160,7 +173,7 @@
             btn_clear.BackColor = Color.Lavender;
             btn_clear.BackgroundImage = Properties.Resources.clear_icon_9213;
             btn_clear.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_clear.Location = new Point(118, 34);
+            btn_clear.Location = new Point(147, 31);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(39, 35);
             btn_clear.TabIndex = 12;
@@ -173,7 +186,7 @@
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
             userid_txtbox.DisplayMember = "userid";
             userid_txtbox.FormattingEnabled = true;
-            userid_txtbox.Location = new Point(306, 38);
+            userid_txtbox.Location = new Point(323, 38);
             userid_txtbox.Name = "userid_txtbox";
             userid_txtbox.Size = new Size(82, 28);
             userid_txtbox.TabIndex = 13;
@@ -194,12 +207,37 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
-            // راهاندازیمجددToolStripMenuItem
+            // گزارشماهانهToolStripMenuItem
             // 
-            راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
-            راهاندازیمجددToolStripMenuItem.Size = new Size(180, 26);
-            راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
-            راهاندازیمجددToolStripMenuItem.Click += راهاندازیمجددToolStripMenuItem_Click;
+            گزارشماهانهToolStripMenuItem.Name = "گزارشماهانهToolStripMenuItem";
+            گزارشماهانهToolStripMenuItem.Size = new Size(180, 24);
+            گزارشماهانهToolStripMenuItem.Text = "گزارش ماهانه";
+            // 
+            // گزارشماهانهToolStripMenuItem1
+            // 
+            گزارشماهانهToolStripMenuItem1.Name = "گزارشماهانهToolStripMenuItem1";
+            گزارشماهانهToolStripMenuItem1.Size = new Size(180, 24);
+            گزارشماهانهToolStripMenuItem1.Text = "گزارش روزانه";
+            // 
+            // ویرایشردیفهایناقصToolStripMenuItem
+            // 
+            ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ویرایشردیفناقصToolStripMenuItem, ویرایشکاربرانToolStripMenuItem });
+            ویرایشردیفهایناقصToolStripMenuItem.Font = new Font("IRANSans", 9F);
+            ویرایشردیفهایناقصToolStripMenuItem.Name = "ویرایشردیفهایناقصToolStripMenuItem";
+            ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(92, 24);
+            ویرایشردیفهایناقصToolStripMenuItem.Text = "ویرایش دیتاها";
+            // 
+            // ویرایشردیفناقصToolStripMenuItem
+            // 
+            ویرایشردیفناقصToolStripMenuItem.Name = "ویرایشردیفناقصToolStripMenuItem";
+            ویرایشردیفناقصToolStripMenuItem.Size = new Size(180, 24);
+            ویرایشردیفناقصToolStripMenuItem.Text = "ویرایش ردیف ناقص";
+            // 
+            // ویرایشکاربرانToolStripMenuItem
+            // 
+            ویرایشکاربرانToolStripMenuItem.Name = "ویرایشکاربرانToolStripMenuItem";
+            ویرایشکاربرانToolStripMenuItem.Size = new Size(180, 24);
+            ویرایشکاربرانToolStripMenuItem.Text = "ویرایش کاربران";
             // 
             // Frm_Main
             // 
@@ -249,5 +287,10 @@
         private ToolStripMenuItem SettingToolStripMenuItem;
         private ToolStripMenuItem DBConfigToolStripMenuItem;
         private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;
+        private ToolStripMenuItem گزارشماهانهToolStripMenuItem;
+        private ToolStripMenuItem گزارشماهانهToolStripMenuItem1;
+        private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
+        private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
+        private ToolStripMenuItem ویرایشکاربرانToolStripMenuItem;
     }
 }

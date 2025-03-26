@@ -59,14 +59,23 @@
             lbl_user = new Label();
             label1 = new Label();
             dataView_calender = new DataGridView();
-            tabControl1 = new TabControl();
-            menuStrip1 = new MenuStrip();
+            menuStrip2 = new MenuStrip();
             OutputExcelToolStripMenuItem = new ToolStripMenuItem();
+            tabControl1 = new TabControl();
+            tabPage_durationdays = new TabPage();
+            button1 = new Button();
+            groupBox1 = new GroupBox();
+            radioButton_holidays = new RadioButton();
+            radioButton_qeybat = new RadioButton();
+            dataView_lade = new DataGridView();
             tabpage_detailvorodkhoroj.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).BeginInit();
+            menuStrip2.SuspendLayout();
             tabControl1.SuspendLayout();
-            menuStrip1.SuspendLayout();
+            tabPage_durationdays.SuspendLayout();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataView_lade).BeginInit();
             SuspendLayout();
             // 
             // tabpage_detailvorodkhoroj
@@ -77,11 +86,12 @@
             tabpage_detailvorodkhoroj.Controls.Add(lbl_user);
             tabpage_detailvorodkhoroj.Controls.Add(label1);
             tabpage_detailvorodkhoroj.Controls.Add(dataView_calender);
+            tabpage_detailvorodkhoroj.Controls.Add(menuStrip2);
             tabpage_detailvorodkhoroj.Location = new Point(4, 29);
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(1296, 655);
+            tabpage_detailvorodkhoroj.Size = new Size(1307, 683);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
@@ -112,9 +122,9 @@
             panel1.Controls.Add(label9);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(lbl_avgentry);
-            panel1.Location = new Point(-78, 27);
+            panel1.Location = new Point(-68, 36);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1371, 72);
+            panel1.Size = new Size(1371, 73);
             panel1.TabIndex = 21;
             // 
             // lbl_MaxExitTime
@@ -351,7 +361,7 @@
             // lbl_FromTo
             // 
             lbl_FromTo.AutoSize = true;
-            lbl_FromTo.Location = new Point(513, 3);
+            lbl_FromTo.Location = new Point(117, 7);
             lbl_FromTo.Name = "lbl_FromTo";
             lbl_FromTo.Size = new Size(16, 20);
             lbl_FromTo.TabIndex = 20;
@@ -360,7 +370,7 @@
             // lbl_user
             // 
             lbl_user.AutoSize = true;
-            lbl_user.Location = new Point(695, 3);
+            lbl_user.Location = new Point(298, 4);
             lbl_user.Name = "lbl_user";
             lbl_user.Size = new Size(0, 20);
             lbl_user.TabIndex = 3;
@@ -368,7 +378,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(743, 3);
+            label1.Location = new Point(346, 7);
             label1.Name = "label1";
             label1.Size = new Size(35, 20);
             label1.TabIndex = 2;
@@ -380,59 +390,132 @@
             dataView_calender.AllowUserToDeleteRows = false;
             dataView_calender.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_calender.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_calender.Location = new Point(3, 105);
+            dataView_calender.Location = new Point(3, 115);
             dataView_calender.Name = "dataView_calender";
             dataView_calender.ReadOnly = true;
             dataView_calender.RightToLeft = RightToLeft.No;
             dataView_calender.RowHeadersWidth = 70;
-            dataView_calender.Size = new Size(1290, 546);
+            dataView_calender.Size = new Size(1301, 567);
             dataView_calender.TabIndex = 0;
             dataView_calender.VirtualMode = true;
             dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
             dataView_calender.RowPrePaint += dataView_calender_RowPrePaint;
             // 
+            // menuStrip2
+            // 
+            menuStrip2.Font = new Font("IRANSans", 8.249999F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            menuStrip2.Items.AddRange(new ToolStripItem[] { OutputExcelToolStripMenuItem });
+            menuStrip2.Location = new Point(3, 4);
+            menuStrip2.Name = "menuStrip2";
+            menuStrip2.Size = new Size(1301, 27);
+            menuStrip2.TabIndex = 22;
+            menuStrip2.Text = "menuStrip2";
+            // 
+            // OutputExcelToolStripMenuItem
+            // 
+            OutputExcelToolStripMenuItem.Name = "OutputExcelToolStripMenuItem";
+            OutputExcelToolStripMenuItem.Size = new Size(80, 23);
+            OutputExcelToolStripMenuItem.Text = "خروجی اکسل";
+            OutputExcelToolStripMenuItem.Click += OutputExcelToolStripMenuItem_Click;
+            // 
             // tabControl1
             // 
             tabControl1.Controls.Add(tabpage_detailvorodkhoroj);
+            tabControl1.Controls.Add(tabPage_durationdays);
             tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 28);
+            tabControl1.Location = new Point(0, 0);
             tabControl1.Margin = new Padding(3, 4, 3, 4);
             tabControl1.Name = "tabControl1";
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1304, 688);
+            tabControl1.Size = new Size(1315, 716);
             tabControl1.TabIndex = 0;
             // 
-            // menuStrip1
+            // tabPage_durationdays
             // 
-            menuStrip1.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { OutputExcelToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.RightToLeft = RightToLeft.Yes;
-            menuStrip1.Size = new Size(1304, 28);
-            menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
+            tabPage_durationdays.Controls.Add(button1);
+            tabPage_durationdays.Controls.Add(groupBox1);
+            tabPage_durationdays.Controls.Add(dataView_lade);
+            tabPage_durationdays.Location = new Point(4, 29);
+            tabPage_durationdays.Name = "tabPage_durationdays";
+            tabPage_durationdays.Padding = new Padding(3);
+            tabPage_durationdays.Size = new Size(1307, 683);
+            tabPage_durationdays.TabIndex = 1;
+            tabPage_durationdays.Text = "روز های غیبت";
+            tabPage_durationdays.UseVisualStyleBackColor = true;
             // 
-            // OutputExcelToolStripMenuItem
+            // button1
             // 
-            OutputExcelToolStripMenuItem.Name = "OutputExcelToolStripMenuItem";
-            OutputExcelToolStripMenuItem.Size = new Size(86, 24);
-            OutputExcelToolStripMenuItem.Text = "خروجی اکسل";
-            OutputExcelToolStripMenuItem.Click += OutputExcelToolStripMenuItem_Click;
+            button1.Location = new Point(8, 8);
+            button1.Name = "button1";
+            button1.Size = new Size(71, 67);
+            button1.TabIndex = 23;
+            button1.Text = "اکسل";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(radioButton_holidays);
+            groupBox1.Controls.Add(radioButton_qeybat);
+            groupBox1.Location = new Point(876, 6);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(251, 75);
+            groupBox1.TabIndex = 1;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "انتخاب لیست:";
+            // 
+            // radioButton_holidays
+            // 
+            radioButton_holidays.AutoSize = true;
+            radioButton_holidays.Location = new Point(96, 45);
+            radioButton_holidays.Name = "radioButton_holidays";
+            radioButton_holidays.Size = new Size(98, 24);
+            radioButton_holidays.TabIndex = 27;
+            radioButton_holidays.TabStop = true;
+            radioButton_holidays.Text = "لیست تعطیلات";
+            radioButton_holidays.UseVisualStyleBackColor = true;
+            radioButton_holidays.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // radioButton_qeybat
+            // 
+            radioButton_qeybat.AutoSize = true;
+            radioButton_qeybat.Checked = true;
+            radioButton_qeybat.Location = new Point(39, 17);
+            radioButton_qeybat.Name = "radioButton_qeybat";
+            radioButton_qeybat.Size = new Size(155, 24);
+            radioButton_qeybat.TabIndex = 26;
+            radioButton_qeybat.TabStop = true;
+            radioButton_qeybat.Text = "لیست غیبت بدون تعطیلات";
+            radioButton_qeybat.UseVisualStyleBackColor = true;
+            radioButton_qeybat.CheckedChanged += radioButton_CheckedChanged;
+            // 
+            // dataView_lade
+            // 
+            dataView_lade.AllowUserToAddRows = false;
+            dataView_lade.AllowUserToDeleteRows = false;
+            dataView_lade.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataView_lade.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataView_lade.Location = new Point(0, 87);
+            dataView_lade.Name = "dataView_lade";
+            dataView_lade.ReadOnly = true;
+            dataView_lade.RightToLeft = RightToLeft.No;
+            dataView_lade.RowHeadersWidth = 70;
+            dataView_lade.Size = new Size(1307, 568);
+            dataView_lade.TabIndex = 22;
+            dataView_lade.VirtualMode = true;
+            dataView_lade.RowPostPaint += dataView_calender_RowPostPaint;
             // 
             // FrmCalc
             // 
             AcceptButton = btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1304, 716);
+            ClientSize = new Size(1315, 716);
             Controls.Add(tabControl1);
-            Controls.Add(menuStrip1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmCalc";
             Text = "FrmCalc";
@@ -442,11 +525,14 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).EndInit();
+            menuStrip2.ResumeLayout(false);
+            menuStrip2.PerformLayout();
             tabControl1.ResumeLayout(false);
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+            tabPage_durationdays.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataView_lade).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -484,7 +570,13 @@
         private Label lbl_sumaddwork;
         private Label lbl_MaxExitTime;
         private Label label14;
-        private MenuStrip menuStrip1;
+        private MenuStrip menuStrip2;
         private ToolStripMenuItem OutputExcelToolStripMenuItem;
+        private TabPage tabPage_durationdays;
+        private DataGridView dataView_lade;
+        private GroupBox groupBox1;
+        private RadioButton radioButton_qeybat;
+        private RadioButton radioButton_holidays;
+        private Button button1;
     }
 }

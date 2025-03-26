@@ -1,21 +1,25 @@
-﻿using System.Linq;
-using System.Windows.Forms;
+﻿using Microsoft.Identity.Client;
 
 namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
+    //TabPage 0_VorodKhoroj:
+
+    private List<DateTime> _qeybathaDaysList;
+    private List<DateTime> _holidaysDaysList;
+
     private readonly string _fromDateTime, _toDateTime, _userid;
     private TimeSpan tm = new(08, 30, 00);
     private readonly AppServices _service;
 
     public FrmCalc(AppServices services, string fromDateTime, string toDateTime, string userid)
     {
+        InitializeComponent();
         _service = services;
         this._fromDateTime = fromDateTime;
         this._toDateTime = toDateTime;
         this._userid = userid;
-        InitializeComponent();
     }
 
     private void FrmCalc_Load(object sender, EventArgs e)
@@ -23,6 +27,7 @@ public partial class FrmCalc : Form
         lbl_FromTo.Text = @$"{_fromDateTime} تا {_toDateTime}";
         lbl_user.Text = _userid;
         DataGridConfig();
+
     }
 
     private void DataGridConfig()
@@ -31,6 +36,9 @@ public partial class FrmCalc : Form
         {
             CalculatorData();
             DataGridViewConfig();
+
+            Part2_Load();
+
         }
         catch (Exception ex)
         {
@@ -39,33 +47,37 @@ public partial class FrmCalc : Form
         }
     }
 
-    private void CalculatorData()
+    public void CalculatorData()
     {
         var dataFiltered
             = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
         if (dataFiltered.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
         var groupedData = dataFiltered
-            .GroupBy(x => (x.UserId, x.DateTime.Date))
-            .Select(g =>
-            {
-                var minDateTime = g.Min(x => x.DateTime);
-                var maxDateTime = g.Max(x => x.DateTime);
-                var duration = maxDateTime - minDateTime;
+                        .GroupBy(x => (x.UserId, x.DateTime.Date))
+                        .Select(g =>
+                        {
+                            var minDateTime = g.Min(x => x.DateTime);
+                            var maxDateTime = g.Max(x => x.DateTime);
+                            var duration = maxDateTime - minDateTime;
 
-                return new
-                {
-                    DayOfWeek = g.Key.Date.ToString("dddd"),
-                    Date = g.Key.Date.ToString("yyyy/MM/dd"),
-                    EntryTime = minDateTime.ToString("HH:mm:ss"),
-                    ExitTime = maxDateTime.ToString("HH:mm:ss"),
-                    DurationMin = duration.TotalMinutes,
-                    DurationHour = $"{(int)duration.TotalHours}h {duration.Minutes}m",
-                    IsLate = minDateTime.TimeOfDay > tm
-                };
-            })
-            .ToList();
-        //.ToString("0") + "m"
+                            return new
+                            {
+                                DayOfWeek = g.Key.Date.ToString("dddd"),
+                                Date = g.Key.Date.ToString("yyyy/MM/dd"),
+                                EntryTime = minDateTime.ToString("HH:mm:ss"),
+                                ExitTime = maxDateTime.ToString("HH:mm:ss"),
+                                DurationMin = duration.TotalMinutes,
+                                DurationMin1 = (int)Math.Round(duration.TotalMinutes, 0),
+                                DurationHour = $"{(int)duration.TotalHours}h {duration.Minutes}m",
+                                IsLate = minDateTime.TimeOfDay > tm
+                            };
+                        })
+                        .ToList();
+
+        // محاسبه مجموع دقایق کاری
+        var totalMinutes = groupedData.Sum(x => (x.DurationMin1));
+        lbl_summinute.Text = totalMinutes.ToString("0") + "m";
 
         // محاسبه میانگین ساعت ورود
         var entryTimes = groupedData
@@ -73,7 +85,6 @@ public partial class FrmCalc : Form
             .ToList();
         var avgEntryTime = TimeSpan.FromTicks((long)entryTimes.Average(t => t.Ticks));
         lbl_avgentry.Text = avgEntryTime.ToString(@"hh\:mm\:ss");
-
 
         // محاسبه میانگین ساعت خروج
         var exitTimes = groupedData
@@ -85,11 +96,6 @@ public partial class FrmCalc : Form
         // محاسبه مجموع روزهای کاری
         lbl_sumdayworker.Text = groupedData.Count.ToString();
 
-
-        // محاسبه مجموع دقایق کاری
-        var totalMinutes = groupedData.Sum(x => (x.DurationMin));
-        lbl_summinute.Text = totalMinutes.ToString("0") + "m";
-
         // محاسبه مجموع ساعت کاری
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
         lbl_sumhour.Text = @$"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}:{totalHours.Seconds:D2}";
@@ -99,7 +105,6 @@ public partial class FrmCalc : Form
         lbl_sumentryDelay.Text = lateDays.ToString();
 
         //مجموع غیبت
-
         var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
 
         // تولید لیست تاریخ‌های بین دو بازه
@@ -112,9 +117,14 @@ public partial class FrmCalc : Form
             .ToList(); // تاریخ‌هایی که کارمند حضور داشته است
 
         // محاسبه تعداد روزهای غیبت (روز کاری باشد، حضور نداشته باشد، تعطیل رسمی هم نباشد)
-        var absenceCount = workDays.Count(day => !presentDays.Contains(day) && !holidays.Contains(day));
+        var absence = workDays.Where(day => !presentDays.Contains(day) && !holidays.Contains(day));
 
+        var absenceCount = absence.Count();
         lbl_sumOff.Text = absenceCount.ToString();
+
+        _qeybathaDaysList = absence.ToList();
+
+        _holidaysDaysList = workDays.Where(day => holidays.Contains(day)).ToList();
 
         //اضافه کاری
         int overtimeCount = presentDays.Count(day => holidays.Contains(day));
@@ -149,7 +159,9 @@ public partial class FrmCalc : Form
 
     private void dataView_calender_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
     {
-        dataView_calender.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
+        var data = (DataGridView)sender;
+
+        data.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
     }
 
     private void btn_Submit_Click(object sender, EventArgs e)
@@ -190,5 +202,10 @@ public partial class FrmCalc : Form
         {
             CommonHelper.ShowMessage(ex);
         }
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+        CommonHelper.DataGridToExcel(dataView_lade);
     }
 }
