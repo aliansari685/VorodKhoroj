@@ -29,8 +29,11 @@
         private void InitializeComponent()
         {
             tabpage_detailvorodkhoroj = new TabPage();
-            btn_exportExcel = new Button();
             panel1 = new Panel();
+            lbl_MaxExitTime = new Label();
+            label14 = new Label();
+            label10 = new Label();
+            lbl_sumaddwork = new Label();
             label6 = new Label();
             lbl_avgtimework = new Label();
             lbl_minEntry = new Label();
@@ -57,16 +60,18 @@
             label1 = new Label();
             dataView_calender = new DataGridView();
             tabControl1 = new TabControl();
+            menuStrip1 = new MenuStrip();
+            OutputExcelToolStripMenuItem = new ToolStripMenuItem();
             tabpage_detailvorodkhoroj.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).BeginInit();
             tabControl1.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // tabpage_detailvorodkhoroj
             // 
             tabpage_detailvorodkhoroj.BackColor = Color.Transparent;
-            tabpage_detailvorodkhoroj.Controls.Add(btn_exportExcel);
             tabpage_detailvorodkhoroj.Controls.Add(panel1);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_FromTo);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_user);
@@ -76,24 +81,16 @@
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(1274, 611);
+            tabpage_detailvorodkhoroj.Size = new Size(1296, 655);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
-            // btn_exportExcel
-            // 
-            btn_exportExcel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btn_exportExcel.Location = new Point(3, 105);
-            btn_exportExcel.Name = "btn_exportExcel";
-            btn_exportExcel.Size = new Size(37, 30);
-            btn_exportExcel.TabIndex = 1;
-            btn_exportExcel.Text = "S";
-            btn_exportExcel.UseVisualStyleBackColor = true;
-            btn_exportExcel.Click += btn_exportExcel_Click;
-            // 
             // panel1
             // 
-            panel1.Anchor = AnchorStyles.Top;
+            panel1.Controls.Add(lbl_MaxExitTime);
+            panel1.Controls.Add(label14);
+            panel1.Controls.Add(label10);
+            panel1.Controls.Add(lbl_sumaddwork);
             panel1.Controls.Add(label6);
             panel1.Controls.Add(lbl_avgtimework);
             panel1.Controls.Add(lbl_minEntry);
@@ -115,15 +112,52 @@
             panel1.Controls.Add(label9);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(lbl_avgentry);
-            panel1.Location = new Point(6, 27);
+            panel1.Location = new Point(-78, 27);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1265, 72);
+            panel1.Size = new Size(1371, 72);
             panel1.TabIndex = 21;
+            // 
+            // lbl_MaxExitTime
+            // 
+            lbl_MaxExitTime.AutoSize = true;
+            lbl_MaxExitTime.Location = new Point(1024, 43);
+            lbl_MaxExitTime.Name = "lbl_MaxExitTime";
+            lbl_MaxExitTime.Size = new Size(57, 20);
+            lbl_MaxExitTime.TabIndex = 29;
+            lbl_MaxExitTime.Text = "59:59:59";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(1090, 43);
+            label14.Name = "label14";
+            label14.Size = new Size(103, 20);
+            label14.TabIndex = 28;
+            label14.Text = "دیرترین زمان خروج:";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(304, 8);
+            label10.Name = "label10";
+            label10.Size = new Size(101, 20);
+            label10.TabIndex = 26;
+            label10.Text = "مجموع اضافه کاری:";
+            // 
+            // lbl_sumaddwork
+            // 
+            lbl_sumaddwork.AutoSize = true;
+            lbl_sumaddwork.Location = new Point(278, 8);
+            lbl_sumaddwork.Name = "lbl_sumaddwork";
+            lbl_sumaddwork.Size = new Size(16, 20);
+            lbl_sumaddwork.TabIndex = 27;
+            lbl_sumaddwork.Text = "0";
+            lbl_sumaddwork.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(146, 41);
+            label6.Location = new Point(474, 43);
             label6.Name = "label6";
             label6.Size = new Size(137, 20);
             label6.TabIndex = 24;
@@ -132,7 +166,7 @@
             // lbl_avgtimework
             // 
             lbl_avgtimework.AutoSize = true;
-            lbl_avgtimework.Location = new Point(65, 41);
+            lbl_avgtimework.Location = new Point(393, 43);
             lbl_avgtimework.Name = "lbl_avgtimework";
             lbl_avgtimework.Size = new Size(77, 20);
             lbl_avgtimework.TabIndex = 25;
@@ -141,7 +175,7 @@
             // lbl_minEntry
             // 
             lbl_minEntry.AutoSize = true;
-            lbl_minEntry.Location = new Point(297, 41);
+            lbl_minEntry.Location = new Point(1203, 43);
             lbl_minEntry.Name = "lbl_minEntry";
             lbl_minEntry.Size = new Size(57, 20);
             lbl_minEntry.TabIndex = 23;
@@ -150,7 +184,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(360, 41);
+            label8.Location = new Point(1267, 43);
             label8.Name = "label8";
             label8.Size = new Size(99, 20);
             label8.TabIndex = 22;
@@ -159,16 +193,16 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(503, 41);
+            label4.Location = new Point(444, 8);
             label4.Name = "label4";
-            label4.Size = new Size(126, 20);
+            label4.Size = new Size(139, 20);
             label4.TabIndex = 20;
-            label4.Text = "مجموع غیبت(غیر جمعه):";
+            label4.Text = "مجموع غیبت(غیر تعطیلات):";
             // 
             // lbl_sumOff
             // 
             lbl_sumOff.AutoSize = true;
-            lbl_sumOff.Location = new Point(478, 41);
+            lbl_sumOff.Location = new Point(421, 8);
             lbl_sumOff.Name = "lbl_sumOff";
             lbl_sumOff.Size = new Size(16, 20);
             lbl_sumOff.TabIndex = 21;
@@ -178,7 +212,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(291, 9);
+            label13.Location = new Point(627, 8);
             label13.Name = "label13";
             label13.Size = new Size(147, 20);
             label13.TabIndex = 14;
@@ -187,7 +221,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(920, 9);
+            label2.Location = new Point(1256, 8);
             label2.Name = "label2";
             label2.Size = new Size(114, 20);
             label2.TabIndex = 4;
@@ -195,7 +229,7 @@
             // 
             // txtbox_lade
             // 
-            txtbox_lade.Location = new Point(91, 6);
+            txtbox_lade.Location = new Point(91, 4);
             txtbox_lade.Mask = "00:00:00";
             txtbox_lade.Name = "txtbox_lade";
             txtbox_lade.Size = new Size(69, 28);
@@ -207,7 +241,7 @@
             // lbl_sumdayworker
             // 
             lbl_sumdayworker.AutoSize = true;
-            lbl_sumdayworker.Location = new Point(877, 9);
+            lbl_sumdayworker.Location = new Point(1213, 8);
             lbl_sumdayworker.Name = "lbl_sumdayworker";
             lbl_sumdayworker.Size = new Size(37, 20);
             lbl_sumdayworker.TabIndex = 5;
@@ -216,7 +250,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(163, 9);
+            label3.Location = new Point(166, 7);
             label3.Name = "label3";
             label3.Size = new Size(84, 20);
             label3.TabIndex = 18;
@@ -225,7 +259,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(758, 9);
+            label5.Location = new Point(1093, 8);
             label5.Name = "label5";
             label5.Size = new Size(85, 20);
             label5.TabIndex = 6;
@@ -233,9 +267,9 @@
             // 
             // btn_submit
             // 
-            btn_submit.Location = new Point(7, 6);
+            btn_submit.Location = new Point(91, 36);
             btn_submit.Name = "btn_submit";
-            btn_submit.Size = new Size(77, 29);
+            btn_submit.Size = new Size(159, 30);
             btn_submit.TabIndex = 16;
             btn_submit.Text = "اعمال";
             btn_submit.UseVisualStyleBackColor = true;
@@ -244,7 +278,7 @@
             // lbl_sumhour
             // 
             lbl_sumhour.AutoSize = true;
-            lbl_sumhour.Location = new Point(661, 9);
+            lbl_sumhour.Location = new Point(997, 8);
             lbl_sumhour.Name = "lbl_sumhour";
             lbl_sumhour.Size = new Size(77, 20);
             lbl_sumhour.TabIndex = 7;
@@ -253,16 +287,16 @@
             // lbl_sumentryDelay
             // 
             lbl_sumentryDelay.AutoSize = true;
-            lbl_sumentryDelay.Location = new Point(255, 9);
+            lbl_sumentryDelay.Location = new Point(590, 8);
             lbl_sumentryDelay.Name = "lbl_sumentryDelay";
-            lbl_sumentryDelay.Size = new Size(37, 20);
+            lbl_sumentryDelay.Size = new Size(30, 20);
             lbl_sumentryDelay.TabIndex = 15;
-            lbl_sumentryDelay.Text = "1000";
+            lbl_sumentryDelay.Text = "100";
             // 
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(552, 9);
+            label7.Location = new Point(888, 8);
             label7.Name = "label7";
             label7.Size = new Size(79, 20);
             label7.TabIndex = 8;
@@ -271,7 +305,7 @@
             // lbl_summinute
             // 
             lbl_summinute.AutoSize = true;
-            lbl_summinute.Location = new Point(499, 9);
+            lbl_summinute.Location = new Point(832, 8);
             lbl_summinute.Name = "lbl_summinute";
             lbl_summinute.Size = new Size(16, 20);
             lbl_summinute.TabIndex = 9;
@@ -281,7 +315,7 @@
             // lbl_avgexit
             // 
             lbl_avgexit.AutoSize = true;
-            lbl_avgexit.Location = new Point(634, 41);
+            lbl_avgexit.Location = new Point(617, 43);
             lbl_avgexit.Name = "lbl_avgexit";
             lbl_avgexit.Size = new Size(57, 20);
             lbl_avgexit.TabIndex = 13;
@@ -290,7 +324,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(904, 41);
+            label9.Location = new Point(881, 43);
             label9.Name = "label9";
             label9.Size = new Size(132, 20);
             label9.TabIndex = 10;
@@ -299,7 +333,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(697, 41);
+            label11.Location = new Point(674, 43);
             label11.Name = "label11";
             label11.Size = new Size(137, 20);
             label11.TabIndex = 12;
@@ -308,7 +342,7 @@
             // lbl_avgentry
             // 
             lbl_avgentry.AutoSize = true;
-            lbl_avgentry.Location = new Point(841, 41);
+            lbl_avgentry.Location = new Point(821, 43);
             lbl_avgentry.Name = "lbl_avgentry";
             lbl_avgentry.Size = new Size(57, 20);
             lbl_avgentry.TabIndex = 11;
@@ -317,7 +351,7 @@
             // lbl_FromTo
             // 
             lbl_FromTo.AutoSize = true;
-            lbl_FromTo.Location = new Point(424, 4);
+            lbl_FromTo.Location = new Point(513, 3);
             lbl_FromTo.Name = "lbl_FromTo";
             lbl_FromTo.Size = new Size(16, 20);
             lbl_FromTo.TabIndex = 20;
@@ -326,7 +360,7 @@
             // lbl_user
             // 
             lbl_user.AutoSize = true;
-            lbl_user.Location = new Point(606, 4);
+            lbl_user.Location = new Point(695, 3);
             lbl_user.Name = "lbl_user";
             lbl_user.Size = new Size(0, 20);
             lbl_user.TabIndex = 3;
@@ -334,7 +368,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(654, 4);
+            label1.Location = new Point(743, 3);
             label1.Name = "label1";
             label1.Size = new Size(35, 20);
             label1.TabIndex = 2;
@@ -351,8 +385,9 @@
             dataView_calender.ReadOnly = true;
             dataView_calender.RightToLeft = RightToLeft.No;
             dataView_calender.RowHeadersWidth = 70;
-            dataView_calender.Size = new Size(1268, 502);
+            dataView_calender.Size = new Size(1290, 546);
             dataView_calender.TabIndex = 0;
+            dataView_calender.VirtualMode = true;
             dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
             dataView_calender.RowPrePaint += dataView_calender_RowPrePaint;
             // 
@@ -360,24 +395,44 @@
             // 
             tabControl1.Controls.Add(tabpage_detailvorodkhoroj);
             tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 0);
+            tabControl1.Location = new Point(0, 28);
             tabControl1.Margin = new Padding(3, 4, 3, 4);
             tabControl1.Name = "tabControl1";
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1282, 644);
+            tabControl1.Size = new Size(1304, 688);
             tabControl1.TabIndex = 0;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { OutputExcelToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.RightToLeft = RightToLeft.Yes;
+            menuStrip1.Size = new Size(1304, 28);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // OutputExcelToolStripMenuItem
+            // 
+            OutputExcelToolStripMenuItem.Name = "OutputExcelToolStripMenuItem";
+            OutputExcelToolStripMenuItem.Size = new Size(86, 24);
+            OutputExcelToolStripMenuItem.Text = "خروجی اکسل";
+            OutputExcelToolStripMenuItem.Click += OutputExcelToolStripMenuItem_Click;
             // 
             // FrmCalc
             // 
             AcceptButton = btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1282, 644);
+            ClientSize = new Size(1304, 716);
             Controls.Add(tabControl1);
+            Controls.Add(menuStrip1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmCalc";
             Text = "FrmCalc";
@@ -388,13 +443,15 @@
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).EndInit();
             tabControl1.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private TabPage tabpage_detailvorodkhoroj;
-        private Button btn_exportExcel;
         private Panel panel1;
         private Label label6;
         private Label lbl_avgtimework;
@@ -422,5 +479,12 @@
         private Label label1;
         private DataGridView dataView_calender;
         private TabControl tabControl1;
+        private Label label10;
+        private Label lbl_us;
+        private Label lbl_sumaddwork;
+        private Label lbl_MaxExitTime;
+        private Label label14;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem OutputExcelToolStripMenuItem;
     }
 }

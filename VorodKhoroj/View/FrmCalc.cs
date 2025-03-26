@@ -1,4 +1,7 @@
-﻿namespace VorodKhoroj.View;
+﻿using System.Linq;
+using System.Windows.Forms;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -32,6 +35,7 @@ public partial class FrmCalc : Form
         catch (Exception ex)
         {
             CommonHelper.ShowMessage(ex);
+            this.Close();
         }
     }
 
@@ -61,6 +65,7 @@ public partial class FrmCalc : Form
                 };
             })
             .ToList();
+        //.ToString("0") + "m"
 
         // محاسبه میانگین ساعت ورود
         var entryTimes = groupedData
@@ -82,7 +87,7 @@ public partial class FrmCalc : Form
 
 
         // محاسبه مجموع دقایق کاری
-        var totalMinutes = groupedData.Sum(x => x.DurationMin);
+        var totalMinutes = groupedData.Sum(x => (x.DurationMin));
         lbl_summinute.Text = totalMinutes.ToString("0") + "m";
 
         // محاسبه مجموع ساعت کاری
@@ -94,13 +99,34 @@ public partial class FrmCalc : Form
         lbl_sumentryDelay.Text = lateDays.ToString();
 
         //مجموع غیبت
-        lbl_sumOff.Text =
-            CalculateAbsenceDays(DateTime.Parse(_fromDateTime), DateTime.Parse(_toDateTime), groupedData.Count)
-                .ToString();
+
+        var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
+
+        // تولید لیست تاریخ‌های بین دو بازه
+        var workDays = Enumerable.Range(0, (DateTime.Parse(_toDateTime) - DateTime.Parse(_fromDateTime)).Days + 1)
+            .Select(i => DateTime.Parse(_fromDateTime).AddDays(i))
+            .ToList(); // تمامی روزها از `_fromDateTime` تا `_toDateTime`
+
+        var presentDays = groupedData
+            .Select(g => DateTime.ParseExact(g.Date, "yyyy/MM/dd", null).Date)
+            .ToList(); // تاریخ‌هایی که کارمند حضور داشته است
+
+        // محاسبه تعداد روزهای غیبت (روز کاری باشد، حضور نداشته باشد، تعطیل رسمی هم نباشد)
+        var absenceCount = workDays.Count(day => !presentDays.Contains(day) && !holidays.Contains(day));
+
+        lbl_sumOff.Text = absenceCount.ToString();
+
+        //اضافه کاری
+        int overtimeCount = presentDays.Count(day => holidays.Contains(day));
+        lbl_sumaddwork.Text = overtimeCount.ToString();
 
         //زودترین ورود
         var minEntryTime = TimeSpan.FromTicks(entryTimes.Min(t => t.Ticks));
         lbl_minEntry.Text = minEntryTime.ToString(@"hh\:mm\:ss");
+
+        //دیرترین خروج
+        var maxExitTime = TimeSpan.FromTicks(exitTimes.Max(t => t.Ticks));
+        lbl_MaxExitTime.Text = maxExitTime.ToString(@"hh\:mm\:ss");
 
         //میانگین ساعت کاری
         var avgMinutes = totalMinutes / groupedData.Count;
@@ -108,19 +134,6 @@ public partial class FrmCalc : Form
         lbl_avgtimework.Text = @$"{(int)avgTimeSpan.TotalHours:D2}:{avgTimeSpan.Minutes:D2}:{avgTimeSpan.Seconds:D2}";
 
         dataView_calender.DataSource = groupedData.ToDataTable();
-    }
-
-    private int CalculateAbsenceDays(DateTime startDate, DateTime endDate, int workDays)
-    {
-        var totalDays = (endDate - startDate).Days + 1;
-
-        // شمارش تعداد جمعه‌ها در بازه
-        var fridaysCount = Enumerable.Range(0, totalDays)
-            .Select(i => startDate.AddDays(i))
-            .Count(date => date.DayOfWeek == DayOfWeek.Friday);
-
-        var totalCountedDays = workDays + fridaysCount;
-        return totalDays - totalCountedDays;
     }
 
     private void DataGridViewConfig()
@@ -151,11 +164,27 @@ public partial class FrmCalc : Form
             dataView_calender.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
     }
 
-    private void btn_exportExcel_Click(object sender, EventArgs e)
+    private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
         {
-            CommonHelper.DataGridToExcel(dataView_calender);
+            Dictionary<string, string> labels = new()
+            {
+                { "مجموع روز های کاری", lbl_sumdayworker.Text },
+                { "مجموع ساعات کاری", lbl_sumhour.Text },
+                { "مجموع دقایق کاری", lbl_summinute.Text },
+                { "مجموع روز های ورود باتاخیر", lbl_sumentryDelay.Text },
+                { "مجموع غیبت (غیر تعطیلات)", lbl_sumOff.Text },
+                { "مجموع اضافه کاری", lbl_sumaddwork.Text },
+                { "زودترین زمان ورود", lbl_minEntry.Text },
+                { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
+                { "میانگین ساعت های ورود", lbl_avgentry.Text },
+                { "میانگین ساعت های خروج", lbl_avgexit.Text },
+                { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text },
+                };
+
+            //   CommonHelper.DataGridToExcel(dataView_calender);
+            CommonHelper.DataGridToExcel(dataView_calender, labels);
         }
         catch (Exception ex)
         {

@@ -2,6 +2,34 @@
 {
     public class PersianDateHelper
     {
+        public static List<Holiday> GetHolidays()
+        {
+            var list = new List<Holiday>();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var excelPath = Application.StartupPath + @"Resources\holiday.xlsx";
+
+            using (var package = new ExcelPackage(new FileInfo(excelPath)))
+            {
+                var worksheet = package.Workbook.Worksheets[0]; // اولین شیت
+
+                var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
+                for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
+                {
+                    var title = worksheet.Cells[row, 1].Text; // ستون title
+                    var dateString = worksheet.Cells[row, 2].Text; // ستون date
+
+                    if (DateTime.TryParse(dateString, out var date))
+                        list.Add(new Holiday { Title = title, Date = date });
+                    else
+                        throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
+                }
+            }
+
+            return list;
+        }
+
         private static DateTime _dateTime = ConfigDateTime();
         private static readonly PersianCalendar _persianCalendar = new();
         public static string PersianCalenderDateNow()

@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj;
+﻿using Microsoft.Extensions.Options;
+
+namespace VorodKhoroj;
 
 public partial class Frm_Main : Form
 {
@@ -19,11 +21,14 @@ public partial class Frm_Main : Form
 
     public void DataGridConfig()
     {
+        if (_services.Records == null) return;
+
         dataView.DataSource = _temp?.Rows?.Count == 0 || _temp == null
-            ? _temp = _services?.Records?.ToDataTable() 
+            ? _temp = _services?.Records?.ToDataTable()
             : _temp;
         DataGridViewConfig();
         userid_txtbox.Items.AddRange(Array = _services.Records.DistinctBy(x => x.UserId).ToArray());
+
     }
 
     private void DataGridViewConfig()
@@ -40,6 +45,7 @@ public partial class Frm_Main : Form
 
         try
         {
+            DataGridConfig();
             dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
                 toDateTime_txtbox.Text, int.Parse(userid_txtbox.Text)).ToDataTable();
             DataGridViewConfig();

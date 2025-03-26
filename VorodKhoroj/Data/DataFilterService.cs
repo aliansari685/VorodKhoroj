@@ -2,11 +2,11 @@
 {
     public class DataFilterService
     {
-        public static List<Attendance> ApplyFilter(IList<Attendance>_records ,string fromDate, string toDate, int userid)
+        public static List<Attendance> ApplyFilter(IList<Attendance> _records, string fromDate, string toDate, int userid)
         {
             try
             {
-                return _records.Where(x => x.DateTime >= DateTime.Parse(fromDate) && x.DateTime <= DateTime.Parse(toDate) && x.UserId == userid).ToList();
+                return _records.Where(x => x.DateTime >= DateTime.Parse(fromDate) && x.DateTime <= DateTime.Parse(toDate).AddDays(1).AddSeconds(-1) && x.UserId == userid).ToList();
             }
             catch (Exception ex)
             {
