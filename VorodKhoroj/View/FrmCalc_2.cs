@@ -16,6 +16,10 @@ public partial class FrmCalc
         dataView_lade.Columns[1].HeaderText = "تاریخ";
 
     }
+    private void BtnExportExcelClick(object sender, EventArgs e)
+    {
+        CommonHelper.DataGridToExcel(dataView_lade);
+    }
     private void radioButton_CheckedChanged(object? sender, EventArgs? e)
     {
         try

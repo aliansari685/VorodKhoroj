@@ -142,4 +142,9 @@ public partial class Frm_Main : Form
     {
         Application.Restart();
     }
+
+    private void گزارشماهانهToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
 }
