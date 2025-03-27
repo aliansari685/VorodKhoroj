@@ -33,22 +33,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            Labels = new() {
-        { "مجموع روز های کاری", lbl_sumdayworker.Text },
-        { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", lbl_fullwork.Text },
-        { "مجموع ساعات کاری", lbl_sumhour.Text },
-        { "مجموع دقایق کاری", lbl_summinute.Text },
-        { "مجموع روز های ورود باتاخیر", lbl_sumentryDelay.Text },
-        { "مجموع روز های ناقص", lbl_nofull.Text },
-        { "مجموع غیبت (غیر تعطیلات)", lbl_sumOff.Text },
-        { "مجموع اضافه کاری", lbl_sumaddwork.Text },
-        { "زودترین زمان ورود", lbl_minEntry.Text },
-        { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
-        { "میانگین ساعت های ورود", lbl_avgentry.Text },
-        { "میانگین ساعت های خروج", lbl_avgexit.Text },
-        { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text },
-
-        };
+    
             CalculatorData();
             DataGridViewConfig();
 
@@ -172,6 +157,24 @@ public partial class FrmCalc : Form
 
     private void DataGridViewConfig()
     {
+
+        Labels = new() {
+            { "مجموع روز های کاری", lbl_sumdayworker.Text },
+            { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", lbl_fullwork.Text },
+            { "مجموع ساعات کاری", lbl_sumhour.Text },
+            { "مجموع دقایق کاری", lbl_summinute.Text },
+            { "مجموع روز های ورود باتاخیر", lbl_sumentryDelay.Text },
+            { "مجموع روز های ناقص", lbl_nofull.Text },
+            { "مجموع غیبت (غیر تعطیلات)", lbl_sumOff.Text },
+            { "مجموع اضافه کاری", lbl_sumaddwork.Text },
+            { "زودترین زمان ورود", lbl_minEntry.Text },
+            { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
+            { "میانگین ساعت های ورود", lbl_avgentry.Text },
+            { "میانگین ساعت های خروج", lbl_avgexit.Text },
+            { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text },
+
+        };
+
         dataView_calender.Columns[0].HeaderText = @"روز در هفته";
         dataView_calender.Columns[1].HeaderText = @"تاریخ";
         dataView_calender.Columns[2].HeaderText = @"ساعت ورود";
