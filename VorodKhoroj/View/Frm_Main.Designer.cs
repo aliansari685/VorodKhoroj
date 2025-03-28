@@ -84,21 +84,21 @@
             // مجموعToolStripMenuItem
             // 
             مجموعToolStripMenuItem.Name = "مجموعToolStripMenuItem";
-            مجموعToolStripMenuItem.Size = new Size(180, 24);
+            مجموعToolStripMenuItem.Size = new Size(160, 24);
             مجموعToolStripMenuItem.Text = "مجموع و اختلاف ";
             مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
             // 
             // گزارشماهانهToolStripMenuItem
             // 
             گزارشماهانهToolStripMenuItem.Name = "گزارشماهانهToolStripMenuItem";
-            گزارشماهانهToolStripMenuItem.Size = new Size(180, 24);
+            گزارشماهانهToolStripMenuItem.Size = new Size(160, 24);
             گزارشماهانهToolStripMenuItem.Text = "گزارش ماهانه";
             گزارشماهانهToolStripMenuItem.Click += گزارشماهانهToolStripMenuItem_Click;
             // 
             // گزارشماهانهToolStripMenuItem1
             // 
             گزارشماهانهToolStripMenuItem1.Name = "گزارشماهانهToolStripMenuItem1";
-            گزارشماهانهToolStripMenuItem1.Size = new Size(180, 24);
+            گزارشماهانهToolStripMenuItem1.Size = new Size(160, 24);
             گزارشماهانهToolStripMenuItem1.Text = "گزارش روزانه";
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
@@ -183,7 +183,7 @@
             // 
             // btn_applyfilter
             // 
-            btn_applyfilter.Location = new Point(192, 33);
+            btn_applyfilter.Location = new Point(192, 38);
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(125, 30);
             btn_applyfilter.TabIndex = 7;
@@ -206,7 +206,7 @@
             btn_clear.BackColor = Color.Lavender;
             btn_clear.BackgroundImage = Properties.Resources.clear_icon_9213;
             btn_clear.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_clear.Location = new Point(147, 31);
+            btn_clear.Location = new Point(147, 36);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(39, 35);
             btn_clear.TabIndex = 12;

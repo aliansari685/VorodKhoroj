@@ -8,10 +8,15 @@ public partial class FrmCalc : Form
 
     private List<DateTime> _qeybathaDaysList = [];
     private List<DateTime> _holidaysDaysList;
-
     private readonly string _fromDateTime, _toDateTime, _userid;
-    private TimeSpan _tm = new(08, 30, 00);
     private readonly AppServices _service;
+
+    private TimeSpan _lateTm = new(08, 30, 00);
+    //  private TimeSpan _late_exitTm = new(16, 45, 00);
+    private TimeSpan _fullworkTm = new(08, 30, 00);
+    private TimeSpan _fullwork_thursdayTm = new(05, 30, 00);
+    private TimeSpan _fullwork_farvardinTm = new(07, 45, 00);
+
 
     public FrmCalc(AppServices services, string fromDateTime, string toDateTime, string userid)
     {
@@ -33,10 +38,8 @@ public partial class FrmCalc : Form
     {
         try
         {
-    
             CalculatorData();
             DataGridViewConfig();
-
             Part2_Load();
         }
         catch (Exception ex)
@@ -52,33 +55,72 @@ public partial class FrmCalc : Form
             = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
         if (dataFiltered.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
 
+
         var groupedData = dataFiltered
             .GroupBy(x => (x.UserId, x.DateTime.Date))
             .Select(g =>
             {
+                TimeSpan overtime = new(0);
+
                 var minDateTime = g.Min(x => x.DateTime);
                 var maxDateTime = g.Max(x => x.DateTime);
+
+                var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday;
+
+                var _farvardin = minDateTime.DayOfWeek == DayOfWeek.Friday && maxDateTime.DayOfWeek == DayOfWeek.Friday;
+
                 var duration = maxDateTime - minDateTime;
-                TimeSpan? durationThursday = (minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday)
-                    ? maxDateTime - minDateTime : new TimeSpan(0);
+
+                /////     var durationThursday = _thursday ? maxDateTime - minDateTime : new TimeSpan(0);
+
+                var lateMinutes = minDateTime.TimeOfDay > _lateTm
+                    ? (minDateTime.TimeOfDay - _lateTm).TotalMinutes
+                    : 0;
+
+                if (_thursday && duration > _fullwork_thursdayTm)
+                {
+                    overtime = duration - _fullwork_thursdayTm;
+                }
+                //شرط فروردین اعمال کن فردا
+                //else if (_farvardin && duration > _fullwork_farvardinTm)
+                //{
+                //    overtime = duration - _fullwork_farvardinTm;
+                //}
+                else if (duration > _fullworkTm)
+                {
+                    overtime = duration - _fullworkTm;
+                }
 
                 return new
                 {
                     DayOfWeek = g.Key.Date.ToString("dddd"),
                     Date = g.Key.Date.ToString("yyyy/MM/dd"),
-                    EntryTime = minDateTime.ToString("HH:mm:ss"),
+                    EntryTime = minDateTime.ToString("HH:mm:ss"),//datetime
                     ExitTime = maxDateTime.ToString("HH:mm:ss"),
                     DurationMin = (int)Math.Round(duration.TotalMinutes, 0),
-                    DurationHour = $"{(int)duration.TotalHours}h {duration.Minutes}m",
-                    IsLate = minDateTime.TimeOfDay > _tm,
-                    FullWork = duration.TotalMinutes >= 510 || durationThursday.Value.TotalMinutes >= 330
+                    DurationHour = $"{(int)duration.TotalHours:D2}h {duration.Minutes:D2}m",
+                    IsLate = minDateTime.TimeOfDay > _lateTm,
+                    LateMinutes = (int)Math.Round(lateMinutes, 0),
+                    Overtime = (overtime).ToString(@"hh\:mm\:ss"), //or: Overtime = @$"{(int)overtime.TotalHours:D2}:{overtime.Minutes:D2}:{overtime.Seconds:D2}",
+                    FullWork = (duration >= _fullworkTm) || (_thursday && duration > _fullwork_thursdayTm),
                 };
             })
             .ToList();
 
-        // محاسبه مجموع ناقص
-        var totalnofull = groupedData.Count(x => x.DurationMin < 30);
-        lbl_nofull.Text = totalnofull.ToString();
+        // محاسبه مجموع اضافه ساعت کاری
+        var totalOvertimeMinutes = groupedData
+            .Sum(x => (TimeSpan.Parse(x.Overtime)).TotalMinutes);
+
+        var sumOvertime = TimeSpan.FromMinutes(totalOvertimeMinutes);
+        lbl_sumaddworkhour.Text = sumOvertime.ToString(@"hh\:mm\:ss");//timespan
+
+        // محاسبه مجموع تاخیر ب ساعت
+        var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes));
+        lbl_sumlate.Text = totalLateMinutes.ToString(@"hh\:mm\:ss");
+
+        // محاسبه مجموع ناقصی
+        var totalling = groupedData.Count(x => x.DurationMin < 30);
+        lbl_nofull.Text = totalling.ToString();
 
         // محاسبه مجموع دقایق کاری
         var totalMinutes = groupedData.Sum(x => x.DurationMin);
@@ -103,14 +145,14 @@ public partial class FrmCalc : Form
 
         // محاسبه مجموع ساعت کاری
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
-        lbl_sumhour.Text = @$"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}:{totalHours.Seconds:D2}";
+        lbl_sumhour.Text = totalHours.ToString(@"hh\:mm\:ss");
 
         // محاسبه مجموع روز کامل
         var total = groupedData.Count(x => x.FullWork);
         lbl_fullwork.Text = total.ToString();
 
         // محاسبه تعداد روزهایی که ورود با تأخیر داشته‌اند)
-        var lateDays = groupedData.Count(x => DateTime.Parse(x.EntryTime).TimeOfDay > _tm);
+        var lateDays = groupedData.Count(x => DateTime.Parse(x.EntryTime).TimeOfDay > _lateTm);
         lbl_sumentryDelay.Text = lateDays.ToString();
 
         //مجموع غیبت
@@ -150,13 +192,7 @@ public partial class FrmCalc : Form
         //میانگین ساعت کاری
         var avgMinutes = totalMinutes / groupedData.Count;
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
-        lbl_avgtimework.Text = @$"{(int)avgTimeSpan.TotalHours:D2}:{avgTimeSpan.Minutes:D2}:{avgTimeSpan.Seconds:D2}";
-
-        dataView_calender.DataSource = groupedData.ToDataTable();
-    }
-
-    private void DataGridViewConfig()
-    {
+        lbl_avgtimework.Text = avgTimeSpan.ToString(@"hh\:mm\:ss");
 
         Labels = new() {
             { "مجموع روز های کاری", lbl_sumdayworker.Text },
@@ -164,9 +200,11 @@ public partial class FrmCalc : Form
             { "مجموع ساعات کاری", lbl_sumhour.Text },
             { "مجموع دقایق کاری", lbl_summinute.Text },
             { "مجموع روز های ورود باتاخیر", lbl_sumentryDelay.Text },
+            { "مجموع تاخیر ها به ساعت", lbl_sumlate.Text },
             { "مجموع روز های ناقص", lbl_nofull.Text },
             { "مجموع غیبت (غیر تعطیلات)", lbl_sumOff.Text },
             { "مجموع اضافه کاری", lbl_sumaddwork.Text },
+            { " مجموع اضافه کاری بعد ساعت کاری", lbl_sumaddworkhour.Text },
             { "زودترین زمان ورود", lbl_minEntry.Text },
             { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
             { "میانگین ساعت های ورود", lbl_avgentry.Text },
@@ -175,6 +213,11 @@ public partial class FrmCalc : Form
 
         };
 
+        dataView_calender.DataSource = groupedData.ToDataTable();
+    }
+
+    private void DataGridViewConfig()
+    {
         dataView_calender.Columns[0].HeaderText = @"روز در هفته";
         dataView_calender.Columns[1].HeaderText = @"تاریخ";
         dataView_calender.Columns[2].HeaderText = @"ساعت ورود";
@@ -182,7 +225,9 @@ public partial class FrmCalc : Form
         dataView_calender.Columns[4].HeaderText = @"اختلاف به دقیقه";
         dataView_calender.Columns[5].HeaderText = @"اختلاف به ساعت";
         dataView_calender.Columns[6].HeaderText = @"ورود با تاخیر";
-        dataView_calender.Columns[7].HeaderText = @" روز کاری کامل طبق 8 ساعت 30 دقیقه کار";
+        dataView_calender.Columns[7].HeaderText = @"اختلاف تاخیر به دقیقه";
+        dataView_calender.Columns[8].HeaderText = @"اختلاف اضافه کاری به ساعت";
+        dataView_calender.Columns[9].HeaderText = @"روز کاری کامل";
     }
 
     private void dataView_calender_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -194,8 +239,12 @@ public partial class FrmCalc : Form
 
     private void btn_Submit_Click(object sender, EventArgs e)
     {
-        _tm = TimeSpan.Parse(txtbox_lade.Text);
+        _lateTm = TimeSpan.Parse(txtbox_late.Text);
+        _fullworkTm = TimeSpan.Parse(txtbox_fullwork.Text);
+        _fullwork_thursdayTm = TimeSpan.Parse(txtbox_fullwork_thursday.Text);
+        _fullwork_farvardinTm = TimeSpan.Parse(txtbox_fullwork_farvardin.Text);
         DataGridConfig();
+        CommonHelper.ShowMessage("انجام شد");
     }
 
     private void dataView_calender_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -215,4 +264,5 @@ public partial class FrmCalc : Form
             CommonHelper.ShowMessage(ex);
         }
     }
+
 }

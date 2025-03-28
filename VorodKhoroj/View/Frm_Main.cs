@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace VorodKhoroj;
 
 public partial class Frm_Main : Form
@@ -57,6 +59,19 @@ public partial class Frm_Main : Form
 
     private void btn_clear_Click(object sender, EventArgs e)
     {
+        List<Holiday> list = [];
+
+        MessageBox.Show(PersianDateHelper.ConvertToShamsi(DateTime.Now.ToShortDateString()).ToShortDateString());
+        for (var dt = PersianDateHelper.ConvertToShamsi("1400/01/01"); dt <= PersianDateHelper.ConvertToShamsi(PersianDateHelper.PersianCalenderDateNow()); dt = dt.AddDays(1))
+        {
+            if (dt.DayOfWeek == DayOfWeek.Friday)
+            {
+                list.Add(new Holiday { Title = "جمعه", Date = dt });
+            }
+        }
+
+        MessageBox.Show(list[0].Date.ToShortDateString());
+
         TextBoxClear();
         DataGridConfig();
     }
