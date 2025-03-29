@@ -36,7 +36,7 @@ public partial class FrmCalc
                 dataView_late.DataSource = _holidaysDaysList.Select(g => new
                 {
                     DayOfWeek = g.Date.ToString("dddd"),
-                    Date = g.Date.ToString("yyyy/MM/dd")
+                    Date = g.Date.ToString("yyyy/MM/dd"),
                 }).ToList().ToDataTable();
 
             DataGridViewConfig1();

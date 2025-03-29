@@ -67,25 +67,27 @@ public partial class FrmCalc : Form
 
                 var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday;
 
-                var _farvardin = minDateTime.DayOfWeek == DayOfWeek.Friday && maxDateTime.DayOfWeek == DayOfWeek.Friday;
+                //     var _farvardin = minDateTime.DayOfWeek == DayOfWeek.Friday && maxDateTime.DayOfWeek == DayOfWeek.Friday;
 
                 var duration = maxDateTime - minDateTime;
 
                 /////     var durationThursday = _thursday ? maxDateTime - minDateTime : new TimeSpan(0);
 
-                var lateMinutes = minDateTime.TimeOfDay > _lateTm
-                    ? (minDateTime.TimeOfDay - _lateTm).TotalMinutes
-                    : 0;
+                TimeSpan lateMinutes = minDateTime.TimeOfDay > _lateTm
+                    ? (minDateTime.TimeOfDay - _lateTm)
+                    : new(0);
 
                 if (_thursday && duration > _fullwork_thursdayTm)
                 {
                     overtime = duration - _fullwork_thursdayTm;
                 }
+
                 //شرط فروردین اعمال کن فردا
                 //else if (_farvardin && duration > _fullwork_farvardinTm)
                 //{
                 //    overtime = duration - _fullwork_farvardinTm;
                 //}
+
                 else if (duration > _fullworkTm)
                 {
                     overtime = duration - _fullworkTm;
@@ -100,23 +102,21 @@ public partial class FrmCalc : Form
                     DurationMin = (int)Math.Round(duration.TotalMinutes, 0),
                     DurationHour = $"{(int)duration.TotalHours:D2}h {duration.Minutes:D2}m",
                     IsLate = minDateTime.TimeOfDay > _lateTm,
-                    LateMinutes = (int)Math.Round(lateMinutes, 0),
+                    LateMinutes = lateMinutes,
                     Overtime = (overtime).ToString(@"hh\:mm\:ss"), //or: Overtime = @$"{(int)overtime.TotalHours:D2}:{overtime.Minutes:D2}:{overtime.Seconds:D2}",
                     FullWork = (duration >= _fullworkTm) || (_thursday && duration > _fullwork_thursdayTm),
                 };
             })
             .ToList();
 
+
+        // محاسبه مجموع تاخیر
+        var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
+        lbl_sumlate.Text = $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}";
+
         // محاسبه مجموع اضافه ساعت کاری
-        var totalOvertimeMinutes = groupedData
-            .Sum(x => (TimeSpan.Parse(x.Overtime)).TotalMinutes);
-
-        var sumOvertime = TimeSpan.FromMinutes(totalOvertimeMinutes);
-        lbl_sumaddworkhour.Text = sumOvertime.ToString(@"hh\:mm\:ss");//timespan
-
-        // محاسبه مجموع تاخیر ب ساعت
-        var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes));
-        lbl_sumlate.Text = totalLateMinutes.ToString(@"hh\:mm\:ss");
+        var totalOvertimeMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime).TotalMinutes));
+        lbl_sumaddworkhour.Text = $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}";
 
         // محاسبه مجموع ناقصی
         var totalling = groupedData.Count(x => x.DurationMin < 30);
@@ -145,7 +145,7 @@ public partial class FrmCalc : Form
 
         // محاسبه مجموع ساعت کاری
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
-        lbl_sumhour.Text = totalHours.ToString(@"hh\:mm\:ss");
+        lbl_sumhour.Text = $@"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}";
 
         // محاسبه مجموع روز کامل
         var total = groupedData.Count(x => x.FullWork);
@@ -193,6 +193,8 @@ public partial class FrmCalc : Form
         var avgMinutes = totalMinutes / groupedData.Count;
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
         lbl_avgtimework.Text = avgTimeSpan.ToString(@"hh\:mm\:ss");
+
+
 
         Labels = new() {
             { "مجموع روز های کاری", lbl_sumdayworker.Text },

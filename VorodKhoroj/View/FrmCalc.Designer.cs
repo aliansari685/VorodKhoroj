@@ -503,10 +503,10 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 24);
+            tabPage_durationdays.Location = new Point(4, 29);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(976, 471);
+            tabPage_durationdays.Size = new Size(976, 466);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -561,9 +561,9 @@
             // 
             dataView_late.AllowUserToAddRows = false;
             dataView_late.AllowUserToDeleteRows = false;
+            dataView_late.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_late.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_late.Dock = DockStyle.Bottom;
-            dataView_late.Location = new Point(3, 92);
+            dataView_late.Location = new Point(3, 87);
             dataView_late.Name = "dataView_late";
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
@@ -584,10 +584,10 @@
             tabPage_.Controls.Add(txtbox_late);
             tabPage_.Controls.Add(label3);
             tabPage_.Controls.Add(btn_submit);
-            tabPage_.Location = new Point(4, 29);
+            tabPage_.Location = new Point(4, 24);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(976, 466);
+            tabPage_.Size = new Size(976, 471);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;

@@ -27,15 +27,14 @@
                 }
             }
             // اضافه کردن جمعه‌ها به لیست
-           
-                for (var dt = DateTime.Parse("1400/01/01"); dt <= ConvertToShamsi(DateTime.Now.ToShortDateString()); dt = dt.AddDays(1))
+
+            for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
+            {
+                if (dt.DayOfWeek == DayOfWeek.Friday)
                 {
-                    if (dt.DayOfWeek == DayOfWeek.Friday)
-                    {
-                        list.Add(new Holiday { Title = "جمعه", Date = dt });
-                    }
+                    list.Add(new Holiday { Title = "جمعه", Date = dt });
                 }
-            
+            }
 
             return list;
         }
