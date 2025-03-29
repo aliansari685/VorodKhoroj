@@ -1,9 +1,14 @@
-﻿namespace VorodKhoroj.Classes
+﻿using System.Linq;
+
+namespace VorodKhoroj.Classes
 {
     public class PersianDateHelper
     {
         public static List<Holiday> GetHolidays()
         {
+            var farvardinHolidays = new List<int> { 1, 2, 12, 13 };
+
+
             var list = new List<Holiday>();
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -26,13 +31,17 @@
                         throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
                 }
             }
-            // اضافه کردن جمعه‌ها به لیست
 
+            // اضافه کردن تعطیلات به لیست
             for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
             {
                 if (dt.DayOfWeek == DayOfWeek.Friday)
                 {
                     list.Add(new Holiday { Title = "جمعه", Date = dt });
+                }
+                if (dt.Month == 1 && farvardinHolidays.Contains(dt.Day))
+                {
+                    list.Add(new Holiday { Title = "تعطیلات نوروز", Date = dt });
                 }
             }
 

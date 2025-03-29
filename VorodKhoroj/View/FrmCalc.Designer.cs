@@ -568,7 +568,7 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(970, 376);
+            dataView_late.Size = new Size(970, 371);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += dataView_calender_RowPostPaint;
@@ -584,10 +584,10 @@
             tabPage_.Controls.Add(txtbox_late);
             tabPage_.Controls.Add(label3);
             tabPage_.Controls.Add(btn_submit);
-            tabPage_.Location = new Point(4, 24);
+            tabPage_.Location = new Point(4, 29);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(976, 471);
+            tabPage_.Size = new Size(976, 466);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;

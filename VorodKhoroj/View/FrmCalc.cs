@@ -67,11 +67,9 @@ public partial class FrmCalc : Form
 
                 var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday;
 
-                //     var _farvardin = minDateTime.DayOfWeek == DayOfWeek.Friday && maxDateTime.DayOfWeek == DayOfWeek.Friday;
+                //   var _farvardin = minDateTime.Month ==  && maxDateTime.DayOfWeek == DayOfWeek.Friday;
 
                 var duration = maxDateTime - minDateTime;
-
-                /////     var durationThursday = _thursday ? maxDateTime - minDateTime : new TimeSpan(0);
 
                 TimeSpan lateMinutes = minDateTime.TimeOfDay > _lateTm
                     ? (minDateTime.TimeOfDay - _lateTm)
