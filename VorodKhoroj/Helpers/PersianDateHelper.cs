@@ -1,12 +1,11 @@
-﻿using System.Linq;
-
+﻿
 namespace VorodKhoroj.Classes
 {
     public class PersianDateHelper
     {
         public static List<Holiday> GetHolidays()
         {
-            var farvardinHolidays = new List<int> { 1, 2, 12, 13 };
+            var farvardinHolidays = new List<int> { 1, 2, 3, 4, 12, 13 };
 
 
             var list = new List<Holiday>();
@@ -41,7 +40,24 @@ namespace VorodKhoroj.Classes
                 }
                 if (dt.Month == 1 && farvardinHolidays.Contains(dt.Day))
                 {
-                    list.Add(new Holiday { Title = "تعطیلات نوروز", Date = dt });
+                    list.Add(new Holiday { Title = "نوروز", Date = dt });
+                }
+            }
+
+            return list;
+        }
+
+        public static List<DateTime> GetWorkDays_Farvardin()
+        {
+            var farvardindays = new[] { 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13 };
+
+            var list = new List<DateTime>();
+
+            for (var dt = DateTime.Parse("1400/01/01 00:00:00"); dt <= (DateTime.Now); dt = dt.AddDays(1))
+            {
+                if (dt.Month == 01 && farvardindays.Contains(dt.Day))
+                {
+                    list.Add(dt.Date);
                 }
             }
 

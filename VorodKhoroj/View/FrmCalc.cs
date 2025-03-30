@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using System.Linq;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -67,7 +69,7 @@ public partial class FrmCalc : Form
 
                 var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday;
 
-                //   var _farvardin = minDateTime.Month ==  && maxDateTime.DayOfWeek == DayOfWeek.Friday;
+                var _farvardin = PersianDateHelper.GetWorkDays_Farvardin().Contains(minDateTime.Date) && PersianDateHelper.GetWorkDays_Farvardin().Contains(maxDateTime);
 
                 var duration = maxDateTime - minDateTime;
 
@@ -81,10 +83,11 @@ public partial class FrmCalc : Form
                 }
 
                 //شرط فروردین اعمال کن فردا
-                //else if (_farvardin && duration > _fullwork_farvardinTm)
-                //{
-                //    overtime = duration - _fullwork_farvardinTm;
-                //}
+                else if (_farvardin && duration > _fullwork_farvardinTm)
+                {
+                    overtime = duration - _fullwork_farvardinTm;
+                    
+                }
 
                 else if (duration > _fullworkTm)
                 {

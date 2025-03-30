@@ -56,7 +56,10 @@ public partial class Frm_Main : Form
 
     private void btn_clear_Click(object sender, EventArgs e)
     {
-
+        foreach (var var in PersianDateHelper.GetWorkDays_Farvardin())
+        {
+            MessageBox.Show(var.ToShortDateString());
+        }
         TextBoxClear();
         DataGridConfig();
     }
