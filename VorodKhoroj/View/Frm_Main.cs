@@ -56,10 +56,6 @@ public partial class Frm_Main : Form
 
     private void btn_clear_Click(object sender, EventArgs e)
     {
-        foreach (var var in PersianDateHelper.GetWorkDays_Farvardin())
-        {
-            MessageBox.Show(var.ToShortDateString());
-        }
         TextBoxClear();
         DataGridConfig();
     }
@@ -141,13 +137,18 @@ public partial class Frm_Main : Form
         }
     }
 
-    private void راهاندازیمجددToolStripMenuItem_Click(object sender, EventArgs e)
+    private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
     {
         Application.Restart();
     }
 
-    private void گزارشماهانهToolStripMenuItem_Click(object sender, EventArgs e)
+    private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        using (FrmFilter_Monthly frm=new(_services))
+        {
+            frm.userid_txtbox.Items.AddRange(Array);
 
+            frm.ShowDialog();
+        }
     }
 }

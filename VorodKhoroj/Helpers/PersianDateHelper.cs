@@ -38,7 +38,7 @@ namespace VorodKhoroj.Classes
                 {
                     list.Add(new Holiday { Title = "جمعه", Date = dt });
                 }
-                if (dt.Month == 1 && farvardinHolidays.Contains(dt.Day))
+                if (_persianCalendar.GetMonth(dt) == 1 && farvardinHolidays.Contains(_persianCalendar.GetDayOfMonth(dt)))
                 {
                     list.Add(new Holiday { Title = "نوروز", Date = dt });
                 }
@@ -53,9 +53,9 @@ namespace VorodKhoroj.Classes
 
             var list = new List<DateTime>();
 
-            for (var dt = DateTime.Parse("1400/01/01 00:00:00"); dt <= (DateTime.Now); dt = dt.AddDays(1))
+            for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
             {
-                if (dt.Month == 01 && farvardindays.Contains(dt.Day))
+                if (_persianCalendar.GetMonth(dt) == 1 && farvardindays.Contains(_persianCalendar.GetDayOfMonth(dt)))
                 {
                     list.Add(dt.Date);
                 }
@@ -104,5 +104,10 @@ namespace VorodKhoroj.Classes
             return DateTime.Parse(DateTime.Now.ToShortDateString(), CultureInfo.DefaultThreadCurrentCulture);
         }
 
+    }
+    public class Holiday
+    {
+        public string Title { get; set; }
+        public DateTime Date { get; set; }
     }
 }

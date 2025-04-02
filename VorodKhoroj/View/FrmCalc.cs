@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -14,6 +12,7 @@ public partial class FrmCalc : Form
     private readonly AppServices _service;
 
     private TimeSpan _lateTm = new(08, 30, 00);
+
     //  private TimeSpan _late_exitTm = new(16, 45, 00);
     private TimeSpan _fullworkTm = new(08, 30, 00);
     private TimeSpan _fullwork_thursdayTm = new(05, 30, 00);
@@ -55,7 +54,7 @@ public partial class FrmCalc : Form
     {
         var dataFiltered
             = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
-        if (dataFiltered.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
+        if (dataFiltered.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
 
         var groupedData = dataFiltered
@@ -64,68 +63,92 @@ public partial class FrmCalc : Form
             {
                 TimeSpan overtime = new(0);
 
-                var minDateTime = g.Min(x => x.DateTime);
-                var maxDateTime = g.Max(x => x.DateTime);
+                var orderedTimes = g.Select(x => x.DateTime).OrderBy(dt => dt).ToList();
 
-                var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday && maxDateTime.DayOfWeek == DayOfWeek.Thursday;
+                // بررسی لیست که خالی نباشه
+                if (!orderedTimes.Any())
+                    return null; // یا هر مقدار پیش‌فرض دیگه‌ای که مناسب باشه
 
-                var _farvardin = PersianDateHelper.GetWorkDays_Farvardin().Contains(minDateTime.Date) && PersianDateHelper.GetWorkDays_Farvardin().Contains(maxDateTime);
+                // اولین ورود و خروج
+                var minDateTime = orderedTimes.FirstOrDefault();
+                var maxDateTime = orderedTimes.ElementAtOrDefault(1); // به جای FirstOrDefault()
+
+                if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // 0 دقیقه کار
+
+                DateTime? minDateTime2 = null;
+                DateTime? maxDateTime2 = null;
+
+                if (orderedTimes.Count > 2)
+                {
+                    minDateTime2 = orderedTimes.ElementAtOrDefault(2);
+                    maxDateTime2 = orderedTimes.LastOrDefault();
+
+                    if (minDateTime2 != DateTime.MinValue && maxDateTime2 == DateTime.MinValue) maxDateTime2 = minDateTime2;
+                }
+
+                var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday &&
+                                maxDateTime.DayOfWeek == DayOfWeek.Thursday;
+
+                var _farvardin = PersianDateHelper.GetWorkDays_Farvardin()
+                    .Any(d => d.Date == minDateTime.Date && d.Date == maxDateTime.Date);
 
                 var duration = maxDateTime - minDateTime;
 
-                TimeSpan lateMinutes = minDateTime.TimeOfDay > _lateTm
-                    ? (minDateTime.TimeOfDay - _lateTm)
-                    : new(0);
+                var duration2 = TimeSpan.Zero;
+                if (maxDateTime2 != null || minDateTime2 != null) duration2 = (TimeSpan)(maxDateTime2 - minDateTime2);
 
-                if (_thursday && duration > _fullwork_thursdayTm)
-                {
-                    overtime = duration - _fullwork_thursdayTm;
-                }
+                var totalDuration = duration + duration2;
 
-                //شرط فروردین اعمال کن فردا
-                else if (_farvardin && duration > _fullwork_farvardinTm)
-                {
-                    overtime = duration - _fullwork_farvardinTm;
-                    
-                }
+                var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60
+                    ? minDateTime.TimeOfDay - _lateTm
+                    : TimeSpan.Zero;
 
-                else if (duration > _fullworkTm)
-                {
-                    overtime = duration - _fullworkTm;
-                }
+                if (_thursday && totalDuration > _fullwork_thursdayTm)
+                    overtime = totalDuration - _fullwork_thursdayTm;
+
+                else if (_farvardin && totalDuration > _fullwork_farvardinTm)
+                    overtime = (totalDuration - _fullwork_farvardinTm)!;
+
+                else if (totalDuration > _fullworkTm) overtime = (totalDuration - _fullworkTm)!;
 
                 return new
                 {
                     DayOfWeek = g.Key.Date.ToString("dddd"),
                     Date = g.Key.Date.ToString("yyyy/MM/dd"),
-                    EntryTime = minDateTime.ToString("HH:mm:ss"),//datetime
+                    EntryTime = minDateTime.ToString("HH:mm:ss"), //datetime
                     ExitTime = maxDateTime.ToString("HH:mm:ss"),
-                    DurationMin = (int)Math.Round(duration.TotalMinutes, 0),
-                    DurationHour = $"{(int)duration.TotalHours:D2}h {duration.Minutes:D2}m",
-                    IsLate = minDateTime.TimeOfDay > _lateTm,
+                    EntryTime2 = minDateTime2?.ToString("HH:mm:ss"),
+                    ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
+                    DurationMin = totalDuration.TotalMinutes,
+                    DurationHour = $"{(int)totalDuration.TotalHours!:D2}h {totalDuration.Minutes:D2}m",
+                    IsLate = lateMinutes != TimeSpan.Zero,
                     LateMinutes = lateMinutes,
-                    Overtime = (overtime).ToString(@"hh\:mm\:ss"), //or: Overtime = @$"{(int)overtime.TotalHours:D2}:{overtime.Minutes:D2}:{overtime.Seconds:D2}",
-                    FullWork = (duration >= _fullworkTm) || (_thursday && duration > _fullwork_thursdayTm),
+                    Overtime = overtime.ToString(
+                        @"hh\:mm\:ss"), //or: Overtime = @$"{(int)overtime.TotalHours:D2}:{overtime.Minutes:D2}:{overtime.Seconds:D2}",
+                    FullWork = totalDuration >= _fullworkTm || (_thursday && totalDuration > _fullwork_thursdayTm) ||
+                               (_farvardin && totalDuration > _fullwork_farvardinTm),
+                    IsComplete = totalDuration.TotalMinutes < 60,
                 };
             })
             .ToList();
 
-
         // محاسبه مجموع تاخیر
         var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
-        lbl_sumlate.Text = $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}";
+        lbl_sumlate.Text =
+            $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}";
 
         // محاسبه مجموع اضافه ساعت کاری
         var totalOvertimeMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime).TotalMinutes));
-        lbl_sumaddworkhour.Text = $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}";
+        lbl_sumaddworkhour.Text =
+            $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}";
 
         // محاسبه مجموع ناقصی
-        var totalling = groupedData.Count(x => x.DurationMin < 30);
+        var totalling = groupedData.Count(x => x.DurationMin < 60);
         lbl_nofull.Text = totalling.ToString();
 
         // محاسبه مجموع دقایق کاری
         var totalMinutes = groupedData.Sum(x => x.DurationMin);
-        lbl_summinute.Text = totalMinutes.ToString("0") + @"m";
+        lbl_summinute.Text = totalMinutes.ToString("0") + @"m"; //رند  به سمت بالا
 
         // محاسبه میانگین ساعت ورود
         var entryTimes = groupedData
@@ -142,7 +165,7 @@ public partial class FrmCalc : Form
         lbl_avgexit.Text = avgExitTime.ToString(@"hh\:mm\:ss");
 
         // محاسبه مجموع روزهای کاری
-        lbl_sumdayworker.Text = groupedData.Count.ToString();
+        lbl_sumdayworker.Text = groupedData.Count().ToString();
 
         // محاسبه مجموع ساعت کاری
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
@@ -196,9 +219,9 @@ public partial class FrmCalc : Form
         lbl_avgtimework.Text = avgTimeSpan.ToString(@"hh\:mm\:ss");
 
 
-
-        Labels = new() {
-            { "مجموع روز های کاری", lbl_sumdayworker.Text },
+        Labels = new Dictionary<string, string>
+        {
+            {"مجموع روز های کاری", lbl_sumdayworker.Text},
             { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", lbl_fullwork.Text },
             { "مجموع ساعات کاری", lbl_sumhour.Text },
             { "مجموع دقایق کاری", lbl_summinute.Text },
@@ -212,8 +235,7 @@ public partial class FrmCalc : Form
             { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
             { "میانگین ساعت های ورود", lbl_avgentry.Text },
             { "میانگین ساعت های خروج", lbl_avgexit.Text },
-            { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text },
-
+            { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text }
         };
 
         dataView_calender.DataSource = groupedData.ToDataTable();
@@ -225,12 +247,15 @@ public partial class FrmCalc : Form
         dataView_calender.Columns[1].HeaderText = @"تاریخ";
         dataView_calender.Columns[2].HeaderText = @"ساعت ورود";
         dataView_calender.Columns[3].HeaderText = @"ساعت خروج";
-        dataView_calender.Columns[4].HeaderText = @"اختلاف به دقیقه";
-        dataView_calender.Columns[5].HeaderText = @"اختلاف به ساعت";
-        dataView_calender.Columns[6].HeaderText = @"ورود با تاخیر";
-        dataView_calender.Columns[7].HeaderText = @"اختلاف تاخیر به دقیقه";
-        dataView_calender.Columns[8].HeaderText = @"اختلاف اضافه کاری به ساعت";
-        dataView_calender.Columns[9].HeaderText = @"روز کاری کامل";
+        dataView_calender.Columns[4].HeaderText = @"ساعت ورود 2";
+        dataView_calender.Columns[5].HeaderText = @"ساعت خروج 2";
+        dataView_calender.Columns[6].HeaderText = @"حضور به دقیقه";
+        dataView_calender.Columns[7].HeaderText = @"حضور به ساعت";
+        dataView_calender.Columns[8].HeaderText = @"ورود با تاخیر";
+        dataView_calender.Columns[9].HeaderText = @"اختلاف تاخیر به دقیقه";
+        dataView_calender.Columns[10].HeaderText = @"اختلاف اضافه کاری به ساعت";
+        dataView_calender.Columns[11].HeaderText = @"روز کاری کامل";
+        dataView_calender.Columns[12].HeaderText = @"روز ناقص";
     }
 
     private void dataView_calender_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -254,6 +279,11 @@ public partial class FrmCalc : Form
     {
         if (dataView_calender.Rows[e.RowIndex].Cells["IsLate"].Value is true)
             dataView_calender.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
+
+        if (dataView_calender.Rows[e.RowIndex].Cells["IsComplete"].Value is true)
+            dataView_calender.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Orange;
+
+        //  dataView_calender.Columns[12]
     }
 
     private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -267,5 +297,4 @@ public partial class FrmCalc : Form
             CommonHelper.ShowMessage(ex);
         }
     }
-
 }

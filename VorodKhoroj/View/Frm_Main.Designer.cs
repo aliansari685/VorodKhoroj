@@ -32,7 +32,7 @@
             SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             گزارشToolStripMenuItem = new ToolStripMenuItem();
             مجموعToolStripMenuItem = new ToolStripMenuItem();
-            گزارشماهانهToolStripMenuItem = new ToolStripMenuItem();
+            MonthlyReportToolStripMenuItem = new ToolStripMenuItem();
             گزارشماهانهToolStripMenuItem1 = new ToolStripMenuItem();
             ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
@@ -49,6 +49,7 @@
             btn_clear = new Button();
             userid_txtbox = new ComboBox();
             dataView = new DataGridView();
+            اکسلسریعToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -75,7 +76,7 @@
             // 
             // گزارشToolStripMenuItem
             // 
-            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem, گزارشماهانهToolStripMenuItem, گزارشماهانهToolStripMenuItem1 });
+            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem, MonthlyReportToolStripMenuItem, گزارشماهانهToolStripMenuItem1, اکسلسریعToolStripMenuItem });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
             گزارشToolStripMenuItem.Size = new Size(59, 24);
@@ -84,21 +85,21 @@
             // مجموعToolStripMenuItem
             // 
             مجموعToolStripMenuItem.Name = "مجموعToolStripMenuItem";
-            مجموعToolStripMenuItem.Size = new Size(160, 24);
-            مجموعToolStripMenuItem.Text = "مجموع و اختلاف ";
+            مجموعToolStripMenuItem.Size = new Size(180, 24);
+            مجموعToolStripMenuItem.Text = "ریز جزییات";
             مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
             // 
-            // گزارشماهانهToolStripMenuItem
+            // MonthlyReportToolStripMenuItem
             // 
-            گزارشماهانهToolStripMenuItem.Name = "گزارشماهانهToolStripMenuItem";
-            گزارشماهانهToolStripMenuItem.Size = new Size(160, 24);
-            گزارشماهانهToolStripMenuItem.Text = "گزارش ماهانه";
-            گزارشماهانهToolStripMenuItem.Click += گزارشماهانهToolStripMenuItem_Click;
+            MonthlyReportToolStripMenuItem.Name = "MonthlyReportToolStripMenuItem";
+            MonthlyReportToolStripMenuItem.Size = new Size(180, 24);
+            MonthlyReportToolStripMenuItem.Text = "گزارش ماهانه";
+            MonthlyReportToolStripMenuItem.Click += MonthlyReportToolStripMenuItem_Click;
             // 
             // گزارشماهانهToolStripMenuItem1
             // 
             گزارشماهانهToolStripMenuItem1.Name = "گزارشماهانهToolStripMenuItem1";
-            گزارشماهانهToolStripMenuItem1.Size = new Size(160, 24);
+            گزارشماهانهToolStripMenuItem1.Size = new Size(180, 24);
             گزارشماهانهToolStripMenuItem1.Text = "گزارش روزانه";
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
@@ -141,7 +142,7 @@
             راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
             راهاندازیمجددToolStripMenuItem.Size = new Size(163, 24);
             راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
-            راهاندازیمجددToolStripMenuItem.Click += راهاندازیمجددToolStripMenuItem_Click;
+            راهاندازیمجددToolStripMenuItem.Click += AppRestartToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -240,6 +241,12 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
+            // اکسلسریعToolStripMenuItem
+            // 
+            اکسلسریعToolStripMenuItem.Name = "اکسلسریعToolStripMenuItem";
+            اکسلسریعToolStripMenuItem.Size = new Size(180, 24);
+            اکسلسریعToolStripMenuItem.Text = "گزارش سریع(اکسل)";
+            // 
             // Frm_Main
             // 
             AcceptButton = btn_applyfilter;
@@ -288,10 +295,11 @@
         private ToolStripMenuItem SettingToolStripMenuItem;
         private ToolStripMenuItem DBConfigToolStripMenuItem;
         private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;
-        private ToolStripMenuItem گزارشماهانهToolStripMenuItem;
+        private ToolStripMenuItem MonthlyReportToolStripMenuItem;
         private ToolStripMenuItem گزارشماهانهToolStripMenuItem1;
         private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشکاربرانToolStripMenuItem;
+        private ToolStripMenuItem اکسلسریعToolStripMenuItem;
     }
 }

@@ -123,6 +123,50 @@ namespace VorodKhoroj.Classes
             }
         }
 
+        public static void DataToExcel(DataGridView dataGridView)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" })
+                {
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        using (ExcelPackage package = new())
+                        {
+                            using (ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Data"))
+                            {
+                                // افزودن عنوان ستون‌ها
+                                for (int i = 0; i < dataGridView.Columns.Count; i++)
+                                {
+                                    worksheet.Cells[1, i + 1].Value = dataGridView.Columns[i].HeaderText;
+                                }
+
+                                // افزودن داده‌های DataGridView
+                                for (int i = 0; i < dataGridView.Rows.Count; i++)
+                                {
+                                    for (int j = 0; j < dataGridView.Columns.Count; j++)
+                                    {
+                                        worksheet.Cells[i + 2, j + 1].Value =
+                                            dataGridView.Rows[i].Cells[j].Value?.ToString();
+                                    }
+                                }
+
+                                // ذخیره فایل
+                                File.WriteAllBytes(sfd.FileName, package.GetAsByteArray());
+                                CommonHelper.ShowMessage("فایل اکسل با موفقیت ذخیره شد!");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+
         public static DataTable ToDataTable<T>(this List<T> list)
         {
             try
@@ -158,9 +202,5 @@ namespace VorodKhoroj.Classes
             }
         }
     }
-    public class Holiday
-    {
-        public string Title { get; set; }
-        public DateTime Date { get; set; }
-    }
+
 }

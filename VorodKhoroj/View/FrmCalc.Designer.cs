@@ -326,16 +326,16 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(844, 11);
+            label2.Location = new Point(839, 11);
             label2.Name = "label2";
-            label2.Size = new Size(114, 20);
+            label2.Size = new Size(119, 20);
             label2.TabIndex = 4;
-            label2.Text = "مجموع روز های کاری :";
+            label2.Text = "مجموع روز های حضور :";
             // 
             // lbl_sumdayworker
             // 
             lbl_sumdayworker.AutoSize = true;
-            lbl_sumdayworker.Location = new Point(802, 11);
+            lbl_sumdayworker.Location = new Point(800, 11);
             lbl_sumdayworker.Name = "lbl_sumdayworker";
             lbl_sumdayworker.Size = new Size(37, 20);
             lbl_sumdayworker.TabIndex = 5;
@@ -344,7 +344,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(710, 11);
+            label5.Location = new Point(708, 11);
             label5.Name = "label5";
             label5.Size = new Size(85, 20);
             label5.TabIndex = 6;
@@ -568,7 +568,7 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(970, 371);
+            dataView_late.Size = new Size(970, 366);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += dataView_calender_RowPostPaint;
@@ -584,10 +584,10 @@
             tabPage_.Controls.Add(txtbox_late);
             tabPage_.Controls.Add(label3);
             tabPage_.Controls.Add(btn_submit);
-            tabPage_.Location = new Point(4, 29);
+            tabPage_.Location = new Point(4, 24);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(976, 466);
+            tabPage_.Size = new Size(976, 471);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
