@@ -8,11 +8,12 @@
         public FrmFilter_Monthly(AppServices services)
         {
             InitializeComponent();
-            _services= services;
+            _services = services;
         }
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-
+            userid_txtbox.DataSource = _services?.LoadUsers();
+         
         }
         private void btn_clear_Click(object sender, EventArgs e)
         {

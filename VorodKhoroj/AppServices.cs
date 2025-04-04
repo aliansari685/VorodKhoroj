@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj
+﻿using System.Runtime.InteropServices.JavaScript;
+
+namespace VorodKhoroj
 {
     public class AppServices : IDisposable
     {
@@ -23,6 +25,12 @@
         {
             Records = _repository.GetRecordsFromFile(fileName);
         }
+
+        public int[] LoadUsers()
+        {
+            return _repository.GetUsersAttendances(Records);
+        }
+
 
         public void LoadRecordsFromDb()
         {

@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using System.Diagnostics;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -8,12 +10,11 @@ public partial class FrmCalc : Form
 
     private List<DateTime> _qeybathaDaysList = [];
     private List<DateTime> _holidaysDaysList;
-    private readonly string _fromDateTime, _toDateTime, _userid;
+    private string _fromDateTime, _toDateTime, _userid;
     private readonly AppServices _service;
 
     private TimeSpan _lateTm = new(08, 30, 00);
 
-    //  private TimeSpan _late_exitTm = new(16, 45, 00);
     private TimeSpan _fullworkTm = new(08, 30, 00);
     private TimeSpan _fullwork_thursdayTm = new(05, 30, 00);
     private TimeSpan _fullwork_farvardinTm = new(07, 45, 00);
@@ -30,8 +31,6 @@ public partial class FrmCalc : Form
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        lbl_FromTo.Text = @$"{_fromDateTime} تا {_toDateTime}";
-        lbl_user.Text = _userid;
         DataGridConfig();
     }
 
@@ -39,77 +38,86 @@ public partial class FrmCalc : Form
     {
         try
         {
+            lbl_FromTo.Text = @$"{_fromDateTime} تا {_toDateTime}";
             CalculatorData();
+            userid_txtbox.DataSource = _service?.LoadUsers();
+            userid_txtbox.Text = _userid;
             DataGridViewConfig();
             Part2_Load();
         }
         catch (Exception ex)
         {
             CommonHelper.ShowMessage(ex);
-            Close();
+            dataView_calender.DataSource = null;
         }
     }
 
     public void CalculatorData()
     {
-        var dataFiltered
-            = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
-        if (dataFiltered.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+        Stopwatch st = new();
 
+        var filtered = DataFilterService.ApplyFilter(_service.Records, _fromDateTime, _toDateTime, int.Parse(_userid));
+
+        if (filtered?.Any() == false)
+            throw new ArgumentNullException("داده ای وجود ندارد");
+
+        var dataFiltered = filtered?.Select(x => new { x.UserId, x.DateTime })
+            .OrderBy(x => x.DateTime);
+
+        st.Restart(); // تست کن
 
         var groupedData = dataFiltered
             .GroupBy(x => (x.UserId, x.DateTime.Date))
             .Select(g =>
             {
-                TimeSpan overtime = new(0);
+                var overtime = TimeSpan.Zero;
+                var kasri = TimeSpan.Zero;
 
-                var orderedTimes = g.Select(x => x.DateTime).OrderBy(dt => dt).ToList();
+                var orderedTimes = g.Select(x => x.DateTime).ToArray();
+                if (orderedTimes.Length == 0) return null; // بررسی لیست که خالی نباشه
 
-                // بررسی لیست که خالی نباشه
-                if (!orderedTimes.Any())
-                    return null; // یا هر مقدار پیش‌فرض دیگه‌ای که مناسب باشه
+                // تعیین اولین و آخرین ورود و خروج
+                var minDateTime = orderedTimes.First();
+                var maxDateTime = orderedTimes.ElementAtOrDefault(1);
+                if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // جلوگیری از مقدار نامعتبر
 
-                // اولین ورود و خروج
-                var minDateTime = orderedTimes.FirstOrDefault();
-                var maxDateTime = orderedTimes.ElementAtOrDefault(1); // به جای FirstOrDefault()
 
-                if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // 0 دقیقه کار
+                DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
+                DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
 
-                DateTime? minDateTime2 = null;
-                DateTime? maxDateTime2 = null;
+                // بررسی پنجشنبه 
+                var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
 
-                if (orderedTimes.Count > 2)
-                {
-                    minDateTime2 = orderedTimes.ElementAtOrDefault(2);
-                    maxDateTime2 = orderedTimes.LastOrDefault();
+                //  فروردین
+                var isFarvardin = PersianDateHelper.GetWorkDays_Farvardin()
+                    .Any(d => d.Date == minDateTime.Date);
 
-                    if (minDateTime2 != DateTime.MinValue && maxDateTime2 == DateTime.MinValue) maxDateTime2 = minDateTime2;
-                }
-
-                var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday &&
-                                maxDateTime.DayOfWeek == DayOfWeek.Thursday;
-
-                var _farvardin = PersianDateHelper.GetWorkDays_Farvardin()
-                    .Any(d => d.Date == minDateTime.Date && d.Date == maxDateTime.Date);
-
+                // محاسبه زمان حضور
                 var duration = maxDateTime - minDateTime;
-
-                var duration2 = TimeSpan.Zero;
-                if (maxDateTime2 != null || minDateTime2 != null) duration2 = (TimeSpan)(maxDateTime2 - minDateTime2);
+                var duration2 = minDateTime2.HasValue && maxDateTime2.HasValue
+                    ? maxDateTime2.Value - minDateTime2.Value
+                    : TimeSpan.Zero;
 
                 var totalDuration = duration + duration2;
 
+                // محاسبه تأخیر
                 var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60
                     ? minDateTime.TimeOfDay - _lateTm
                     : TimeSpan.Zero;
 
-                if (_thursday && totalDuration > _fullwork_thursdayTm)
-                    overtime = totalDuration - _fullwork_thursdayTm;
+                // تعیین ساعت کار استاندارد برای مقایسه
+                var standardWorkTime = isThursday ? _fullwork_thursdayTm
+                    : isFarvardin ? _fullwork_farvardinTm
+                    : _fullworkTm;
 
-                else if (_farvardin && totalDuration > _fullwork_farvardinTm)
-                    overtime = (totalDuration - _fullwork_farvardinTm)!;
+                // محاسبه اضافه‌کار و کسری‌کار
+                if (totalDuration > standardWorkTime)
+                    overtime = totalDuration - standardWorkTime;
+                else if (totalDuration < standardWorkTime)
+                    kasri = standardWorkTime - totalDuration;
 
-                else if (totalDuration > _fullworkTm) overtime = (totalDuration - _fullworkTm)!;
+                // بررسی تکمیل بودن ساعت کار
+                var fullWork = totalDuration >= standardWorkTime;
 
                 return new
                 {
@@ -123,14 +131,15 @@ public partial class FrmCalc : Form
                     DurationHour = $"{(int)totalDuration.TotalHours!:D2}h {totalDuration.Minutes:D2}m",
                     IsLate = lateMinutes != TimeSpan.Zero,
                     LateMinutes = lateMinutes,
-                    Overtime = overtime.ToString(
-                        @"hh\:mm\:ss"), //or: Overtime = @$"{(int)overtime.TotalHours:D2}:{overtime.Minutes:D2}:{overtime.Seconds:D2}",
-                    FullWork = totalDuration >= _fullworkTm || (_thursday && totalDuration > _fullwork_thursdayTm) ||
-                               (_farvardin && totalDuration > _fullwork_farvardinTm),
-                    IsComplete = totalDuration.TotalMinutes < 60,
+                    Overtime = overtime.ToString(@"hh\:mm\:ss"), //timespan
+                    FullWork = fullWork,
+                    IsKasri = kasri.TotalMinutes,
+                    IsComplete = totalDuration.TotalMinutes < 60
                 };
-            })
-            .ToList();
+            }).ToArray();
+
+        st.Stop();
+        Log.Information(st.ElapsedMilliseconds.ToString());
 
         // محاسبه مجموع تاخیر
         var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
@@ -164,9 +173,6 @@ public partial class FrmCalc : Form
         var avgExitTime = TimeSpan.FromTicks((long)exitTimes.Average(t => t.Ticks));
         lbl_avgexit.Text = avgExitTime.ToString(@"hh\:mm\:ss");
 
-        // محاسبه مجموع روزهای کاری
-        lbl_sumdayworker.Text = groupedData.Count().ToString();
-
         // محاسبه مجموع ساعت کاری
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
         lbl_sumhour.Text = $@"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}";
@@ -197,9 +203,12 @@ public partial class FrmCalc : Form
         var absenceCount = absence.Count();
         lbl_sumOff.Text = absenceCount.ToString();
 
+        //لیست تعطیلات و غیبت ها
         _qeybathaDaysList = absence.ToList();
-
         _holidaysDaysList = workDays.Where(day => holidays.Contains(day)).ToList();
+
+        // محاسبه مجموع روزهای کاری
+        lbl_sumdayworker.Text = @$"{groupedData?.Count()} از {groupedData.Count() + absenceCount}";
 
         //اضافه کاری
         var overtimeCount = presentDays.Count(day => holidays.Contains(day));
@@ -214,10 +223,17 @@ public partial class FrmCalc : Form
         lbl_MaxExitTime.Text = maxExitTime.ToString(@"hh\:mm\:ss");
 
         //میانگین ساعت کاری
-        var avgMinutes = totalMinutes / groupedData.Count;
+        var avgMinutes = totalMinutes / groupedData.Count();
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
         lbl_avgtimework.Text = avgTimeSpan.ToString(@"hh\:mm\:ss");
 
+        //محاسبه کسری
+        var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.IsKasri));
+        lbl_sumkasri.Text = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}";
+
+        //محاسبه تعدیل
+        var tadil = totalOvertimeMinutes - kasriTime;
+        lbl_tadil.Text = $@"{(int)tadil.TotalHours:D2}:{tadil.Minutes:D2}:{tadil.Seconds:D2}";
 
         Labels = new Dictionary<string, string>
         {
@@ -235,10 +251,12 @@ public partial class FrmCalc : Form
             { "دیرترین زمان خروج", lbl_MaxExitTime.Text },
             { "میانگین ساعت های ورود", lbl_avgentry.Text },
             { "میانگین ساعت های خروج", lbl_avgexit.Text },
-            { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text }
+            { "میانگین ساعت کاری روزانه", lbl_avgtimework.Text },
+            { "مقدار کسری به ساعت", lbl_sumkasri.Text },
+            { "مقدار تعدیل یا اضافه ساعت کاری خالص", lbl_tadil.Text },
         };
 
-        dataView_calender.DataSource = groupedData.ToDataTable();
+        dataView_calender.DataSource = groupedData.ToList().ToDataTable();
     }
 
     private void DataGridViewConfig()
@@ -255,7 +273,8 @@ public partial class FrmCalc : Form
         dataView_calender.Columns[9].HeaderText = @"اختلاف تاخیر به دقیقه";
         dataView_calender.Columns[10].HeaderText = @"اختلاف اضافه کاری به ساعت";
         dataView_calender.Columns[11].HeaderText = @"روز کاری کامل";
-        dataView_calender.Columns[12].HeaderText = @"روز ناقص";
+        dataView_calender.Columns[12].HeaderText = @"مقدار کسری";
+        //     dataView_calender.Columns[13].HeaderText = @"روز ناقص";
     }
 
     private void dataView_calender_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -283,7 +302,6 @@ public partial class FrmCalc : Form
         if (dataView_calender.Rows[e.RowIndex].Cells["IsComplete"].Value is true)
             dataView_calender.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Orange;
 
-        //  dataView_calender.Columns[12]
     }
 
     private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -297,4 +315,105 @@ public partial class FrmCalc : Form
             CommonHelper.ShowMessage(ex);
         }
     }
+
+    private void btn_next_Click(object sender, EventArgs e)
+    {
+        //var t = arr.Where(x => x.UserId == 100);
+        var now = Array.IndexOf(_service.LoadUsers(), int.Parse(_userid));
+        now += 1;
+        _userid = _service.LoadUsers()[now].ToString();
+        ChangeUser();
+    }
+    private void btn_perv_Click(object sender, EventArgs e)
+    {
+        var now = Array.IndexOf(_service.LoadUsers(), int.Parse(_userid));
+        now--;
+        _userid = _service.LoadUsers()[now].ToString();
+        ChangeUser();
+    }
+    private void userid_txtbox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyData == Keys.Enter)
+        {
+            _userid = userid_txtbox.Text;
+            ChangeUser();
+        }
+    }
+
+    private void ChangeUser()
+    {
+
+        //Task.Run(() =>
+        //  {
+        DataGridConfig();
+        // });
+    }
+
+
 }
+//old:
+//         TimeSpan overtime = TimeSpan.Zero;
+//    TimeSpan kasri = TimeSpan.Zero;
+
+//    var orderedTimes = g.Select(x => x.DateTime).OrderBy(dt => dt).ToList();
+
+//                // بررسی لیست که خالی نباشه
+//                if (!orderedTimes.Any())
+//                    return null; // یا هر مقدار پیش‌فرض دیگه‌ای که مناسب باشه
+
+//                // اولین ورود و خروج
+//                var minDateTime = orderedTimes.FirstOrDefault();
+//var maxDateTime = orderedTimes.ElementAtOrDefault(1); // به جای FirstOrDefault()
+
+//                if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // 0 دقیقه کار
+
+//                DateTime? minDateTime2 = null;
+//DateTime? maxDateTime2 = null;
+
+//                if (orderedTimes.Count > 2)
+//                {
+//                    minDateTime2 = orderedTimes.ElementAtOrDefault(2);
+//                    maxDateTime2 = orderedTimes.LastOrDefault();
+
+//                    if (minDateTime2 != DateTime.MinValue && maxDateTime2 == DateTime.MinValue) maxDateTime2 = minDateTime2;
+//                }
+
+//                var _thursday = minDateTime.DayOfWeek == DayOfWeek.Thursday &&
+//                                maxDateTime.DayOfWeek == DayOfWeek.Thursday;
+
+//var _farvardin = PersianDateHelper.GetWorkDays_Farvardin()
+//    .Any(d => d.Date == minDateTime.Date && d.Date == maxDateTime.Date);
+
+//var duration = maxDateTime - minDateTime;
+
+//var duration2 = TimeSpan.Zero;
+//if (maxDateTime2 != null && minDateTime2 != null) duration2 = (TimeSpan)(maxDateTime2 - minDateTime2);
+
+//var totalDuration = duration + duration2;
+
+//var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60
+//    ? minDateTime.TimeOfDay - _lateTm
+//    : TimeSpan.Zero;
+
+////Overtime:
+//if (_thursday && totalDuration > _fullwork_thursdayTm)
+//    overtime = totalDuration - _fullwork_thursdayTm;
+
+//else if (_farvardin && totalDuration > _fullwork_farvardinTm)
+//    overtime = (totalDuration - _fullwork_farvardinTm)!;
+
+//else if (totalDuration > _fullworkTm) overtime = (totalDuration - _fullworkTm)!;
+
+////Kasri:
+//if (_thursday && totalDuration < _fullwork_thursdayTm)
+//    kasri = totalDuration - _fullwork_thursdayTm;
+
+//else if (_farvardin && totalDuration < _fullwork_farvardinTm)
+//    kasri = (totalDuration - _fullwork_farvardinTm)!;
+
+//else if (totalDuration < _fullworkTm) kasri = (totalDuration - _fullworkTm)!;
+
+
+
+//var fullWork = totalDuration >= _fullworkTm || (_thursday && totalDuration >= _fullwork_thursdayTm) ||
+//               (_farvardin && totalDuration >= _fullwork_farvardinTm);

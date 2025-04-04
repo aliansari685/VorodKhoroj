@@ -8,6 +8,11 @@
             Finger = 1
         }
 
+        public int[] GetUsersAttendances(List<Attendance> list)
+        {
+            return list.Select(x => x.UserId).Distinct().ToArray();
+        }
+
         public string LoginType_String(string number)
         {
             var num = int.Parse(number);

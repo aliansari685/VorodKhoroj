@@ -3,7 +3,7 @@
 public partial class Frm_Main : Form
 {
     private readonly AppServices _services;
-    public Attendance[] Array;
+
     private DataTable _temp;
 
     public Frm_Main(AppServices services)
@@ -25,7 +25,7 @@ public partial class Frm_Main : Form
             ? _temp = _services?.Records?.ToDataTable()
             : _temp;
         DataGridViewConfig();
-        userid_txtbox.Items.AddRange(Array = _services.Records.DistinctBy(x => x.UserId).ToArray());
+        userid_txtbox.DataSource = _services?.LoadUsers();
 
     }
 
@@ -43,9 +43,8 @@ public partial class Frm_Main : Form
 
         try
         {
-            DataGridConfig();
             dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
-                toDateTime_txtbox.Text, int.Parse(userid_txtbox.Text)).ToDataTable();
+                toDateTime_txtbox.Text, int.Parse(userid_txtbox.Text)).ToList().ToDataTable();
             DataGridViewConfig();
         }
         catch (Exception ex)
@@ -68,6 +67,7 @@ public partial class Frm_Main : Form
 
     private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        //Go To FrmFilter:
         try
         {
             if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
@@ -76,7 +76,7 @@ public partial class Frm_Main : Form
             {
                 frm.FromDateTime_txtbox.Text = FromDateTime_txtbox.Text;
                 frm.toDateTime_txtbox.Text = toDateTime_txtbox.Text;
-                frm.userid_txtbox.Items.AddRange(Array);
+                frm.userid_txtbox.Text = userid_txtbox.Text;
                 frm.ShowDialog();
             }
         }
@@ -144,9 +144,9 @@ public partial class Frm_Main : Form
 
     private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using (FrmFilter_Monthly frm=new(_services))
+        using (FrmFilter_Monthly frm = new(_services))
         {
-            frm.userid_txtbox.Items.AddRange(Array);
+            frm.userid_txtbox.Text = userid_txtbox.Text;
 
             frm.ShowDialog();
         }

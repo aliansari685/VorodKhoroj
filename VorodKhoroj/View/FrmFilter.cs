@@ -30,4 +30,9 @@ public partial class FrmFilter : Form
         FromDateTime_txtbox.Text = userid_txtbox.Text = "";
         toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
     }
+
+    private void FrmFilter_Load(object sender, EventArgs e)
+    {
+        userid_txtbox.DataSource = _services?.LoadUsers();
+    }
 }

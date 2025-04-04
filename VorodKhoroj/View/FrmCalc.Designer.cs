@@ -29,7 +29,15 @@
         private void InitializeComponent()
         {
             tabpage_detailvorodkhoroj = new TabPage();
+            btn_perv = new Button();
+            btn_next = new Button();
+            userid_txtbox = new ComboBox();
+            label19 = new Label();
             panel1 = new Panel();
+            lbl_tadil = new Label();
+            label22 = new Label();
+            lbl_sumkasri = new Label();
+            label16 = new Label();
             lbl_sumlate = new Label();
             label17 = new Label();
             label18 = new Label();
@@ -61,8 +69,6 @@
             label11 = new Label();
             lbl_avgentry = new Label();
             lbl_FromTo = new Label();
-            lbl_user = new Label();
-            label1 = new Label();
             dataView_calender = new DataGridView();
             menuStrip2 = new MenuStrip();
             OutputExcelToolStripMenuItem = new ToolStripMenuItem();
@@ -74,15 +80,16 @@
             radioButton_qeybat = new RadioButton();
             dataView_late = new DataGridView();
             tabPage_ = new TabPage();
+            groupBox2 = new GroupBox();
+            txtbox_late = new MaskedTextBox();
             txtbox_fullwork_farvardin = new MaskedTextBox();
+            btn_submit = new Button();
             label23 = new Label();
+            label3 = new Label();
             txtbox_fullwork_thursday = new MaskedTextBox();
+            label20 = new Label();
             label21 = new Label();
             txtbox_fullwork = new MaskedTextBox();
-            label20 = new Label();
-            txtbox_late = new MaskedTextBox();
-            label3 = new Label();
-            btn_submit = new Button();
             tabpage_detailvorodkhoroj.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_calender).BeginInit();
@@ -92,27 +99,78 @@
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_late).BeginInit();
             tabPage_.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // tabpage_detailvorodkhoroj
             // 
             tabpage_detailvorodkhoroj.BackColor = Color.Transparent;
+            tabpage_detailvorodkhoroj.Controls.Add(btn_perv);
+            tabpage_detailvorodkhoroj.Controls.Add(btn_next);
+            tabpage_detailvorodkhoroj.Controls.Add(userid_txtbox);
+            tabpage_detailvorodkhoroj.Controls.Add(label19);
             tabpage_detailvorodkhoroj.Controls.Add(panel1);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_FromTo);
-            tabpage_detailvorodkhoroj.Controls.Add(lbl_user);
-            tabpage_detailvorodkhoroj.Controls.Add(label1);
             tabpage_detailvorodkhoroj.Controls.Add(dataView_calender);
             tabpage_detailvorodkhoroj.Controls.Add(menuStrip2);
             tabpage_detailvorodkhoroj.Location = new Point(4, 29);
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(976, 466);
+            tabpage_detailvorodkhoroj.Size = new Size(1058, 501);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
+            // btn_perv
+            // 
+            btn_perv.Location = new Point(307, 35);
+            btn_perv.Name = "btn_perv";
+            btn_perv.Size = new Size(44, 27);
+            btn_perv.TabIndex = 26;
+            btn_perv.Text = "قبلی";
+            btn_perv.UseVisualStyleBackColor = true;
+            btn_perv.Click += btn_perv_Click;
+            // 
+            // btn_next
+            // 
+            btn_next.Location = new Point(446, 35);
+            btn_next.Name = "btn_next";
+            btn_next.Size = new Size(44, 27);
+            btn_next.TabIndex = 25;
+            btn_next.Text = "بعدی";
+            btn_next.UseVisualStyleBackColor = true;
+            btn_next.Click += btn_next_Click;
+            // 
+            // userid_txtbox
+            // 
+            userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            userid_txtbox.DisplayMember = "userid";
+            userid_txtbox.Font = new Font("IRANSans", 8.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            userid_txtbox.FormattingEnabled = true;
+            userid_txtbox.Location = new Point(358, 36);
+            userid_txtbox.Name = "userid_txtbox";
+            userid_txtbox.Size = new Size(82, 27);
+            userid_txtbox.TabIndex = 24;
+            userid_txtbox.KeyDown += userid_txtbox_KeyDown;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("IRANSans", 8.5F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label19.Location = new Point(496, 39);
+            label19.Name = "label19";
+            label19.RightToLeft = RightToLeft.Yes;
+            label19.Size = new Size(47, 20);
+            label19.TabIndex = 23;
+            label19.Text = "کد کاربر:";
+            // 
             // panel1
             // 
+            panel1.Controls.Add(lbl_tadil);
+            panel1.Controls.Add(label22);
+            panel1.Controls.Add(lbl_sumkasri);
+            panel1.Controls.Add(label16);
             panel1.Controls.Add(lbl_sumlate);
             panel1.Controls.Add(label17);
             panel1.Controls.Add(label18);
@@ -143,15 +201,56 @@
             panel1.Controls.Add(label9);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(lbl_avgentry);
-            panel1.Location = new Point(8, 36);
+            panel1.Location = new Point(8, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(961, 113);
+            panel1.Size = new Size(1044, 113);
             panel1.TabIndex = 21;
+            // 
+            // lbl_tadil
+            // 
+            lbl_tadil.AutoSize = true;
+            lbl_tadil.Font = new Font("IRANSans", 8.5F);
+            lbl_tadil.Location = new Point(3, 46);
+            lbl_tadil.Name = "lbl_tadil";
+            lbl_tadil.Size = new Size(57, 20);
+            lbl_tadil.TabIndex = 41;
+            lbl_tadil.Text = "16:59:59";
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new Font("IRANSans", 8.5F);
+            label22.Location = new Point(62, 46);
+            label22.Name = "label22";
+            label22.Size = new Size(112, 20);
+            label22.TabIndex = 40;
+            label22.Text = "تعدیل(اضافه-کسری):";
+            // 
+            // lbl_sumkasri
+            // 
+            lbl_sumkasri.AutoSize = true;
+            lbl_sumkasri.Font = new Font("IRANSans", 8.5F);
+            lbl_sumkasri.Location = new Point(28, 11);
+            lbl_sumkasri.Name = "lbl_sumkasri";
+            lbl_sumkasri.Size = new Size(57, 20);
+            lbl_sumkasri.TabIndex = 39;
+            lbl_sumkasri.Text = "16:59:59";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("IRANSans", 8.5F);
+            label16.Location = new Point(92, 11);
+            label16.Name = "label16";
+            label16.Size = new Size(78, 20);
+            label16.TabIndex = 38;
+            label16.Text = "مجموع کسری:";
             // 
             // lbl_sumlate
             // 
             lbl_sumlate.AutoSize = true;
-            lbl_sumlate.Location = new Point(295, 46);
+            lbl_sumlate.Font = new Font("IRANSans", 8.5F);
+            lbl_sumlate.Location = new Point(375, 46);
             lbl_sumlate.Name = "lbl_sumlate";
             lbl_sumlate.Size = new Size(57, 20);
             lbl_sumlate.TabIndex = 37;
@@ -160,7 +259,8 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(358, 46);
+            label17.Font = new Font("IRANSans", 8.5F);
+            label17.Location = new Point(438, 46);
             label17.Name = "label17";
             label17.Size = new Size(118, 20);
             label17.TabIndex = 36;
@@ -169,7 +269,8 @@
             // label18
             // 
             label18.AutoSize = true;
-            label18.Location = new Point(155, 46);
+            label18.Font = new Font("IRANSans", 8.5F);
+            label18.Location = new Point(235, 46);
             label18.Name = "label18";
             label18.Size = new Size(134, 20);
             label18.TabIndex = 34;
@@ -178,16 +279,18 @@
             // lbl_sumaddworkhour
             // 
             lbl_sumaddworkhour.AutoSize = true;
-            lbl_sumaddworkhour.Location = new Point(92, 46);
+            lbl_sumaddworkhour.Font = new Font("IRANSans", 8.5F);
+            lbl_sumaddworkhour.Location = new Point(175, 46);
             lbl_sumaddworkhour.Name = "lbl_sumaddworkhour";
-            lbl_sumaddworkhour.Size = new Size(57, 20);
+            lbl_sumaddworkhour.Size = new Size(64, 20);
             lbl_sumaddworkhour.TabIndex = 35;
-            lbl_sumaddworkhour.Text = "16:59:59";
+            lbl_sumaddworkhour.Text = "168:59:59";
             // 
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(664, 46);
+            label15.Font = new Font("IRANSans", 8.5F);
+            label15.Location = new Point(744, 46);
             label15.Name = "label15";
             label15.Size = new Size(93, 20);
             label15.TabIndex = 32;
@@ -196,7 +299,8 @@
             // lbl_nofull
             // 
             lbl_nofull.AutoSize = true;
-            lbl_nofull.Location = new Point(642, 46);
+            lbl_nofull.Font = new Font("IRANSans", 8.5F);
+            lbl_nofull.Location = new Point(723, 46);
             lbl_nofull.Name = "lbl_nofull";
             lbl_nofull.Size = new Size(16, 20);
             lbl_nofull.TabIndex = 33;
@@ -206,7 +310,8 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(525, 46);
+            label12.Font = new Font("IRANSans", 8.5F);
+            label12.Location = new Point(605, 46);
             label12.Name = "label12";
             label12.Size = new Size(111, 20);
             label12.TabIndex = 30;
@@ -215,7 +320,8 @@
             // lbl_fullwork
             // 
             lbl_fullwork.AutoSize = true;
-            lbl_fullwork.Location = new Point(482, 46);
+            lbl_fullwork.Font = new Font("IRANSans", 8.5F);
+            lbl_fullwork.Location = new Point(562, 46);
             lbl_fullwork.Name = "lbl_fullwork";
             lbl_fullwork.Size = new Size(37, 20);
             lbl_fullwork.TabIndex = 31;
@@ -225,7 +331,8 @@
             // lbl_MaxExitTime
             // 
             lbl_MaxExitTime.AutoSize = true;
-            lbl_MaxExitTime.Location = new Point(212, 81);
+            lbl_MaxExitTime.Font = new Font("IRANSans", 8.5F);
+            lbl_MaxExitTime.Location = new Point(292, 81);
             lbl_MaxExitTime.Name = "lbl_MaxExitTime";
             lbl_MaxExitTime.Size = new Size(57, 20);
             lbl_MaxExitTime.TabIndex = 29;
@@ -234,7 +341,8 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(275, 81);
+            label14.Font = new Font("IRANSans", 8.5F);
+            label14.Location = new Point(355, 81);
             label14.Name = "label14";
             label14.Size = new Size(103, 20);
             label14.TabIndex = 28;
@@ -243,7 +351,8 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(785, 46);
+            label10.Font = new Font("IRANSans", 8.5F);
+            label10.Location = new Point(865, 46);
             label10.Name = "label10";
             label10.Size = new Size(173, 20);
             label10.TabIndex = 26;
@@ -252,7 +361,8 @@
             // lbl_sumaddwork
             // 
             lbl_sumaddwork.AutoSize = true;
-            lbl_sumaddwork.Location = new Point(763, 46);
+            lbl_sumaddwork.Font = new Font("IRANSans", 8.5F);
+            lbl_sumaddwork.Location = new Point(843, 46);
             lbl_sumaddwork.Name = "lbl_sumaddwork";
             lbl_sumaddwork.Size = new Size(16, 20);
             lbl_sumaddwork.TabIndex = 27;
@@ -262,7 +372,8 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(615, 81);
+            label6.Font = new Font("IRANSans", 8.5F);
+            label6.Location = new Point(695, 81);
             label6.Name = "label6";
             label6.Size = new Size(137, 20);
             label6.TabIndex = 24;
@@ -271,7 +382,8 @@
             // lbl_avgtimework
             // 
             lbl_avgtimework.AutoSize = true;
-            lbl_avgtimework.Location = new Point(552, 81);
+            lbl_avgtimework.Font = new Font("IRANSans", 8.5F);
+            lbl_avgtimework.Location = new Point(632, 81);
             lbl_avgtimework.Name = "lbl_avgtimework";
             lbl_avgtimework.Size = new Size(57, 20);
             lbl_avgtimework.TabIndex = 25;
@@ -280,7 +392,8 @@
             // lbl_minEntry
             // 
             lbl_minEntry.AutoSize = true;
-            lbl_minEntry.Location = new Point(384, 81);
+            lbl_minEntry.Font = new Font("IRANSans", 8.5F);
+            lbl_minEntry.Location = new Point(464, 81);
             lbl_minEntry.Name = "lbl_minEntry";
             lbl_minEntry.Size = new Size(57, 20);
             lbl_minEntry.TabIndex = 23;
@@ -289,7 +402,8 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(447, 81);
+            label8.Font = new Font("IRANSans", 8.5F);
+            label8.Location = new Point(527, 81);
             label8.Name = "label8";
             label8.Size = new Size(99, 20);
             label8.TabIndex = 22;
@@ -298,7 +412,8 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(117, 11);
+            label4.Font = new Font("IRANSans", 8.5F);
+            label4.Location = new Point(210, 11);
             label4.Name = "label4";
             label4.Size = new Size(139, 20);
             label4.TabIndex = 20;
@@ -307,17 +422,19 @@
             // lbl_sumOff
             // 
             lbl_sumOff.AutoSize = true;
-            lbl_sumOff.Location = new Point(94, 11);
+            lbl_sumOff.Font = new Font("IRANSans", 8.5F);
+            lbl_sumOff.Location = new Point(175, 11);
             lbl_sumOff.Name = "lbl_sumOff";
-            lbl_sumOff.Size = new Size(16, 20);
+            lbl_sumOff.Size = new Size(30, 20);
             lbl_sumOff.TabIndex = 21;
-            lbl_sumOff.Text = "0";
+            lbl_sumOff.Text = "100";
             lbl_sumOff.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(311, 11);
+            label13.Font = new Font("IRANSans", 8.5F);
+            label13.Location = new Point(404, 11);
             label13.Name = "label13";
             label13.Size = new Size(147, 20);
             label13.TabIndex = 14;
@@ -326,7 +443,8 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(839, 11);
+            label2.Font = new Font("IRANSans", 8.5F);
+            label2.Location = new Point(919, 11);
             label2.Name = "label2";
             label2.Size = new Size(119, 20);
             label2.TabIndex = 4;
@@ -335,7 +453,8 @@
             // lbl_sumdayworker
             // 
             lbl_sumdayworker.AutoSize = true;
-            lbl_sumdayworker.Location = new Point(800, 11);
+            lbl_sumdayworker.Font = new Font("IRANSans", 8.5F);
+            lbl_sumdayworker.Location = new Point(856, 11);
             lbl_sumdayworker.Name = "lbl_sumdayworker";
             lbl_sumdayworker.Size = new Size(37, 20);
             lbl_sumdayworker.TabIndex = 5;
@@ -344,7 +463,8 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(708, 11);
+            label5.Font = new Font("IRANSans", 8.5F);
+            label5.Location = new Point(772, 11);
             label5.Name = "label5";
             label5.Size = new Size(85, 20);
             label5.TabIndex = 6;
@@ -353,16 +473,18 @@
             // lbl_sumhour
             // 
             lbl_sumhour.AutoSize = true;
-            lbl_sumhour.Location = new Point(623, 11);
+            lbl_sumhour.Font = new Font("IRANSans", 8.5F);
+            lbl_sumhour.Location = new Point(713, 11);
             lbl_sumhour.Name = "lbl_sumhour";
-            lbl_sumhour.Size = new Size(77, 20);
+            lbl_sumhour.Size = new Size(47, 20);
             lbl_sumhour.TabIndex = 7;
-            lbl_sumhour.Text = "107h , 32.95";
+            lbl_sumhour.Text = "107:60";
             // 
             // lbl_sumentryDelay
             // 
             lbl_sumentryDelay.AutoSize = true;
-            lbl_sumentryDelay.Location = new Point(274, 11);
+            lbl_sumentryDelay.Font = new Font("IRANSans", 8.5F);
+            lbl_sumentryDelay.Location = new Point(367, 11);
             lbl_sumentryDelay.Name = "lbl_sumentryDelay";
             lbl_sumentryDelay.Size = new Size(30, 20);
             lbl_sumentryDelay.TabIndex = 15;
@@ -371,7 +493,8 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(534, 11);
+            label7.Font = new Font("IRANSans", 8.5F);
+            label7.Location = new Point(627, 11);
             label7.Name = "label7";
             label7.Size = new Size(79, 20);
             label7.TabIndex = 8;
@@ -380,7 +503,8 @@
             // lbl_summinute
             // 
             lbl_summinute.AutoSize = true;
-            lbl_summinute.Location = new Point(465, 11);
+            lbl_summinute.Font = new Font("IRANSans", 8.5F);
+            lbl_summinute.Location = new Point(558, 11);
             lbl_summinute.Name = "lbl_summinute";
             lbl_summinute.Size = new Size(62, 20);
             lbl_summinute.TabIndex = 9;
@@ -390,7 +514,8 @@
             // lbl_avgexit
             // 
             lbl_avgexit.AutoSize = true;
-            lbl_avgexit.Location = new Point(758, 81);
+            lbl_avgexit.Font = new Font("IRANSans", 8.5F);
+            lbl_avgexit.Location = new Point(838, 81);
             lbl_avgexit.Name = "lbl_avgexit";
             lbl_avgexit.Size = new Size(57, 20);
             lbl_avgexit.TabIndex = 13;
@@ -399,7 +524,8 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(74, 81);
+            label9.Font = new Font("IRANSans", 8.5F);
+            label9.Location = new Point(154, 81);
             label9.Name = "label9";
             label9.Size = new Size(132, 20);
             label9.TabIndex = 10;
@@ -408,7 +534,8 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(821, 81);
+            label11.Font = new Font("IRANSans", 8.5F);
+            label11.Location = new Point(901, 81);
             label11.Name = "label11";
             label11.Size = new Size(137, 20);
             label11.TabIndex = 12;
@@ -417,7 +544,8 @@
             // lbl_avgentry
             // 
             lbl_avgentry.AutoSize = true;
-            lbl_avgentry.Location = new Point(11, 81);
+            lbl_avgentry.Font = new Font("IRANSans", 8.5F);
+            lbl_avgentry.Location = new Point(88, 81);
             lbl_avgentry.Name = "lbl_avgentry";
             lbl_avgentry.Size = new Size(57, 20);
             lbl_avgentry.TabIndex = 11;
@@ -426,28 +554,11 @@
             // lbl_FromTo
             // 
             lbl_FromTo.AutoSize = true;
-            lbl_FromTo.Location = new Point(117, 7);
+            lbl_FromTo.Location = new Point(100, 38);
             lbl_FromTo.Name = "lbl_FromTo";
             lbl_FromTo.Size = new Size(16, 20);
             lbl_FromTo.TabIndex = 20;
             lbl_FromTo.Text = "0";
-            // 
-            // lbl_user
-            // 
-            lbl_user.AutoSize = true;
-            lbl_user.Location = new Point(298, 4);
-            lbl_user.Name = "lbl_user";
-            lbl_user.Size = new Size(0, 20);
-            lbl_user.TabIndex = 3;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(346, 7);
-            label1.Name = "label1";
-            label1.Size = new Size(35, 20);
-            label1.TabIndex = 2;
-            label1.Text = "کاربر :";
             // 
             // dataView_calender
             // 
@@ -455,12 +566,12 @@
             dataView_calender.AllowUserToDeleteRows = false;
             dataView_calender.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_calender.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_calender.Location = new Point(3, 155);
+            dataView_calender.Location = new Point(3, 184);
             dataView_calender.Name = "dataView_calender";
             dataView_calender.ReadOnly = true;
             dataView_calender.RightToLeft = RightToLeft.No;
             dataView_calender.RowHeadersWidth = 70;
-            dataView_calender.Size = new Size(970, 312);
+            dataView_calender.Size = new Size(1052, 318);
             dataView_calender.TabIndex = 0;
             dataView_calender.VirtualMode = true;
             dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
@@ -472,7 +583,7 @@
             menuStrip2.Items.AddRange(new ToolStripItem[] { OutputExcelToolStripMenuItem });
             menuStrip2.Location = new Point(3, 4);
             menuStrip2.Name = "menuStrip2";
-            menuStrip2.Size = new Size(970, 27);
+            menuStrip2.Size = new Size(1052, 27);
             menuStrip2.TabIndex = 22;
             menuStrip2.Text = "menuStrip2";
             // 
@@ -495,7 +606,7 @@
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(984, 499);
+            tabControl1.Size = new Size(1066, 534);
             tabControl1.TabIndex = 0;
             // 
             // tabPage_durationdays
@@ -503,10 +614,10 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 29);
+            tabPage_durationdays.Location = new Point(4, 24);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(976, 466);
+            tabPage_durationdays.Size = new Size(1058, 506);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -568,96 +679,44 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(970, 366);
+            dataView_late.Size = new Size(1055, 409);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += dataView_calender_RowPostPaint;
             // 
             // tabPage_
             // 
-            tabPage_.Controls.Add(txtbox_fullwork_farvardin);
-            tabPage_.Controls.Add(label23);
-            tabPage_.Controls.Add(txtbox_fullwork_thursday);
-            tabPage_.Controls.Add(label21);
-            tabPage_.Controls.Add(txtbox_fullwork);
-            tabPage_.Controls.Add(label20);
-            tabPage_.Controls.Add(txtbox_late);
-            tabPage_.Controls.Add(label3);
-            tabPage_.Controls.Add(btn_submit);
+            tabPage_.Controls.Add(groupBox2);
             tabPage_.Location = new Point(4, 24);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(976, 471);
+            tabPage_.Size = new Size(1058, 506);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
             // 
-            // txtbox_fullwork_farvardin
+            // groupBox2
             // 
-            txtbox_fullwork_farvardin.Location = new Point(201, 45);
-            txtbox_fullwork_farvardin.Mask = "00:00:00";
-            txtbox_fullwork_farvardin.Name = "txtbox_fullwork_farvardin";
-            txtbox_fullwork_farvardin.RightToLeft = RightToLeft.No;
-            txtbox_fullwork_farvardin.Size = new Size(59, 28);
-            txtbox_fullwork_farvardin.TabIndex = 34;
-            txtbox_fullwork_farvardin.Text = "074500";
-            txtbox_fullwork_farvardin.TextAlign = HorizontalAlignment.Center;
-            txtbox_fullwork_farvardin.ValidatingType = typeof(DateTime);
-            // 
-            // label23
-            // 
-            label23.AutoSize = true;
-            label23.Location = new Point(265, 45);
-            label23.Name = "label23";
-            label23.Size = new Size(159, 20);
-            label23.TabIndex = 33;
-            label23.Text = "شرط ساعت کاری کامل فروردین:";
-            // 
-            // txtbox_fullwork_thursday
-            // 
-            txtbox_fullwork_thursday.Location = new Point(201, 11);
-            txtbox_fullwork_thursday.Mask = "00:00:00";
-            txtbox_fullwork_thursday.Name = "txtbox_fullwork_thursday";
-            txtbox_fullwork_thursday.RightToLeft = RightToLeft.No;
-            txtbox_fullwork_thursday.Size = new Size(59, 28);
-            txtbox_fullwork_thursday.TabIndex = 30;
-            txtbox_fullwork_thursday.Text = "053000";
-            txtbox_fullwork_thursday.TextAlign = HorizontalAlignment.Center;
-            txtbox_fullwork_thursday.ValidatingType = typeof(DateTime);
-            // 
-            // label21
-            // 
-            label21.AutoSize = true;
-            label21.Location = new Point(265, 15);
-            label21.Name = "label21";
-            label21.Size = new Size(164, 20);
-            label21.TabIndex = 29;
-            label21.Text = "شرط ساعت کاری کامل پنج شنبه:";
-            // 
-            // txtbox_fullwork
-            // 
-            txtbox_fullwork.Location = new Point(9, 45);
-            txtbox_fullwork.Mask = "00:00:00";
-            txtbox_fullwork.Name = "txtbox_fullwork";
-            txtbox_fullwork.RightToLeft = RightToLeft.No;
-            txtbox_fullwork.Size = new Size(59, 28);
-            txtbox_fullwork.TabIndex = 28;
-            txtbox_fullwork.Text = "083000";
-            txtbox_fullwork.TextAlign = HorizontalAlignment.Center;
-            txtbox_fullwork.ValidatingType = typeof(DateTime);
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new Point(73, 45);
-            label20.Name = "label20";
-            label20.Size = new Size(117, 20);
-            label20.TabIndex = 27;
-            label20.Text = "شرط ساعت کاری کامل:";
+            groupBox2.Controls.Add(txtbox_late);
+            groupBox2.Controls.Add(txtbox_fullwork_farvardin);
+            groupBox2.Controls.Add(btn_submit);
+            groupBox2.Controls.Add(label23);
+            groupBox2.Controls.Add(label3);
+            groupBox2.Controls.Add(txtbox_fullwork_thursday);
+            groupBox2.Controls.Add(label20);
+            groupBox2.Controls.Add(label21);
+            groupBox2.Controls.Add(txtbox_fullwork);
+            groupBox2.Dock = DockStyle.Left;
+            groupBox2.Location = new Point(3, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(435, 500);
+            groupBox2.TabIndex = 35;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "شرط ها";
             // 
             // txtbox_late
             // 
-            txtbox_late.Location = new Point(9, 7);
+            txtbox_late.Location = new Point(6, 27);
             txtbox_late.Mask = "00:00:00";
             txtbox_late.Name = "txtbox_late";
             txtbox_late.RightToLeft = RightToLeft.No;
@@ -667,18 +726,21 @@
             txtbox_late.TextAlign = HorizontalAlignment.Center;
             txtbox_late.ValidatingType = typeof(DateTime);
             // 
-            // label3
+            // txtbox_fullwork_farvardin
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(73, 11);
-            label3.Name = "label3";
-            label3.Size = new Size(109, 20);
-            label3.TabIndex = 21;
-            label3.Text = "شرط زمان تاخیر ورود:";
+            txtbox_fullwork_farvardin.Location = new Point(198, 65);
+            txtbox_fullwork_farvardin.Mask = "00:00:00";
+            txtbox_fullwork_farvardin.Name = "txtbox_fullwork_farvardin";
+            txtbox_fullwork_farvardin.RightToLeft = RightToLeft.No;
+            txtbox_fullwork_farvardin.Size = new Size(59, 28);
+            txtbox_fullwork_farvardin.TabIndex = 34;
+            txtbox_fullwork_farvardin.Text = "074500";
+            txtbox_fullwork_farvardin.TextAlign = HorizontalAlignment.Center;
+            txtbox_fullwork_farvardin.ValidatingType = typeof(DateTime);
             // 
             // btn_submit
             // 
-            btn_submit.Location = new Point(8, 79);
+            btn_submit.Location = new Point(5, 99);
             btn_submit.Name = "btn_submit";
             btn_submit.Size = new Size(421, 63);
             btn_submit.TabIndex = 20;
@@ -686,11 +748,71 @@
             btn_submit.UseVisualStyleBackColor = true;
             btn_submit.Click += btn_Submit_Click;
             // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(262, 65);
+            label23.Name = "label23";
+            label23.Size = new Size(159, 20);
+            label23.TabIndex = 33;
+            label23.Text = "شرط ساعت کاری کامل فروردین:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(70, 31);
+            label3.Name = "label3";
+            label3.Size = new Size(109, 20);
+            label3.TabIndex = 21;
+            label3.Text = "شرط زمان تاخیر ورود:";
+            // 
+            // txtbox_fullwork_thursday
+            // 
+            txtbox_fullwork_thursday.Location = new Point(198, 31);
+            txtbox_fullwork_thursday.Mask = "00:00:00";
+            txtbox_fullwork_thursday.Name = "txtbox_fullwork_thursday";
+            txtbox_fullwork_thursday.RightToLeft = RightToLeft.No;
+            txtbox_fullwork_thursday.Size = new Size(59, 28);
+            txtbox_fullwork_thursday.TabIndex = 30;
+            txtbox_fullwork_thursday.Text = "053000";
+            txtbox_fullwork_thursday.TextAlign = HorizontalAlignment.Center;
+            txtbox_fullwork_thursday.ValidatingType = typeof(DateTime);
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(70, 65);
+            label20.Name = "label20";
+            label20.Size = new Size(117, 20);
+            label20.TabIndex = 27;
+            label20.Text = "شرط ساعت کاری کامل:";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(262, 35);
+            label21.Name = "label21";
+            label21.Size = new Size(164, 20);
+            label21.TabIndex = 29;
+            label21.Text = "شرط ساعت کاری کامل پنج شنبه:";
+            // 
+            // txtbox_fullwork
+            // 
+            txtbox_fullwork.Location = new Point(6, 65);
+            txtbox_fullwork.Mask = "00:00:00";
+            txtbox_fullwork.Name = "txtbox_fullwork";
+            txtbox_fullwork.RightToLeft = RightToLeft.No;
+            txtbox_fullwork.Size = new Size(59, 28);
+            txtbox_fullwork.TabIndex = 28;
+            txtbox_fullwork.Text = "083000";
+            txtbox_fullwork.TextAlign = HorizontalAlignment.Center;
+            txtbox_fullwork.ValidatingType = typeof(DateTime);
+            // 
             // FrmCalc
             // 
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(984, 499);
+            ClientSize = new Size(1066, 534);
             Controls.Add(tabControl1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -711,7 +833,8 @@
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataView_late).EndInit();
             tabPage_.ResumeLayout(false);
-            tabPage_.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -738,8 +861,6 @@
         public Label label11;
         public Label lbl_avgentry;
         public Label lbl_FromTo;
-        public Label lbl_user;
-        public Label label1;
         private DataGridView dataView_calender;
         private TabControl tabControl1;
         public Label label10;
@@ -773,5 +894,14 @@
         public Label label20;
         private MaskedTextBox txtbox_fullwork_farvardin;
         public Label label23;
+        public Label label16;
+        public Label lbl_sumkasri;
+        public Label lbl_tadil;
+        public Label label22;
+        private GroupBox groupBox2;
+        private Label label19;
+        private Button btn_next;
+        private Button btn_perv;
+        public ComboBox userid_txtbox;
     }
 }

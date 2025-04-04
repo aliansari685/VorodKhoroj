@@ -142,6 +142,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmFilter";
             Text = "FrmFilter";
+            Load += FrmFilter_Load;
             ResumeLayout(false);
             PerformLayout();
         }
