@@ -88,7 +88,7 @@ public partial class Frm_Main : Form
         }
     }
 
-    private void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+    public void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
     {
         dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
     }

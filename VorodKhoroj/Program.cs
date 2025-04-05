@@ -12,7 +12,8 @@ global using VorodKhoroj.Data;
 global using Serilog.Core;
 global using Serilog.Events;
 global using System.Runtime.CompilerServices;
-using VorodKhoroj.Services;
+global using System.Diagnostics;
+global using VorodKhoroj.Services;
 
 
 namespace VorodKhoroj

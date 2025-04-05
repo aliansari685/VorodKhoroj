@@ -16,6 +16,11 @@ public partial class FrmCalc
         dataView_late.Columns[1].HeaderText = "تاریخ";
 
     }
+    private void dataView_late_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+    {
+        if (overtimeinHoliday.Contains(DateTime.Parse(dataView_late?.Rows[e.RowIndex]?.Cells["Date"]?.Value?.ToString())))
+            dataView_late.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.CadetBlue;
+    }
     private void BtnExportExcelClick(object sender, EventArgs e)
     {
         CommonHelper.DataGridToExcel(dataView_late);

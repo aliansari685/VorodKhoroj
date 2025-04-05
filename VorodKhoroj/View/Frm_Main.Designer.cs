@@ -291,7 +291,7 @@
         private ToolStripMenuItem گزارشToolStripMenuItem;
         private ToolStripMenuItem مجموعToolStripMenuItem;
         private ComboBox userid_txtbox;
-        private DataGridView dataView;
+        public DataGridView dataView;
         private ToolStripMenuItem SettingToolStripMenuItem;
         private ToolStripMenuItem DBConfigToolStripMenuItem;
         private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;

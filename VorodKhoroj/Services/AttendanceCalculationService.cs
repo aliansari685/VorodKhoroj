@@ -1,117 +1,191 @@
-﻿//namespace VorodKhoroj.Services;
+﻿namespace VorodKhoroj.Services;
 
-//public class AttendanceCalculationService
-//{
-//    private readonly IDataRepository _dataRepository;
+public class AttendanceCalculationService
+{
+    private readonly AppServices _recordService;
 
-//    public AttendanceCalculationService(IDataRepository dataRepository)
-//    {
-//        _dataRepository = dataRepository;
-//    }
+    private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
+    private TimeSpan _fullworkTm = TimeSpan.Parse("08:30:00");
+    private TimeSpan _fullwork_ThursdayTm = TimeSpan.Parse("05:30:00");
+    private TimeSpan _fullwork_FarvardinTm = TimeSpan.Parse("07:45:00");
 
-//    public async Task<AttendanceResult> CalculateAttendanceAsync(DateRange dateRange, string userId, TimeSettings timeSettings)
-//    {
-//        var records = await _dataRepository.GetRecordsAsync(dateRange.From, dateRange.To, int.Parse(userId));
-//        if (records?.Any() != true) throw new ArgumentNullException("داده‌ای وجود ندارد");
+    public List<DateTime> QeybathaDaysList { get; private set; }
+    public List<DateTime> HolidaysDaysList { get; private set; }
+    public Dictionary<string, string> Labels { get; private set; }
 
-//        var attendanceRecords = CalculateDailyRecords(records, timeSettings);
-//        var summaryLabels = GenerateSummaryLabels(attendanceRecords);
-//        return new AttendanceResult(attendanceRecords, summaryLabels);
-//    }
+    public AttendanceCalculationService(AppServices recordService)
+    {
+        _recordService = recordService;
+    }
 
-//    private IEnumerable<AttendanceRecord> CalculateDailyRecords(IEnumerable<Record> records, TimeSettings timeSettings)
-//    {
-//        var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
+    public AttendanceCalculationService WithLateTime(TimeSpan lateTime)
+    {
+        _lateTm = lateTime;
+        return this;
+    }
 
-//        return records
-//            .GroupBy(x => (x.UserId, x.DateTime.Date))
-//            .Select(g => CalculateSingleDay(g, timeSettings, farvardinDays))
-//            .ToArray();
-//    }
+    public AttendanceCalculationService WithFullWorkTime(TimeSpan fullWorkTime)
+    {
+        _fullworkTm = fullWorkTime;
+        return this;
+    }
 
-//    private AttendanceRecord CalculateSingleDay(IGrouping<(int UserId, DateTime Date), Record> dayRecords,
-//                                               TimeSettings timeSettings, HashSet<DateTime> farvardinDays)
-//    {
-//        var times = dayRecords.Select(x => x.DateTime).OrderBy(t => t).ToArray();
-//        var entryTime = times.First();
-//        var exitTime = times.ElementAtOrDefault(1) == DateTime.MinValue ? entryTime : times.ElementAt(1);
-//        var entryTime2 = times.Length > 2 ? times[2] : (DateTime?)null;
-//        var exitTime2 = times.Length > 2 ? times.Last() : null;
+    public AttendanceCalculationService WithFullWorkThursdayTime(TimeSpan thursdayTime)
+    {
+        _fullwork_ThursdayTm = thursdayTime;
+        return this;
+    }
 
-//        var totalDuration = (exitTime - entryTime) +
-//                           (entryTime2.HasValue && exitTime2.HasValue ? exitTime2.Value - entryTime2.Value : TimeSpan.Zero);
+    public AttendanceCalculationService WithFullWorkFarvardinTime(TimeSpan farvardinTime)
+    {
+        _fullwork_FarvardinTm = farvardinTime;
+        return this;
+    }
 
-//        var isThursday = entryTime.DayOfWeek == DayOfWeek.Thursday;
-//        var isFarvardin = farvardinDays.Contains(entryTime.Date);
-//        var standardWorkTime = isThursday ? timeSettings.FullWorkThursday
-//            : isFarvardin ? timeSettings.FullWorkFarvardin
-//            : timeSettings.FullWorkDay;
+    public Array Calculate(string userId, string fromDateTime, string toDateTime)
+    {
+        var filtered = DataFilterService.ApplyFilter(
+            _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
-//        var lateMinutes = entryTime.TimeOfDay > timeSettings.LateThreshold && totalDuration.TotalMinutes > 60
-//            ? entryTime.TimeOfDay - timeSettings.LateThreshold
-//            : TimeSpan.Zero;
+        if (filtered?.Any() == false)
+            throw new ArgumentNullException("داده ای وجود ندارد");
 
-//        var overtime = totalDuration > standardWorkTime ? totalDuration - standardWorkTime : TimeSpan.Zero;
-//        var kasri = totalDuration < standardWorkTime ? standardWorkTime - totalDuration : TimeSpan.Zero;
+        var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
 
-//        return new AttendanceRecord
-//        {
-//            DayOfWeek = entryTime.ToString("dddd"),
-//            Date = entryTime.ToString("yyyy/MM/dd"),
-//            EntryTime = entryTime.ToString("HH:mm:ss"),
-//            ExitTime = exitTime.ToString("HH:mm:ss"),
-//            EntryTime2 = entryTime2?.ToString("HH:mm:ss"),
-//            ExitTime2 = exitTime2?.ToString("HH:mm:ss"),
-//            DurationMinutes = totalDuration.TotalMinutes,
-//            DurationHours = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
-//            IsLate = lateMinutes != TimeSpan.Zero,
-//            LateMinutes = lateMinutes,
-//            Overtime = overtime.ToString(@"hh\:mm\:ss"),
-//            FullWork = totalDuration >= standardWorkTime,
-//            KasriMinutes = kasri.TotalMinutes,
-//            Is incomplete = totalDuration.TotalMinutes < 60
-//        };
-//    }
+        var dataFiltered = filtered.Select(x => new { x.UserId, x.DateTime })
+            .OrderBy(x => x.DateTime);
 
-//    private Dictionary<string, string> GenerateSummaryLabels(IEnumerable<AttendanceRecord> records)
-//    {
-//        // منطق محاسبه لیبل‌های خلاصه (مثل مجموع تاخیر، اضافه‌کاری و ...) اینجا می‌ره
-//        // برای خلاصه بودن فقط یه نمونه می‌ذارم
-//        var totalLate = TimeSpan.FromMinutes(records.Sum(r => r.LateMinutes.TotalMinutes));
-//        return new Dictionary<string, string>
-//        {
-//            { "مجموع تاخیرها به ساعت", $"{(int)totalLate.TotalHours:D2}:{totalLate.Minutes:D2}:{totalLate.Seconds:D2}" }
-//            // بقیه لیبل‌ها مشابه کد اصلی اضافه بشن
-//        };
-//    }
-//}
+        var dataFilteredGrouped = dataFiltered.GroupBy(x => (x.UserId, x.DateTime.Date)).ToList();
 
-//// مدل‌های داده
-//public class AttendanceRecord
-//{
-//    public string DayOfWeek { get; set; }
-//    public string Date { get; set; }
-//    public string EntryTime { get; set; }
-//    public string ExitTime { get; set; }
-//    public string EntryTime2 { get; set; }
-//    public string ExitTime2 { get; set; }
-//    public double DurationMinutes { get; set; }
-//    public string DurationHours { get; set; }
-//    public bool IsLate { get; set; }
-//    public TimeSpan LateMinutes { get; set; }
-//    public string Overtime { get; set; }
-//    public bool FullWork { get; set; }
-//    public double KasriMinutes { get; set; }
-//    public bool IsIncomplete { get; set; }
-//}
+        // تاریخ‌هایی که کارمند حضور داشته است
+        var pr = dataFilteredGrouped.Select(g => g.Key.Date).ToList();
 
-//public class AttendanceResult
-//{
-//    public IEnumerable<AttendanceRecord> Records { get; }
-//    public Dictionary<string, string> SummaryLabels { get; }
-//    public AttendanceResult(IEnumerable<AttendanceRecord> records, Dictionary<string, string> summaryLabels)
-//    {
-//        Records = records;
-//        SummaryLabels = summaryLabels;
-//    }
-//}
+        var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
+
+        var overtimeinHoliday = pr.Where(day => holidays.Contains(day)).Select(g => g.Date.Date).ToList();
+
+        var groupedData = dataFilteredGrouped.Select(g =>
+        {
+            var overtime = TimeSpan.Zero;
+            var kasri = TimeSpan.Zero;
+
+            var orderedTimes = g.Select(x => x.DateTime).ToArray();
+
+            var minDateTime = orderedTimes.First();
+            var maxDateTime = orderedTimes.ElementAtOrDefault(1);
+            if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime;
+
+            DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
+            DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
+
+            var IsWorkinginHoliday = overtimeinHoliday.Contains(minDateTime.Date.Date);
+            var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
+            var isFarvardin = farvardinDays.Contains(minDateTime.Date);
+
+            var duration = maxDateTime - minDateTime;
+            var duration2 = minDateTime2.HasValue && maxDateTime2.HasValue
+                ? maxDateTime2.Value - minDateTime2.Value
+                : TimeSpan.Zero;
+
+            var totalDuration = duration + duration2;
+            var isNaghes = totalDuration.TotalMinutes < 60 && !IsWorkinginHoliday;
+
+            var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60 && !IsWorkinginHoliday
+                ? minDateTime.TimeOfDay - _lateTm
+                : TimeSpan.Zero;
+
+            var standardWorkTime = isThursday ? _fullwork_ThursdayTm
+                : isFarvardin ? _fullwork_FarvardinTm
+                : _fullworkTm;
+
+            var fullWork = false;
+            if (totalDuration >= standardWorkTime)
+            {
+                overtime = totalDuration - standardWorkTime;
+                fullWork = true;
+            }
+            else if (totalDuration < standardWorkTime && !IsWorkinginHoliday && !isNaghes)
+            {
+                kasri = standardWorkTime - totalDuration;
+            }
+
+            return new
+            {
+                DayOfWeek = g.Key.Date.ToString("dddd"),
+                Date = g.Key.Date.ToString("yyyy/MM/dd"),
+                EntryTime = minDateTime.ToString("HH:mm:ss"),
+                ExitTime = maxDateTime.ToString("HH:mm:ss"),
+                EntryTime2 = minDateTime2?.ToString("HH:mm:ss"),
+                ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
+                DurationMin = totalDuration.TotalMinutes,
+                DurationHour = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
+                IsLate = lateMinutes != TimeSpan.Zero && !IsWorkinginHoliday,
+                LateMinutes = lateMinutes,
+                Overtime = overtime.ToString(@"hh\:mm\:ss"),
+                FullWork = fullWork,
+                IsKasri = kasri.TotalMinutes,
+                IsNaghes = isNaghes
+            };
+        }).ToArray();
+
+        // محاسبه اطلاعات
+        var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
+        var totalOvertimeMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime).TotalMinutes));
+        var totalling = groupedData.Count(x => x.DurationMin < 60);
+        var totalMinutes = groupedData.Sum(x => x.DurationMin);
+        var entryTimes = groupedData.Select(x => TimeSpan.Parse(x.EntryTime)).ToList();
+        var avgEntryTime = TimeSpan.FromTicks((long)entryTimes.Average(t => t.Ticks));
+        var exitTimes = groupedData.Select(x => TimeSpan.Parse(x.ExitTime)).ToList();
+        var avgExitTime = TimeSpan.FromTicks((long)exitTimes.Average(t => t.Ticks));
+        var totalHours = TimeSpan.FromMinutes(totalMinutes);
+        var total = groupedData.Count(x => x.FullWork);
+        var lateDays = groupedData.Count(x => x.IsLate);
+
+        var workDays = Enumerable.Range(0, (DateTime.Parse(toDateTime) - DateTime.Parse(fromDateTime)).Days + 1)
+            .Select(i => DateTime.Parse(fromDateTime).AddDays(i))
+            .ToList();
+
+        var absence = workDays.Where(day => !pr.Contains(day) && !holidays.Contains(day));
+        var absenceCount = absence.Count();
+
+        QeybathaDaysList = absence.ToList();
+        HolidaysDaysList = workDays.Where(day => holidays.Contains(day)).ToList();
+
+        var overtimeCount = pr.Count(day => holidays.Contains(day));
+        var minEntryTime = TimeSpan.FromTicks(entryTimes.Min(t => t.Ticks));
+        var maxExitTime = TimeSpan.FromTicks(exitTimes.Max(t => t.Ticks));
+        var avgMinutes = totalMinutes / groupedData.Count();
+        var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
+        var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.IsKasri));
+        var tadil = totalOvertimeMinutes - kasriTime;
+
+        Labels = new Dictionary<string, string>
+        {
+            { "مجموع روز های کاری", $"{groupedData?.Count()} از {groupedData.Count() + absenceCount}" },
+            { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", total.ToString() },
+            { "مجموع ساعات کاری", $@"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}" },
+            { "مجموع دقایق کاری", totalMinutes.ToString("0") + "m" },
+            { "مجموع روز های ورود باتاخیر", lateDays.ToString() },
+            {
+                "مجموع تاخیر ها به ساعت",
+                $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}"
+            },
+            { "مجموع روز های ناقص", totalling.ToString() },
+            { "مجموع غیبت (غیر تعطیلات)", absenceCount.ToString() },
+            { "مجموع اضافه کاری", overtimeCount.ToString() },
+            {
+                " مجموع اضافه کاری بعد ساعت کاری",
+                $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}"
+            },
+            { "زودترین زمان ورود", minEntryTime.ToString(@"hh\:mm\:ss") },
+            { "دیرترین زمان خروج", maxExitTime.ToString(@"hh\:mm\:ss") },
+            { "میانگین ساعت های ورود", avgEntryTime.ToString(@"hh\:mm\:ss") },
+            { "میانگین ساعت های خروج", avgExitTime.ToString(@"hh\:mm\:ss") },
+            { "میانگین ساعت کاری روزانه", avgTimeSpan.ToString(@"hh\:mm\:ss") },
+            { "مقدار کسری به ساعت", $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}" },
+            { "مقدار تعدیل یا اضافه ساعت کاری خالص", tadil.TotalMinutes.ToString() }
+        };
+
+        return groupedData.ToArray();
+    }
+}
