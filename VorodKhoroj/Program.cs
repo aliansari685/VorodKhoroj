@@ -12,6 +12,7 @@ global using VorodKhoroj.Data;
 global using Serilog.Core;
 global using Serilog.Events;
 global using System.Runtime.CompilerServices;
+using VorodKhoroj.Services;
 
 
 namespace VorodKhoroj
@@ -29,7 +30,6 @@ namespace VorodKhoroj
             ApplicationConfiguration.Initialize();
             Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
             Application.Run(new Frm_Main(new AppServices()));
-            //  Application.Run(new FrmSetting(new AppServices()));
         }
     }
 }

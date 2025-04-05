@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Services;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmFilter : Form
 {

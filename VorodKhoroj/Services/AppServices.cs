@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-
-namespace VorodKhoroj
+﻿namespace VorodKhoroj.Services
 {
     public class AppServices : IDisposable
     {
