@@ -29,18 +29,21 @@ namespace VorodKhoroj
         [STAThread]
         static void Main()
         {
-            var host = CreateHostBuilder().Build();
-
-            ApplicationConfiguration.Initialize();
-
-            var form = host.Services.GetRequiredService<Frm_Main>();
-
-            ApplicationConfiguration.Initialize();
-
             Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
+            try
+            {
+                var host = CreateHostBuilder().Build();
 
-            Application.Run(form);
+                var form = host.Services.GetRequiredService<Frm_Main>();
 
+                ApplicationConfiguration.Initialize();
+
+                Application.Run(form);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
 
 

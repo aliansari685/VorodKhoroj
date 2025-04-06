@@ -1,5 +1,4 @@
-﻿using VorodKhoroj.Services;
-
+﻿
 namespace VorodKhoroj;
 
 public partial class Frm_Main : Form
@@ -7,13 +6,11 @@ public partial class Frm_Main : Form
     private readonly AppServices _services;
     private readonly AttendanceCalculationService _calcServices;
 
-    private DataTable _temp;
-
-    public Frm_Main(AppServices services, AttendanceCalculationService caclService)
+    public Frm_Main(AppServices services, AttendanceCalculationService calculationService)
     {
         InitializeComponent();
         _services = services;
-        _calcServices = caclService;
+        _calcServices = calculationService;
     }
 
     private void Frm_Main_Load(object sender, EventArgs e)
@@ -23,32 +20,31 @@ public partial class Frm_Main : Form
 
     public void DataGridConfig()
     {
-        if (_services.Records == null) return;
+        if (_services?.Records == null) return;
 
-        dataView.DataSource = _temp?.Rows?.Count == 0 || _temp == null
-            ? _temp = _services?.Records?.ToDataTable()
-            : _temp;
+        dataView.DataSource = _services.TempDataTable;
         DataGridViewConfig();
-        userid_txtbox.DataSource = _services?.LoadUsers();
+        Userid_txtbox.DataSource = _services?.GetUsers();
 
     }
 
     private void DataGridViewConfig()
     {
+        dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+
         dataView.Columns[0].HeaderText = "کاربر";
         dataView.Columns[1].HeaderText = "تاریخ و زمان ورود و خروج";
         dataView.Columns[2].HeaderText = " نوع ورود";
-        dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
     {
-        if (_services.Records == null) return;
+        if (_services?.Records == null) return;
 
         try
         {
             dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
-                toDateTime_txtbox.Text, int.Parse(userid_txtbox.Text)).ToList().ToDataTable();
+                toDateTime_txtbox.Text, int.Parse(Userid_txtbox.Text)).ToList().ToDataTable();
             DataGridViewConfig();
         }
         catch (Exception ex)
@@ -65,22 +61,18 @@ public partial class Frm_Main : Form
 
     private void TextBoxClear()
     {
-        FromDateTime_txtbox.Text = userid_txtbox.Text = "";
+        FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
         toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
     }
 
-    private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e)
+    private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e) //Go To FrmFilter:
     {
-        //Go To FrmFilter:
         try
         {
             if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
-            using (FrmFilter frm = new(_services))
+            using (FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text))
             {
-                frm.FromDateTime_txtbox.Text = FromDateTime_txtbox.Text;
-                frm.toDateTime_txtbox.Text = toDateTime_txtbox.Text;
-                frm.userid_txtbox.Text = userid_txtbox.Text;
                 frm.ShowDialog();
             }
         }
@@ -95,17 +87,6 @@ public partial class Frm_Main : Form
         dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
     }
 
-    private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
-    {
-        //if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", "خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-        //{
-        //    e.Cancel = true;
-        //}
-        //else
-        {
-            _services?.Dispose();
-        }
-    }
 
     private void DBConfigToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -148,11 +129,21 @@ public partial class Frm_Main : Form
 
     private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using (FrmFilter_Monthly frm = new(_services))
+        using (FrmFilter_Monthly frm = new(_services, _calcServices, Userid_txtbox.Text))
         {
-            frm.userid_txtbox.Text = userid_txtbox.Text;
-
             frm.ShowDialog();
         }
     }
+    private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        //if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", "خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        //{
+        //    e.Cancel = true;
+        //}
+        //else
+        {
+            _services?.Dispose();
+        }
+    }
+
 }

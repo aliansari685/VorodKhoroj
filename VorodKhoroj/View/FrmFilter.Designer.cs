@@ -35,7 +35,7 @@
             toDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             FromDateTime_txtbox = new MaskedTextBox();
-            userid_txtbox = new ComboBox();
+            Userid_txtbox = new ComboBox();
             SuspendLayout();
             // 
             // btn_clear
@@ -112,16 +112,16 @@
             FromDateTime_txtbox.TabIndex = 0;
             FromDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
-            // userid_txtbox
+            // Userid_txtbox
             // 
-            userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
-            userid_txtbox.DisplayMember = "userid";
-            userid_txtbox.FormattingEnabled = true;
-            userid_txtbox.Location = new Point(106, 101);
-            userid_txtbox.Name = "userid_txtbox";
-            userid_txtbox.Size = new Size(57, 27);
-            userid_txtbox.TabIndex = 2;
+            Userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            Userid_txtbox.DisplayMember = "userid";
+            Userid_txtbox.FormattingEnabled = true;
+            Userid_txtbox.Location = new Point(106, 101);
+            Userid_txtbox.Name = "Userid_txtbox";
+            Userid_txtbox.Size = new Size(57, 27);
+            Userid_txtbox.TabIndex = 2;
             // 
             // FrmFilter
             // 
@@ -129,7 +129,7 @@
             AutoScaleDimensions = new SizeF(7F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(244, 207);
-            Controls.Add(userid_txtbox);
+            Controls.Add(Userid_txtbox);
             Controls.Add(btn_clear);
             Controls.Add(label3);
             Controls.Add(btn_applyfilter);
@@ -156,6 +156,6 @@
         private Label label1;
         public MaskedTextBox toDateTime_txtbox;
         public MaskedTextBox FromDateTime_txtbox;
-        public ComboBox userid_txtbox;
+        public ComboBox Userid_txtbox;
     }
 }

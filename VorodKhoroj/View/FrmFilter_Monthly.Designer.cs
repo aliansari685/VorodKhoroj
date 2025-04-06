@@ -261,7 +261,7 @@
             Btn_submit.UseVisualStyleBackColor = true;
             Btn_submit.Click += Btn_submit_Click;
             // 
-            // userid_txtbox
+            // Userid_txtbox
             // 
             userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;

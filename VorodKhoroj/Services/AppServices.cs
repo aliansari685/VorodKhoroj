@@ -2,14 +2,18 @@
 {
     public class AppServices : IDisposable
     {
+
         public enum DataTypes
         {
-            Text, DataBase
+            Text,
+            DataBase
         }
+
         public DataTypes DataType { get; set; }
         public AppDbContext DbContext { get; set; }
         public AppDbContext DbContextMaster { get; set; }
         public List<Attendance> Records { get; set; }
+        public DataTable TempDataTable { get; set; }
 
         private readonly DataRepository _repository;
         private readonly DataBaseManager _dataBaseManager;
@@ -22,9 +26,10 @@
         public void LoadRecordsFromFile(string fileName)
         {
             Records = _repository.GetRecordsFromFile(fileName);
+            SetTempDataTable();
         }
 
-        public int[] LoadUsers()
+        public int[] GetUsers()
         {
             return _repository.GetUsersAttendances(Records);
         }
@@ -33,6 +38,12 @@
         public void LoadRecordsFromDb()
         {
             Records = _repository.GetRecordsFromDB(DbContext);
+            SetTempDataTable();
+        }
+
+        void SetTempDataTable()
+        {
+            TempDataTable = Records.ToDataTable();
         }
 
         public void InitializeDbContext(string _servername, string dbname, AppDbContext.DataBaseLocation databaseLocation)

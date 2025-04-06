@@ -1,21 +1,25 @@
-﻿using VorodKhoroj.Services;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmFilter_Monthly : Form
     {
         private readonly AppServices _services;
+        private readonly AttendanceCalculationService _calcServices;
+        private readonly string _userId;
+
         public Dictionary<int, bool> MonthlyCheckedList = [];
 
-        public FrmFilter_Monthly(AppServices services)
+        public FrmFilter_Monthly(AppServices services, AttendanceCalculationService calcServices, string userId)
         {
             InitializeComponent();
             _services = services;
+            _calcServices = calcServices;
+            _userId = userId;
         }
+
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services?.LoadUsers();
-         
+            userid_txtbox.DataSource = _services?.GetUsers();
+
         }
         private void btn_clear_Click(object sender, EventArgs e)
         {
@@ -30,6 +34,8 @@ namespace VorodKhoroj.View
 
         private void Btn_submit_Click(object sender, EventArgs e)
         {
+            //ایجاد اکسل شیت به شیت
+
             MonthlyCheckedList = new Dictionary<int, bool>
             {
                 { 1, checkBox_farvardin.Checked },

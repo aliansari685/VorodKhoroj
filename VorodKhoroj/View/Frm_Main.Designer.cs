@@ -47,7 +47,7 @@
             btn_applyfilter = new Button();
             label3 = new Label();
             btn_clear = new Button();
-            userid_txtbox = new ComboBox();
+            Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
             اکسلسریعToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
@@ -214,16 +214,16 @@
             btn_clear.UseVisualStyleBackColor = false;
             btn_clear.Click += btn_clear_Click;
             // 
-            // userid_txtbox
+            // Userid_txtbox
             // 
-            userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
-            userid_txtbox.DisplayMember = "userid";
-            userid_txtbox.FormattingEnabled = true;
-            userid_txtbox.Location = new Point(323, 38);
-            userid_txtbox.Name = "userid_txtbox";
-            userid_txtbox.Size = new Size(82, 28);
-            userid_txtbox.TabIndex = 13;
+            Userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
+            Userid_txtbox.DisplayMember = "userid";
+            Userid_txtbox.FormattingEnabled = true;
+            Userid_txtbox.Location = new Point(323, 38);
+            Userid_txtbox.Name = "Userid_txtbox";
+            Userid_txtbox.Size = new Size(82, 28);
+            Userid_txtbox.TabIndex = 13;
             // 
             // dataView
             // 
@@ -254,7 +254,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(895, 600);
             Controls.Add(dataView);
-            Controls.Add(userid_txtbox);
+            Controls.Add(Userid_txtbox);
             Controls.Add(btn_clear);
             Controls.Add(label3);
             Controls.Add(btn_applyfilter);
@@ -290,7 +290,7 @@
         private Button btn_clear;
         private ToolStripMenuItem گزارشToolStripMenuItem;
         private ToolStripMenuItem مجموعToolStripMenuItem;
-        private ComboBox userid_txtbox;
+        private ComboBox Userid_txtbox;
         public DataGridView dataView;
         private ToolStripMenuItem SettingToolStripMenuItem;
         private ToolStripMenuItem DBConfigToolStripMenuItem;

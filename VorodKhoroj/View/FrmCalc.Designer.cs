@@ -69,7 +69,7 @@
             label11 = new Label();
             lbl_avgentry = new Label();
             lbl_FromTo = new Label();
-            dataView_calender = new DataGridView();
+            dataView_Calculate = new DataGridView();
             menuStrip2 = new MenuStrip();
             OutputExcelToolStripMenuItem = new ToolStripMenuItem();
             tabControl1 = new TabControl();
@@ -92,7 +92,7 @@
             txtbox_fullwork = new MaskedTextBox();
             tabpage_detailvorodkhoroj.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_calender).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataView_Calculate).BeginInit();
             menuStrip2.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage_durationdays.SuspendLayout();
@@ -111,7 +111,7 @@
             tabpage_detailvorodkhoroj.Controls.Add(label19);
             tabpage_detailvorodkhoroj.Controls.Add(panel1);
             tabpage_detailvorodkhoroj.Controls.Add(lbl_FromTo);
-            tabpage_detailvorodkhoroj.Controls.Add(dataView_calender);
+            tabpage_detailvorodkhoroj.Controls.Add(dataView_Calculate);
             tabpage_detailvorodkhoroj.Controls.Add(menuStrip2);
             tabpage_detailvorodkhoroj.Location = new Point(4, 29);
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
@@ -141,7 +141,7 @@
             btn_next.UseVisualStyleBackColor = true;
             btn_next.Click += btn_next_Click;
             // 
-            // userid_txtbox
+            // Userid_txtbox
             // 
             userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -561,22 +561,22 @@
             lbl_FromTo.TabIndex = 20;
             lbl_FromTo.Text = "0";
             // 
-            // dataView_calender
+            // dataView_Calculate
             // 
-            dataView_calender.AllowUserToAddRows = false;
-            dataView_calender.AllowUserToDeleteRows = false;
-            dataView_calender.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataView_calender.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_calender.Location = new Point(3, 184);
-            dataView_calender.Name = "dataView_calender";
-            dataView_calender.ReadOnly = true;
-            dataView_calender.RightToLeft = RightToLeft.No;
-            dataView_calender.RowHeadersWidth = 70;
-            dataView_calender.Size = new Size(1066, 318);
-            dataView_calender.TabIndex = 0;
-            dataView_calender.VirtualMode = true;
-            dataView_calender.RowPostPaint += dataView_calender_RowPostPaint;
-            dataView_calender.RowPrePaint += dataView_calender_RowPrePaint;
+            dataView_Calculate.AllowUserToAddRows = false;
+            dataView_Calculate.AllowUserToDeleteRows = false;
+            dataView_Calculate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataView_Calculate.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataView_Calculate.Location = new Point(3, 184);
+            dataView_Calculate.Name = "dataView_Calculate";
+            dataView_Calculate.ReadOnly = true;
+            dataView_Calculate.RightToLeft = RightToLeft.No;
+            dataView_Calculate.RowHeadersWidth = 70;
+            dataView_Calculate.Size = new Size(1066, 318);
+            dataView_Calculate.TabIndex = 0;
+            dataView_Calculate.VirtualMode = true;
+            dataView_Calculate.RowPostPaint += DataViewCalculateRowPostPaint;
+            dataView_Calculate.RowPrePaint += DataViewCalculateRowPrePaint;
             // 
             // menuStrip2
             // 
@@ -683,7 +683,7 @@
             dataView_late.Size = new Size(1055, 369);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
-            dataView_late.RowPostPaint += dataView_calender_RowPostPaint;
+            dataView_late.RowPostPaint += DataViewCalculateRowPostPaint;
             dataView_late.RowPrePaint += dataView_late_RowPrePaint;
             // 
             // tabPage_
@@ -826,7 +826,7 @@
             tabpage_detailvorodkhoroj.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_calender).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataView_Calculate).EndInit();
             menuStrip2.ResumeLayout(false);
             menuStrip2.PerformLayout();
             tabControl1.ResumeLayout(false);
@@ -863,7 +863,7 @@
         public Label label11;
         public Label lbl_avgentry;
         public Label lbl_FromTo;
-        private DataGridView dataView_calender;
+        private DataGridView dataView_Calculate;
         private TabControl tabControl1;
         public Label label10;
         public Label lbl_us;

@@ -2,6 +2,28 @@
 
 public class AttendanceCalculationService
 {
+    public AttendanceReport Report { get; set; }
+    public class AttendanceReport
+    {
+        public string TotalWorkDays { get; set; }
+        public string TotalFullWorkDays { get; set; }
+        public string TotalWorkingHours { get; set; }
+        public string TotalMinutesWorked { get; set; }
+        public string TotalLateDays { get; set; }
+        public string TotalLateTime { get; set; }
+        public string TotalIncompleteDays { get; set; }
+        public string TotalAbsenceDays { get; set; }
+        public string TotalOvertimeDays { get; set; }
+        public string TotalOvertimeAfterWork { get; set; }
+        public string EarliestEntryTime { get; set; }
+        public string LatestExitTime { get; set; }
+        public string AverageEntryTime { get; set; }
+        public string AverageExitTime { get; set; }
+        public string AverageWorkdayHours { get; set; }
+        public string KasriTime { get; set; }
+        public string TotalAdjustmentOrOvertime { get; set; }
+    }
+
     private readonly AppServices _recordService;
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
@@ -11,7 +33,8 @@ public class AttendanceCalculationService
 
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
-    public Dictionary<string, string> Labels { get; private set; }
+    public List<DateTime> overtimeinHoliday { get; private set; }
+    public Dictionary<string, string> DataWithTitle { get; private set; }
 
     public AttendanceCalculationService(AppServices recordService)
     {
@@ -44,146 +67,276 @@ public class AttendanceCalculationService
 
     public Array Calculate(string userId, string fromDateTime, string toDateTime)
     {
+
         var filtered = DataFilterService.ApplyFilter(
-            _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
+      _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
+
+        // فیلتر کردن داده‌ها بر اساس تاریخ و شناسه کاربری
 
         if (filtered?.Any() == false)
-            throw new ArgumentNullException("داده ای وجود ندارد");
+            throw new ArgumentNullException("داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
 
+        // دریافت روزهای کاری فروردین (تقویم شمسی)
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
 
+        // مرتب کردن داده‌ها بر اساس تاریخ و زمان
         var dataFiltered = filtered.Select(x => new { x.UserId, x.DateTime })
             .OrderBy(x => x.DateTime);
 
+        // گروه‌بندی داده‌ها بر اساس شناسه کاربری و تاریخ
         var dataFilteredGrouped = dataFiltered.GroupBy(x => (x.UserId, x.DateTime.Date)).ToList();
 
         // تاریخ‌هایی که کارمند حضور داشته است
         var pr = dataFilteredGrouped.Select(g => g.Key.Date).ToList();
 
+        // دریافت تعطیلات از تقویم شمسی
         var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
 
-        var overtimeinHoliday = pr.Where(day => holidays.Contains(day)).Select(g => g.Date.Date).ToList();
+        // تاریخ‌های تعطیل که کارمند حضور داشته است
+        overtimeinHoliday = pr.Where(day => holidays.Contains(day)).Select(g => g.Date.Date).ToList();
 
         var groupedData = dataFilteredGrouped.Select(g =>
         {
-            var overtime = TimeSpan.Zero;
-            var kasri = TimeSpan.Zero;
+            var overtime = TimeSpan.Zero; // مقدار پیش‌فرض اضافه کاری
+            var kasri = TimeSpan.Zero; // مقدار پیش‌فرض کسری ساعت
 
-            var orderedTimes = g.Select(x => x.DateTime).ToArray();
+            var orderedTimes = g.Select(x => x.DateTime).ToArray(); // آرایه‌ای از زمان‌های ورودی و خروجی
 
-            var minDateTime = orderedTimes.First();
-            var maxDateTime = orderedTimes.ElementAtOrDefault(1);
-            if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime;
+            var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
+            var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
+            if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
 
+            // اگر زمان ورودی و خروجی دوم وجود داشته باشد
             DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
             DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
 
+            // بررسی اینکه آیا فرد در تعطیلات کار کرده است
             var IsWorkinginHoliday = overtimeinHoliday.Contains(minDateTime.Date.Date);
+
+            // بررسی اینکه آیا روز جاری پنجشنبه است
             var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
+
+            // بررسی اینکه آیا روز جاری در ماه فروردین است
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
 
+            // محاسبه مدت زمان حضور (ورود - خروج)
             var duration = maxDateTime - minDateTime;
             var duration2 = minDateTime2.HasValue && maxDateTime2.HasValue
                 ? maxDateTime2.Value - minDateTime2.Value
                 : TimeSpan.Zero;
 
+            // جمع مدت زمان حضور
             var totalDuration = duration + duration2;
+
+            // بررسی اینکه آیا مدت زمان کاری کمتر از یک ساعت است و فرد در تعطیلات نبوده است
             var isNaghes = totalDuration.TotalMinutes < 60 && !IsWorkinginHoliday;
 
+            // محاسبه زمان تاخیر در صورت لزوم
             var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60 && !IsWorkinginHoliday
                 ? minDateTime.TimeOfDay - _lateTm
                 : TimeSpan.Zero;
 
+            // تعیین ساعات کاری استاندارد بر اساس روز هفته
             var standardWorkTime = isThursday ? _fullwork_ThursdayTm
                 : isFarvardin ? _fullwork_FarvardinTm
                 : _fullworkTm;
 
+            // بررسی اینکه آیا فرد ساعت کامل کار کرده است یا نه
             var fullWork = false;
             if (totalDuration >= standardWorkTime)
             {
-                overtime = totalDuration - standardWorkTime;
+                overtime = totalDuration - standardWorkTime; // اضافه کاری محاسبه می‌شود
                 fullWork = true;
             }
             else if (totalDuration < standardWorkTime && !IsWorkinginHoliday && !isNaghes)
             {
-                kasri = standardWorkTime - totalDuration;
+                kasri = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
             }
 
             return new
             {
+                // روز هفته
                 DayOfWeek = g.Key.Date.ToString("dddd"),
+
+                // تاریخ روز
                 Date = g.Key.Date.ToString("yyyy/MM/dd"),
+
+                // زمان ورود
                 EntryTime = minDateTime.ToString("HH:mm:ss"),
+
+                // زمان خروج
                 ExitTime = maxDateTime.ToString("HH:mm:ss"),
+
+                // زمان ورود دوم اگر وجود داشته باشد
                 EntryTime2 = minDateTime2?.ToString("HH:mm:ss"),
+
+                // زمان خروج دوم اگر وجود داشته باشد
                 ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
+
+                // مدت زمان کارکرد به دقیقه
                 DurationMin = totalDuration.TotalMinutes,
+
+                // مدت زمان کارکرد به فرمت ساعت:دقیقه
                 DurationHour = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
+
+                // آیا فرد دیر آمده است؟
                 IsLate = lateMinutes != TimeSpan.Zero && !IsWorkinginHoliday,
+
+                // مقدار دقیقه تاخیر
                 LateMinutes = lateMinutes,
+
+                // زمان اضافه کاری
                 Overtime = overtime.ToString(@"hh\:mm\:ss"),
+
+                // آیا فرد ساعت کامل کار کرده است؟
                 FullWork = fullWork,
+
+                // مقدار کسری ساعت
                 IsKasri = kasri.TotalMinutes,
+
+                // آیا کار فرد ناقص بوده است؟
                 IsNaghes = isNaghes
             };
         }).ToArray();
 
-        // محاسبه اطلاعات
+        // محاسبه جمع دقیقه‌های تاخیر
         var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
+
+        // محاسبه جمع دقیقه‌های اضافه کاری
         var totalOvertimeMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime).TotalMinutes));
+
+        // تعداد روزهای ناقص که مدت زمان آن‌ها کمتر از یک ساعت بوده است
         var totalling = groupedData.Count(x => x.DurationMin < 60);
+
+        // جمع کل دقایق کاری
         var totalMinutes = groupedData.Sum(x => x.DurationMin);
+
+        // محاسبه میانگین زمان ورود
         var entryTimes = groupedData.Select(x => TimeSpan.Parse(x.EntryTime)).ToList();
         var avgEntryTime = TimeSpan.FromTicks((long)entryTimes.Average(t => t.Ticks));
+
+        // محاسبه میانگین زمان خروج
         var exitTimes = groupedData.Select(x => TimeSpan.Parse(x.ExitTime)).ToList();
         var avgExitTime = TimeSpan.FromTicks((long)exitTimes.Average(t => t.Ticks));
+
+        // جمع ساعات کاری کل
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
+
+        // تعداد روزهایی که فرد ساعت کامل کار کرده است
         var total = groupedData.Count(x => x.FullWork);
+
+        // تعداد روزهای تاخیر
         var lateDays = groupedData.Count(x => x.IsLate);
 
+        // بدست آوردن روزهای کاری در بازه زمانی مشخص
         var workDays = Enumerable.Range(0, (DateTime.Parse(toDateTime) - DateTime.Parse(fromDateTime)).Days + 1)
             .Select(i => DateTime.Parse(fromDateTime).AddDays(i))
             .ToList();
 
+        // محاسبه روزهای غیبت
         var absence = workDays.Where(day => !pr.Contains(day) && !holidays.Contains(day));
         var absenceCount = absence.Count();
 
+        // تعیین روزهای غیبت و تعطیلات
         QeybathaDaysList = absence.ToList();
         HolidaysDaysList = workDays.Where(day => holidays.Contains(day)).ToList();
 
+        // تعداد روزهای اضافه کاری
         var overtimeCount = pr.Count(day => holidays.Contains(day));
+
+        // بدست آوردن زودترین زمان ورود
         var minEntryTime = TimeSpan.FromTicks(entryTimes.Min(t => t.Ticks));
+
+        // بدست آوردن دیرترین زمان خروج
         var maxExitTime = TimeSpan.FromTicks(exitTimes.Max(t => t.Ticks));
+
+        // محاسبه میانگین دقایق کاری در هر روز
         var avgMinutes = totalMinutes / groupedData.Count();
+
+        // محاسبه میانگین ساعات کاری روزانه
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
+
+        // محاسبه مجموع کسری زمان
         var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.IsKasri));
+
+        // محاسبه تعدیل یا اضافه کاری خالص
         var tadil = totalOvertimeMinutes - kasriTime;
 
-        Labels = new Dictionary<string, string>
+
+        Report = new AttendanceReport
         {
-            { "مجموع روز های کاری", $"{groupedData?.Count()} از {groupedData.Count() + absenceCount}" },
-            { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", total.ToString() },
-            { "مجموع ساعات کاری", $@"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}" },
-            { "مجموع دقایق کاری", totalMinutes.ToString("0") + "m" },
-            { "مجموع روز های ورود باتاخیر", lateDays.ToString() },
-            {
-                "مجموع تاخیر ها به ساعت",
-                $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}"
-            },
-            { "مجموع روز های ناقص", totalling.ToString() },
-            { "مجموع غیبت (غیر تعطیلات)", absenceCount.ToString() },
-            { "مجموع اضافه کاری", overtimeCount.ToString() },
-            {
-                " مجموع اضافه کاری بعد ساعت کاری",
-                $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}"
-            },
-            { "زودترین زمان ورود", minEntryTime.ToString(@"hh\:mm\:ss") },
-            { "دیرترین زمان خروج", maxExitTime.ToString(@"hh\:mm\:ss") },
-            { "میانگین ساعت های ورود", avgEntryTime.ToString(@"hh\:mm\:ss") },
-            { "میانگین ساعت های خروج", avgExitTime.ToString(@"hh\:mm\:ss") },
-            { "میانگین ساعت کاری روزانه", avgTimeSpan.ToString(@"hh\:mm\:ss") },
-            { "مقدار کسری به ساعت", $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}" },
-            { "مقدار تعدیل یا اضافه ساعت کاری خالص", tadil.TotalMinutes.ToString() }
+            // مجموع روزهای کاری (تعداد کل روزهای کاری که فرد در سیستم ثبت کرده است)
+            TotalWorkDays = $"{groupedData?.Count()} از {groupedData.Count() + absenceCount}",
+
+            // مجموع روزهای کاری کامل طبق 8 ساعت و 30 دقیقه کار (تعداد روزهای کاری که فرد کار کامل داشته)
+            TotalFullWorkDays = total.ToString(),
+
+            // مجموع ساعات کاری (تعداد ساعات کاری کل در فرمت ساعت:دقیقه)
+            TotalWorkingHours = $@"{(int)totalHours.TotalHours:D2}:{totalHours.Minutes:D2}",
+
+            // مجموع دقایق کاری (تعداد دقایق کاری کل به صورت دقیقه)
+            TotalMinutesWorked = totalMinutes.ToString("0") + "m",
+
+            // مجموع روزهای ورود با تاخیر (تعداد روزهایی که فرد با تاخیر وارد شده)
+            TotalLateDays = lateDays.ToString(),
+
+            // مجموع تاخیرها به ساعت (زمان تاخیر کل در فرمت ساعت:دقیقه:ثانیه)
+            TotalLateTime = $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
+
+            // مجموع روزهای ناقص (تعداد روزهایی که فرد کار ناقص داشته)
+            TotalIncompleteDays = totalling.ToString(),
+
+            // مجموع غیبت‌ها (تعداد روزهایی که فرد غیبت داشته غیر از تعطیلات)
+            TotalAbsenceDays = absenceCount.ToString(),
+
+            // مجموع روزهای اضافه کاری (تعداد روزهایی که فرد اضافه کار داشته)
+            TotalOvertimeDays = overtimeCount.ToString(),
+
+            // مجموع اضافه کاری بعد از ساعت کاری (زمان اضافه کاری کل فرد بعد از ساعت کاری رسمی در فرمت ساعت:دقیقه:ثانیه)
+            TotalOvertimeAfterWork = $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
+
+            // زودترین زمان ورود (اولین زمان ورود فرد در طول دوره)
+            EarliestEntryTime = minEntryTime.ToString(@"hh\:mm\:ss"),
+
+            // دیرترین زمان خروج (آخرین زمان خروج فرد در طول دوره)
+            LatestExitTime = maxExitTime.ToString(@"hh\:mm\:ss"),
+
+            // میانگین ساعت‌های ورود (میانگین زمان‌های ورود فرد در طول دوره به صورت ساعت:دقیقه:ثانیه)
+            AverageEntryTime = avgEntryTime.ToString(@"hh\:mm\:ss"),
+
+            // میانگین ساعت‌های خروج (میانگین زمان‌های خروج فرد در طول دوره به صورت ساعت:دقیقه:ثانیه)
+            AverageExitTime = avgExitTime.ToString(@"hh\:mm\:ss"),
+
+            // میانگین ساعت کاری روزانه (میانگین ساعات کاری فرد در هر روز به صورت ساعت:دقیقه:ثانیه)
+            AverageWorkdayHours = avgTimeSpan.ToString(@"hh\:mm\:ss"),
+
+            // مقدار کسری به ساعت (مجموع زمان کسری فرد به صورت ساعت:دقیقه:ثانیه)
+            KasriTime = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}",
+
+            // مقدار تعدیل یا اضافه ساعت کاری خالص (مجموع ساعات اضافه کاری که باید تعدیل شود یا اضافه شود به صورت دقیقه)
+            TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString()
+        };
+
+        //برای اکسل
+        var DataWithTitle = new Dictionary<string, string>
+        {
+            { "مجموع روز های کاری", Report.TotalWorkDays },
+            { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", Report.TotalFullWorkDays },
+            { "مجموع ساعات کاری", Report.TotalWorkingHours },
+            { "مجموع دقایق کاری", Report.TotalMinutesWorked },
+            { "مجموع روز های ورود باتاخیر", Report.TotalLateDays },
+            { "مجموع تاخیر ها به ساعت", Report.TotalLateTime },
+            { "مجموع روز های ناقص", Report.TotalIncompleteDays },
+            { "مجموع غیبت (غیر تعطیلات)", Report.TotalAbsenceDays },
+            { "مجموع اضافه کاری", Report.TotalOvertimeDays },
+            { "مجموع اضافه کاری بعد ساعت کاری", Report.TotalOvertimeAfterWork },
+            { "زودترین زمان ورود", Report.EarliestEntryTime },
+            { "دیرترین زمان خروج", Report.LatestExitTime },
+            { "میانگین ساعت های ورود", Report.AverageEntryTime },
+            { "میانگین ساعت های خروج", Report.AverageExitTime },
+            { "میانگین ساعت کاری روزانه", Report.AverageWorkdayHours },
+            { "مقدار کسری به ساعت", Report.KasriTime },
+            { "مقدار تعدیل یا اضافه ساعت کاری خالص", Report.TotalAdjustmentOrOvertime }
         };
 
         return groupedData.ToArray();
