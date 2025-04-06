@@ -5,13 +5,15 @@ namespace VorodKhoroj;
 public partial class Frm_Main : Form
 {
     private readonly AppServices _services;
+    private readonly AttendanceCalculationService _calcServices;
 
     private DataTable _temp;
 
-    public Frm_Main(AppServices services)
+    public Frm_Main(AppServices services, AttendanceCalculationService caclService)
     {
         InitializeComponent();
         _services = services;
+        _calcServices = caclService;
     }
 
     private void Frm_Main_Load(object sender, EventArgs e)

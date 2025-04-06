@@ -14,6 +14,9 @@ global using Serilog.Events;
 global using System.Runtime.CompilerServices;
 global using System.Diagnostics;
 global using VorodKhoroj.Services;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.EntityFrameworkCore;
 
 
 namespace VorodKhoroj
@@ -26,11 +29,29 @@ namespace VorodKhoroj
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            var host = CreateHostBuilder().Build();
+
             ApplicationConfiguration.Initialize();
+
+            var form = host.Services.GetRequiredService<Frm_Main>();
+
+            ApplicationConfiguration.Initialize();
+
             Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
-            Application.Run(new Frm_Main(new AppServices()));
+
+            Application.Run(form);
+
         }
+
+
+        public static IHostBuilder CreateHostBuilder() =>
+              Host.CreateDefaultBuilder()
+                  .ConfigureServices((_, services) =>
+                  {
+
+                      services.AddSingleton<AppServices>();
+                      services.AddTransient<AttendanceCalculationService>();
+                      services.AddScoped<Frm_Main>();
+                  });
     }
 }
