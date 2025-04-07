@@ -6,6 +6,7 @@ public partial class FrmCalc : Form
     private readonly AttendanceCalculationService _calcServices;
 
     //TabPage 0_VorodKhoroj:
+
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
     private string _userid;
@@ -26,7 +27,6 @@ public partial class FrmCalc : Form
         userid_txtbox.DataSource = _service?.GetUsers();
         DataGridConfig();
         DataGridViewConfig();
-
     }
 
     private void DataGridConfig()
@@ -35,7 +35,7 @@ public partial class FrmCalc : Form
         {
             userid_txtbox.Text = _userid;
 
-            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException("_userId", "خطای داخلی ");
+            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($"_userId", "خطای داخلی ");
 
             dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime);
 
@@ -53,29 +53,31 @@ public partial class FrmCalc : Form
 
     private void UpdateLabels()
     {
-        var _temp = _calcServices.Report;
+        var temp = _calcServices.Report;
 
-        lbl_sumdayworker.Text = _temp.TotalWorkDays;
-        lbl_fullwork.Text = _temp.TotalFullWorkDays;
-        lbl_sumhour.Text = _temp.TotalWorkingHours;
-        lbl_summinute.Text = _temp.TotalMinutesWorked;
-        lbl_sumentryDelay.Text = _temp.TotalLateTime;
-        lbl_sumlate.Text = _temp.TotalLateDays;
-        lbl_nofull.Text = _temp.TotalIncompleteDays;
-        lbl_sumOff.Text = _temp.TotalAbsenceDays;
-        lbl_sumaddwork.Text = _temp.TotalOvertimeDays;
-        lbl_sumaddworkhour.Text = _temp.TotalOvertimeAfterWork;
-        lbl_minEntry.Text = _temp.EarliestEntryTime;
-        lbl_MaxExitTime.Text = _temp.LatestExitTime;
-        lbl_avgentry.Text = _temp.AverageEntryTime;
-        lbl_avgexit.Text = _temp.AverageExitTime;
-        lbl_avgtimework.Text = _temp.AverageWorkdayHours;
-        lbl_sumkasri.Text = _temp.KasriTime;
-        lbl_tadil.Text = _temp.TotalAdjustmentOrOvertime;
+        lbl_sumdayworker.Text = temp.TotalWorkDays;
+        lbl_fullwork.Text = temp.TotalFullWorkDays;
+        lbl_sumhour.Text = temp.TotalWorkingHours;
+        lbl_summinute.Text = temp.TotalMinutesWorked;
+        lbl_sumentryDelay.Text = temp.TotalLateDays;
+        lbl_sumlate.Text = temp.TotalLateTime;
+        lbl_nofull.Text = temp.TotalIncompleteDays;
+        lbl_sumOff.Text = temp.TotalAbsenceDays;
+        lbl_sumaddwork.Text = temp.TotalOvertimeDays;
+        lbl_sumaddworkhour.Text = temp.TotalOvertimeAfterWork;
+        lbl_minEntry.Text = temp.EarliestEntryTime;
+        lbl_MaxExitTime.Text = temp.LatestExitTime;
+        lbl_avgentry.Text = temp.AverageEntryTime;
+        lbl_avgexit.Text = temp.AverageExitTime;
+        lbl_avgtimework.Text = temp.AverageWorkdayHours;
+        lbl_sumkasri.Text = temp.KasriTime;
+        lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
     }
 
     private void DataGridViewConfig()
     {
+        if (dataView_Calculate?.Columns?.Count == 0) return;
+
         dataView_Calculate.Columns[0].HeaderText = @"روز در هفته";
         dataView_Calculate.Columns[1].HeaderText = @"تاریخ";
         dataView_Calculate.Columns[2].HeaderText = @"ساعت ورود";

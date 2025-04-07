@@ -3,6 +3,7 @@
 public class AttendanceCalculationService
 {
     public AttendanceReport Report { get; set; }
+
     public class AttendanceReport
     {
         public string TotalWorkDays { get; set; }
@@ -27,9 +28,9 @@ public class AttendanceCalculationService
     private readonly AppServices _recordService;
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
-    private TimeSpan _fullworkTm = TimeSpan.Parse("08:30:00");
-    private TimeSpan _fullwork_ThursdayTm = TimeSpan.Parse("05:30:00");
-    private TimeSpan _fullwork_FarvardinTm = TimeSpan.Parse("07:45:00");
+    private TimeSpan _fullWorkTm = TimeSpan.Parse("08:30:00");
+    private TimeSpan _fullWorkThursdayTm = TimeSpan.Parse("05:30:00");
+    private TimeSpan _fullWorkFarvardinTm = TimeSpan.Parse("07:45:00");
 
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
@@ -49,27 +50,26 @@ public class AttendanceCalculationService
 
     public AttendanceCalculationService WithFullWorkTime(TimeSpan fullWorkTime)
     {
-        _fullworkTm = fullWorkTime;
+        _fullWorkTm = fullWorkTime;
         return this;
     }
 
     public AttendanceCalculationService WithFullWorkThursdayTime(TimeSpan thursdayTime)
     {
-        _fullwork_ThursdayTm = thursdayTime;
+        _fullWorkThursdayTm = thursdayTime;
         return this;
     }
 
     public AttendanceCalculationService WithFullWorkFarvardinTime(TimeSpan farvardinTime)
     {
-        _fullwork_FarvardinTm = farvardinTime;
+        _fullWorkFarvardinTm = farvardinTime;
         return this;
     }
 
     public Array Calculate(string userId, string fromDateTime, string toDateTime)
     {
-
         var filtered = DataFilterService.ApplyFilter(
-      _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
+            _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
         // فیلتر کردن داده‌ها بر اساس تاریخ و شناسه کاربری
 
@@ -104,7 +104,8 @@ public class AttendanceCalculationService
 
             var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
-            if (maxDateTime == DateTime.MinValue) maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
+            if (maxDateTime == DateTime.MinValue)
+                maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
 
             // اگر زمان ورودی و خروجی دوم وجود داشته باشد
             DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
@@ -137,9 +138,9 @@ public class AttendanceCalculationService
                 : TimeSpan.Zero;
 
             // تعیین ساعات کاری استاندارد بر اساس روز هفته
-            var standardWorkTime = isThursday ? _fullwork_ThursdayTm
-                : isFarvardin ? _fullwork_FarvardinTm
-                : _fullworkTm;
+            var standardWorkTime = isThursday ? _fullWorkThursdayTm
+                : isFarvardin ? _fullWorkFarvardinTm
+                : _fullWorkTm;
 
             // بررسی اینکه آیا فرد ساعت کامل کار کرده است یا نه
             var fullWork = false;
@@ -281,7 +282,8 @@ public class AttendanceCalculationService
             TotalLateDays = lateDays.ToString(),
 
             // مجموع تاخیرها به ساعت (زمان تاخیر کل در فرمت ساعت:دقیقه:ثانیه)
-            TotalLateTime = $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
+            TotalLateTime =
+                $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
 
             // مجموع روزهای ناقص (تعداد روزهایی که فرد کار ناقص داشته)
             TotalIncompleteDays = totalling.ToString(),
@@ -293,7 +295,8 @@ public class AttendanceCalculationService
             TotalOvertimeDays = overtimeCount.ToString(),
 
             // مجموع اضافه کاری بعد از ساعت کاری (زمان اضافه کاری کل فرد بعد از ساعت کاری رسمی در فرمت ساعت:دقیقه:ثانیه)
-            TotalOvertimeAfterWork = $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
+            TotalOvertimeAfterWork =
+                $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
 
             // زودترین زمان ورود (اولین زمان ورود فرد در طول دوره)
             EarliestEntryTime = minEntryTime.ToString(@"hh\:mm\:ss"),
@@ -314,11 +317,11 @@ public class AttendanceCalculationService
             KasriTime = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}",
 
             // مقدار تعدیل یا اضافه ساعت کاری خالص (مجموع ساعات اضافه کاری که باید تعدیل شود یا اضافه شود به صورت دقیقه)
-            TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString()
+            TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString("0") + "m"
         };
 
         //برای اکسل
-        var DataWithTitle = new Dictionary<string, string>
+        DataWithTitle = new Dictionary<string, string>
         {
             { "مجموع روز های کاری", Report.TotalWorkDays },
             { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", Report.TotalFullWorkDays },

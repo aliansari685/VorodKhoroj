@@ -141,7 +141,7 @@
             btn_next.UseVisualStyleBackColor = true;
             btn_next.Click += btn_next_Click;
             // 
-            // Userid_txtbox
+            // userid_txtbox
             // 
             userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -424,7 +424,7 @@
             // 
             lbl_sumOff.AutoSize = true;
             lbl_sumOff.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_sumOff.Location = new Point(204, 11);
+            lbl_sumOff.Location = new Point(205, 11);
             lbl_sumOff.Name = "lbl_sumOff";
             lbl_sumOff.Size = new Size(30, 19);
             lbl_sumOff.TabIndex = 21;
@@ -485,7 +485,7 @@
             // 
             lbl_sumentryDelay.AutoSize = true;
             lbl_sumentryDelay.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_sumentryDelay.Location = new Point(396, 11);
+            lbl_sumentryDelay.Location = new Point(383, 11);
             lbl_sumentryDelay.Name = "lbl_sumentryDelay";
             lbl_sumentryDelay.Size = new Size(30, 19);
             lbl_sumentryDelay.TabIndex = 15;

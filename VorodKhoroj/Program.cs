@@ -32,11 +32,11 @@ namespace VorodKhoroj
             Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
             try
             {
+                ApplicationConfiguration.Initialize();
+
                 var host = CreateHostBuilder().Build();
 
                 var form = host.Services.GetRequiredService<Frm_Main>();
-
-                ApplicationConfiguration.Initialize();
 
                 Application.Run(form);
             }
@@ -47,14 +47,14 @@ namespace VorodKhoroj
         }
 
 
-        public static IHostBuilder CreateHostBuilder() =>
-              Host.CreateDefaultBuilder()
-                  .ConfigureServices((_, services) =>
-                  {
+        static IHostBuilder CreateHostBuilder() =>
+             Host.CreateDefaultBuilder()
+                 .ConfigureServices((_, services) =>
+                 {
 
-                      services.AddSingleton<AppServices>();
-                      services.AddTransient<AttendanceCalculationService>();
-                      services.AddScoped<Frm_Main>();
-                  });
+                     services.AddSingleton<AppServices>();
+                     services.AddTransient<AttendanceCalculationService>();
+                     services.AddScoped<Frm_Main>();
+                 });
     }
 }
