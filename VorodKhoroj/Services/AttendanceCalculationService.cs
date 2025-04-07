@@ -68,10 +68,7 @@ public class AttendanceCalculationService
 
     public Array Calculate(string userId, string fromDateTime, string toDateTime)
     {
-        var filtered = DataFilterService.ApplyFilter(
-            _recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
-
-        // فیلتر کردن داده‌ها بر اساس تاریخ و شناسه کاربری
+        var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
         if (filtered?.Any() == false)
             throw new ArgumentNullException("داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
@@ -200,6 +197,8 @@ public class AttendanceCalculationService
             };
         }).ToArray();
 
+        #region GroupingAttendanceCalculation
+
         // محاسبه جمع دقیقه‌های تاخیر
         var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
 
@@ -263,6 +262,7 @@ public class AttendanceCalculationService
         // محاسبه تعدیل یا اضافه کاری خالص
         var tadil = totalOvertimeMinutes - kasriTime;
 
+        #endregion
 
         Report = new AttendanceReport
         {
@@ -320,7 +320,14 @@ public class AttendanceCalculationService
             TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString("0") + "m"
         };
 
-        //برای اکسل
+        SetValueForLabels();
+
+        return groupedData.ToArray();
+    }
+
+    //برای اکسل
+    private void SetValueForLabels()
+    {
         DataWithTitle = new Dictionary<string, string>
         {
             { "مجموع روز های کاری", Report.TotalWorkDays },
@@ -341,7 +348,5 @@ public class AttendanceCalculationService
             { "مقدار کسری به ساعت", Report.KasriTime },
             { "مقدار تعدیل یا اضافه ساعت کاری خالص", Report.TotalAdjustmentOrOvertime }
         };
-
-        return groupedData.ToArray();
     }
 }

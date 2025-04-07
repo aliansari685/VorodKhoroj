@@ -38,7 +38,7 @@ namespace VorodKhoroj.Classes
                 {
                     list.Add(new Holiday { Title = "جمعه", Date = dt });
                 }
-                if (_persianCalendar.GetMonth(dt) == 1 && farvardinHolidays.Contains(_persianCalendar.GetDayOfMonth(dt)))
+                if (PersianCalendar.GetMonth(dt) == 1 && farvardinHolidays.Contains(PersianCalendar.GetDayOfMonth(dt)))
                 {
                     list.Add(new Holiday { Title = "نوروز", Date = dt });
                 }
@@ -55,7 +55,7 @@ namespace VorodKhoroj.Classes
 
             for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
             {
-                if (_persianCalendar.GetMonth(dt) == 1 && farvardindays.Contains(_persianCalendar.GetDayOfMonth(dt)))
+                if (PersianCalendar.GetMonth(dt) == 1 && farvardindays.Contains(PersianCalendar.GetDayOfMonth(dt)))
                 {
                     list.Add(dt.Date);
                 }
@@ -64,13 +64,13 @@ namespace VorodKhoroj.Classes
             return list;
         }
 
-        private static DateTime _dateTime = ConfigDateTime();
-        private static readonly PersianCalendar _persianCalendar = new();
+        public static DateTime DateTime = ConfigDateTime();
+        public static readonly PersianCalendar PersianCalendar = new();
         public static string PersianCalenderDateNow()
         {
-            int year = _persianCalendar.GetYear(_dateTime);
-            int month = _persianCalendar.GetMonth(_dateTime);
-            int day = _persianCalendar.GetDayOfMonth(_dateTime);
+            int year = PersianCalendar.GetYear(DateTime);
+            int month = PersianCalendar.GetMonth(DateTime);
+            int day = PersianCalendar.GetDayOfMonth(DateTime);
             return $"{year}/{month:D2}/{day:D2}";
         }
 
@@ -78,16 +78,16 @@ namespace VorodKhoroj.Classes
         {
             var dateTime = ConfigDateTime(inputDateTime);
             // تبدیل تاریخ میلادی به شمسی
-            int year = _persianCalendar.GetYear(dateTime);
-            int month = _persianCalendar.GetMonth(dateTime);
-            int day = _persianCalendar.GetDayOfMonth(dateTime);
+            int year = PersianCalendar.GetYear(dateTime);
+            int month = PersianCalendar.GetMonth(dateTime);
+            int day = PersianCalendar.GetDayOfMonth(dateTime);
 
-            return new DateTime(year, month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, _persianCalendar);
+            return new DateTime(year, month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, PersianCalendar);
             //return: 11:11:11 19/02/1398
 
         }
 
-        public static string ConvertToShamsiString(DateTime dateTime) => $"{_persianCalendar.GetYear(dateTime)}/{_persianCalendar.GetMonth(dateTime):D2}/{_persianCalendar.GetDayOfMonth(dateTime):D2} {dateTime:HH:mm:ss}";
+        public static string ConvertToShamsiString(DateTime dateTime) => $"{PersianCalendar.GetYear(dateTime)}/{PersianCalendar.GetMonth(dateTime):D2}/{PersianCalendar.GetDayOfMonth(dateTime):D2} {dateTime:HH:mm:ss}";
 
         static DateTime ConfigDateTime(string inputDateTime)
         {
