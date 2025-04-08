@@ -35,7 +35,6 @@ public class AttendanceCalculationService
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
     public List<DateTime> overtimeinHoliday { get; private set; }
-    public Dictionary<string, string> DataWithTitle { get; private set; }
 
     public AttendanceCalculationService(AppServices recordService)
     {
@@ -320,15 +319,12 @@ public class AttendanceCalculationService
             TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString("0") + "m"
         };
 
-        SetValueForLabels();
-
         return groupedData.ToArray();
     }
 
-    //برای اکسل
-    private void SetValueForLabels()
+    public Dictionary<string, string> GetDataWithTitle()
     {
-        DataWithTitle = new Dictionary<string, string>
+        return new Dictionary<string, string>
         {
             { "مجموع روز های کاری", Report.TotalWorkDays },
             { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", Report.TotalFullWorkDays },

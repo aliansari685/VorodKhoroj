@@ -130,7 +130,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            CommonHelper.DataGridToExcel(dataView_Calculate, _calcServices.DataWithTitle);
+            CommonHelper.DataGridToExcel(dataView_Calculate, _calcServices.GetDataWithTitle());
         }
         catch (Exception ex)
         {
@@ -369,7 +369,7 @@ public partial class FrmCalc : Form
 //    lbl_tadil.Text = tadil.TotalMinutes.ToString();
 //    dataView_calender.DataSource = groupedData.ToList().ToDataTable();
 
-//    DataWithTitle = new Dictionary<string, string>
+//    GetDataWithTitle = new Dictionary<string, string>
 //    {
 //        { "مجموع روز های کاری", lbl_sumdayworker.Text },
 //        { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", lbl_fullwork.Text },
