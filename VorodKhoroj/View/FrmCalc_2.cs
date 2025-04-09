@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Helpers;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc
 {
@@ -23,7 +25,7 @@ public partial class FrmCalc
     }
     private void BtnExportExcelClick(object sender, EventArgs e)
     {
-        CommonHelper.DataGridToExcel(dataView_late);
+        DataExporter.ExportDataGrid(dataView_late);
     }
     private void radioButton_CheckedChanged(object? sender, EventArgs? e)
     {

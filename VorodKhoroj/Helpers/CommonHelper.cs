@@ -8,6 +8,7 @@ namespace VorodKhoroj.Classes
         {
             return methodName;
         }
+
         public static void ShowMessage(Exception ex)
         {
             using (LogContext.PushProperty("Method", GetCallerMethod()))
@@ -19,153 +20,15 @@ namespace VorodKhoroj.Classes
             }
 
         }
+
         public static void ShowMessage(string message)
         {
             string caption = "پیام";
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
         public static bool Validation(params string[] str) => !(str.Any(string.IsNullOrWhiteSpace));
 
-        public static void DataGridToExcel(DataGridView dataGridView, Dictionary<string, string> labels)
-        {
-            try
-            {
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-                using (SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" })
-                {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        using (ExcelPackage package = new())
-                        {
-                            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Data");
-
-                            int currentRow = 1;
-                            int currentColumn = 1; // شروع از ستون اول
-
-                            // 2️⃣ افزودن عنوان ستون‌های DataGridView
-                            for (int i = 0; i < dataGridView.Columns.Count; i++)
-                            {
-                                worksheet.Cells[currentRow, i + 1].Value = dataGridView.Columns[i].HeaderText;
-                            }
-
-                            // 3️⃣ افزودن داده‌های DataGridView
-                            for (int i = 0; i < dataGridView.Rows.Count; i++)
-                            {
-                                for (int j = 0; j < dataGridView.Columns.Count; j++)
-                                {
-                                    worksheet.Cells[currentRow + i + 1, j + 1].Value =
-                                        dataGridView.Rows[i].Cells[j].Value?.ToString();
-                                }
-                            }
-                            int lastDataRow = currentRow + dataGridView.Rows.Count + 2;
-
-                            foreach (var label in labels)
-                            {
-                                worksheet.Cells[lastDataRow, currentColumn].Value = label.Key;   // عنوان لیبل
-                                worksheet.Cells[lastDataRow + 1, currentColumn].Value = label.Value; // مقدار لیبل در ردیف دوم
-                                currentColumn++; // رفتن به ستون بعدی
-                            }
-                            // ذخیره فایل
-                            File.WriteAllBytes(sfd.FileName, package.GetAsByteArray());
-                            CommonHelper.ShowMessage("فایل اکسل با موفقیت ذخیره شد!");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-        }
-
-        public static void DataGridToExcel(DataGridView dataGridView)
-        {
-            try
-            {
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-                using (SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" })
-                {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        using (ExcelPackage package = new())
-                        {
-                            using (ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Data"))
-                            {
-                                // افزودن عنوان ستون‌ها
-                                for (int i = 0; i < dataGridView.Columns.Count; i++)
-                                {
-                                    worksheet.Cells[1, i + 1].Value = dataGridView.Columns[i].HeaderText;
-                                }
-
-                                // افزودن داده‌های DataGridView
-                                for (int i = 0; i < dataGridView.Rows.Count; i++)
-                                {
-                                    for (int j = 0; j < dataGridView.Columns.Count; j++)
-                                    {
-                                        worksheet.Cells[i + 2, j + 1].Value =
-                                            dataGridView.Rows[i].Cells[j].Value?.ToString();
-                                    }
-                                }
-
-                                // ذخیره فایل
-                                File.WriteAllBytes(sfd.FileName, package.GetAsByteArray());
-                                CommonHelper.ShowMessage("فایل اکسل با موفقیت ذخیره شد!");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-        }
-
-        public static void DataToExcel(DataGridView dataGridView)
-        {
-            try
-            {
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-                using (SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" })
-                {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        using (ExcelPackage package = new())
-                        {
-                            using (ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Data"))
-                            {
-                                // افزودن عنوان ستون‌ها
-                                for (int i = 0; i < dataGridView.Columns.Count; i++)
-                                {
-                                    worksheet.Cells[1, i + 1].Value = dataGridView.Columns[i].HeaderText;
-                                }
-
-                                // افزودن داده‌های DataGridView
-                                for (int i = 0; i < dataGridView.Rows.Count; i++)
-                                {
-                                    for (int j = 0; j < dataGridView.Columns.Count; j++)
-                                    {
-                                        worksheet.Cells[i + 2, j + 1].Value =
-                                            dataGridView.Rows[i].Cells[j].Value?.ToString();
-                                    }
-                                }
-
-                                // ذخیره فایل
-                                File.WriteAllBytes(sfd.FileName, package.GetAsByteArray());
-                                CommonHelper.ShowMessage("فایل اکسل با موفقیت ذخیره شد!");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-        }
 
         public static DataTable ToDataTable<T>(this List<T> list)
         {
@@ -201,6 +64,6 @@ namespace VorodKhoroj.Classes
                 throw ex;
             }
         }
-    }
 
+    }
 }

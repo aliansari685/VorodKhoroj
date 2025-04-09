@@ -29,14 +29,17 @@ namespace VorodKhoroj
         [STAThread]
         static void Main()
         {
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
             try
             {
+                Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
+
                 ApplicationConfiguration.Initialize();
 
                 var host = CreateHostBuilder().Build();
 
                 var form = host.Services.GetRequiredService<Frm_Main>();
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 Application.Run(form);
             }

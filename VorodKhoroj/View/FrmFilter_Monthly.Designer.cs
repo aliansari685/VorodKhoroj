@@ -48,6 +48,7 @@
             Btn_submit = new Button();
             userid_txtbox = new ComboBox();
             label3 = new Label();
+            checkBox_withlabels = new CheckBox();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -70,7 +71,7 @@
             checkBox_farvardin.Margin = new Padding(3, 4, 3, 4);
             checkBox_farvardin.Name = "checkBox_farvardin";
             checkBox_farvardin.Size = new Size(67, 24);
-            checkBox_farvardin.TabIndex = 1;
+            checkBox_farvardin.TabIndex = 0;
             checkBox_farvardin.Text = "فروردین";
             checkBox_farvardin.UseVisualStyleBackColor = true;
             // 
@@ -93,7 +94,7 @@
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 4, 3, 4);
             groupBox1.Size = new Size(159, 416);
-            groupBox1.TabIndex = 3;
+            groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "انتخاب ماه ها";
             // 
@@ -104,7 +105,7 @@
             checkBox_esfand.Margin = new Padding(3, 4, 3, 4);
             checkBox_esfand.Name = "checkBox_esfand";
             checkBox_esfand.Size = new Size(57, 24);
-            checkBox_esfand.TabIndex = 12;
+            checkBox_esfand.TabIndex = 11;
             checkBox_esfand.Text = "اسفند";
             checkBox_esfand.UseVisualStyleBackColor = true;
             // 
@@ -115,7 +116,7 @@
             checkBox_bahman.Margin = new Padding(3, 4, 3, 4);
             checkBox_bahman.Name = "checkBox_bahman";
             checkBox_bahman.Size = new Size(52, 24);
-            checkBox_bahman.TabIndex = 11;
+            checkBox_bahman.TabIndex = 10;
             checkBox_bahman.Text = "بهمن";
             checkBox_bahman.UseVisualStyleBackColor = true;
             // 
@@ -126,7 +127,7 @@
             checkBox_dey.Margin = new Padding(3, 4, 3, 4);
             checkBox_dey.Name = "checkBox_dey";
             checkBox_dey.Size = new Size(43, 24);
-            checkBox_dey.TabIndex = 10;
+            checkBox_dey.TabIndex = 9;
             checkBox_dey.Text = "دی";
             checkBox_dey.UseVisualStyleBackColor = true;
             // 
@@ -137,7 +138,7 @@
             checkBox_azar.Margin = new Padding(3, 4, 3, 4);
             checkBox_azar.Name = "checkBox_azar";
             checkBox_azar.Size = new Size(42, 24);
-            checkBox_azar.TabIndex = 9;
+            checkBox_azar.TabIndex = 8;
             checkBox_azar.Text = "آذر";
             checkBox_azar.UseVisualStyleBackColor = true;
             // 
@@ -148,7 +149,7 @@
             checkBox_aban.Margin = new Padding(3, 4, 3, 4);
             checkBox_aban.Name = "checkBox_aban";
             checkBox_aban.Size = new Size(47, 24);
-            checkBox_aban.TabIndex = 8;
+            checkBox_aban.TabIndex = 7;
             checkBox_aban.Text = "آبان";
             checkBox_aban.UseVisualStyleBackColor = true;
             // 
@@ -159,7 +160,7 @@
             checkBox_mehr.Margin = new Padding(3, 4, 3, 4);
             checkBox_mehr.Name = "checkBox_mehr";
             checkBox_mehr.Size = new Size(43, 24);
-            checkBox_mehr.TabIndex = 7;
+            checkBox_mehr.TabIndex = 6;
             checkBox_mehr.Text = "مهر";
             checkBox_mehr.UseVisualStyleBackColor = true;
             // 
@@ -170,7 +171,7 @@
             checkBox_shahrivar.Margin = new Padding(3, 4, 3, 4);
             checkBox_shahrivar.Name = "checkBox_shahrivar";
             checkBox_shahrivar.Size = new Size(60, 24);
-            checkBox_shahrivar.TabIndex = 6;
+            checkBox_shahrivar.TabIndex = 5;
             checkBox_shahrivar.Text = "شهریور";
             checkBox_shahrivar.UseVisualStyleBackColor = true;
             // 
@@ -181,7 +182,7 @@
             checkBox_mordad.Margin = new Padding(3, 4, 3, 4);
             checkBox_mordad.Name = "checkBox_mordad";
             checkBox_mordad.Size = new Size(53, 24);
-            checkBox_mordad.TabIndex = 5;
+            checkBox_mordad.TabIndex = 4;
             checkBox_mordad.Text = "مرداد";
             checkBox_mordad.UseVisualStyleBackColor = true;
             // 
@@ -192,7 +193,7 @@
             checkBox_tir.Margin = new Padding(3, 4, 3, 4);
             checkBox_tir.Name = "checkBox_tir";
             checkBox_tir.Size = new Size(40, 24);
-            checkBox_tir.TabIndex = 4;
+            checkBox_tir.TabIndex = 3;
             checkBox_tir.Text = "تیر";
             checkBox_tir.UseVisualStyleBackColor = true;
             // 
@@ -203,7 +204,7 @@
             checkBox_khordad.Margin = new Padding(3, 4, 3, 4);
             checkBox_khordad.Name = "checkBox_khordad";
             checkBox_khordad.Size = new Size(55, 24);
-            checkBox_khordad.TabIndex = 3;
+            checkBox_khordad.TabIndex = 2;
             checkBox_khordad.Text = "خرداد";
             checkBox_khordad.UseVisualStyleBackColor = true;
             // 
@@ -214,7 +215,7 @@
             checkBox_ordibehesht.Margin = new Padding(3, 4, 3, 4);
             checkBox_ordibehesht.Name = "checkBox_ordibehesht";
             checkBox_ordibehesht.Size = new Size(77, 24);
-            checkBox_ordibehesht.TabIndex = 2;
+            checkBox_ordibehesht.TabIndex = 1;
             checkBox_ordibehesht.Text = "اردیبهشت";
             checkBox_ordibehesht.UseVisualStyleBackColor = true;
             // 
@@ -224,7 +225,7 @@
             Btn_CheckAll.Margin = new Padding(3, 4, 3, 4);
             Btn_CheckAll.Name = "Btn_CheckAll";
             Btn_CheckAll.Size = new Size(38, 84);
-            Btn_CheckAll.TabIndex = 0;
+            Btn_CheckAll.TabIndex = 3;
             Btn_CheckAll.Text = "همه";
             Btn_CheckAll.UseVisualStyleBackColor = true;
             Btn_CheckAll.Click += Btn_CheckAll_Click;
@@ -237,7 +238,7 @@
             btn_clear.Location = new Point(186, 270);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(38, 35);
-            btn_clear.TabIndex = 13;
+            btn_clear.TabIndex = 4;
             btn_clear.UseVisualStyleBackColor = false;
             btn_clear.Click += btn_clear_Click;
             // 
@@ -252,16 +253,16 @@
             // 
             // Btn_submit
             // 
-            Btn_submit.Location = new Point(50, 469);
+            Btn_submit.Location = new Point(49, 496);
             Btn_submit.Margin = new Padding(3, 4, 3, 4);
             Btn_submit.Name = "Btn_submit";
             Btn_submit.Size = new Size(94, 31);
-            Btn_submit.TabIndex = 15;
+            Btn_submit.TabIndex = 5;
             Btn_submit.Text = "تایید";
             Btn_submit.UseVisualStyleBackColor = true;
             Btn_submit.Click += Btn_submit_Click;
             // 
-            // Userid_txtbox
+            // userid_txtbox
             // 
             userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -270,7 +271,7 @@
             userid_txtbox.Location = new Point(17, 13);
             userid_txtbox.Name = "userid_txtbox";
             userid_txtbox.Size = new Size(57, 28);
-            userid_txtbox.TabIndex = 19;
+            userid_txtbox.TabIndex = 1;
             // 
             // label3
             // 
@@ -282,12 +283,26 @@
             label3.TabIndex = 20;
             label3.Text = "کد کاربر:";
             // 
+            // checkBox_withlabels
+            // 
+            checkBox_withlabels.AutoSize = true;
+            checkBox_withlabels.Checked = true;
+            checkBox_withlabels.CheckState = CheckState.Checked;
+            checkBox_withlabels.Location = new Point(37, 469);
+            checkBox_withlabels.Margin = new Padding(3, 4, 3, 4);
+            checkBox_withlabels.Name = "checkBox_withlabels";
+            checkBox_withlabels.Size = new Size(127, 24);
+            checkBox_withlabels.TabIndex = 21;
+            checkBox_withlabels.Text = "خلاصه داده ها باشد؟";
+            checkBox_withlabels.UseVisualStyleBackColor = true;
+            // 
             // FrmFilter_Monthly
             // 
             AcceptButton = Btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(245, 506);
+            ClientSize = new Size(245, 534);
+            Controls.Add(checkBox_withlabels);
             Controls.Add(userid_txtbox);
             Controls.Add(Btn_submit);
             Controls.Add(label3);
@@ -331,5 +346,6 @@
         private Button Btn_submit;
         public ComboBox userid_txtbox;
         private Label label3;
+        private CheckBox checkBox_withlabels;
     }
 }

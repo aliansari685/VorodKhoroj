@@ -1,8 +1,55 @@
-﻿namespace VorodKhoroj.Services;
+﻿using System.Reflection.Emit;
+
+namespace VorodKhoroj.Services;
 
 public class AttendanceCalculationService
 {
     public AttendanceReport Report { get; set; }
+
+    public class WorkRecord
+    {
+        // روز هفته
+        public string DayOfWeek { get; set; }
+
+        // تاریخ روز
+        public string Date { get; set; }
+
+        // زمان ورود
+        public string EntryTime { get; set; }
+
+        // زمان خروج
+        public string ExitTime { get; set; }
+
+        // زمان ورود دوم (قابل null بودن)
+        public string? EntryTime2 { get; set; }
+
+        // زمان خروج دوم (قابل null بودن)
+        public string? ExitTime2 { get; set; }
+
+        // مدت زمان کارکرد به دقیقه
+        public double DurationMin { get; set; }
+
+        // مدت زمان کارکرد به فرمت ساعت:دقیقه
+        public string DurationHour { get; set; }
+
+        // آیا فرد دیر آمده است؟
+        public bool IsLate { get; set; }
+
+        // مقدار دقیقه تاخیر
+        public TimeSpan LateMinutes { get; set; }
+
+        // زمان اضافه کاری
+        public string Overtime { get; set; }
+
+        // آیا فرد ساعت کامل کار کرده است؟
+        public bool IsFullWork { get; set; }
+
+        // مقدار کسری ساعت
+        public double Kasri { get; set; }
+
+        // آیا کار فرد ناقص بوده است؟
+        public bool IsNaghes { get; set; }
+    }
 
     public class AttendanceReport
     {
@@ -21,7 +68,7 @@ public class AttendanceCalculationService
         public string AverageEntryTime { get; set; }
         public string AverageExitTime { get; set; }
         public string AverageWorkdayHours { get; set; }
-        public string KasriTime { get; set; }
+        public string TotalKasriTime { get; set; }
         public string TotalAdjustmentOrOvertime { get; set; }
     }
 
@@ -35,6 +82,24 @@ public class AttendanceCalculationService
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
     public List<DateTime> overtimeinHoliday { get; private set; }
+
+    public List<string> PersianColumnHeader =
+    [
+        "روز در هفته",
+        "تاریخ",
+        "ساعت ورود",
+        "ساعت خروج",
+        "ساعت ورود 2",
+        "ساعت خروج 2",
+        "حضور به دقیقه",
+        "حضور به ساعت",
+        "ورود با تاخیر",
+        "اختلاف تاخیر به دقیقه",
+        "اختلاف اضافه کاری به ساعت",
+        "روز کاری کامل",
+        "مقدار کسری",
+        "روز ناقص"
+    ];
 
     public AttendanceCalculationService(AppServices recordService)
     {
@@ -65,7 +130,7 @@ public class AttendanceCalculationService
         return this;
     }
 
-    public Array Calculate(string userId, string fromDateTime, string toDateTime)
+    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime)
     {
         var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
@@ -150,48 +215,21 @@ public class AttendanceCalculationService
                 kasri = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
             }
 
-            return new
+            return new WorkRecord
             {
-                // روز هفته
                 DayOfWeek = g.Key.Date.ToString("dddd"),
-
-                // تاریخ روز
                 Date = g.Key.Date.ToString("yyyy/MM/dd"),
-
-                // زمان ورود
                 EntryTime = minDateTime.ToString("HH:mm:ss"),
-
-                // زمان خروج
                 ExitTime = maxDateTime.ToString("HH:mm:ss"),
-
-                // زمان ورود دوم اگر وجود داشته باشد
                 EntryTime2 = minDateTime2?.ToString("HH:mm:ss"),
-
-                // زمان خروج دوم اگر وجود داشته باشد
                 ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
-
-                // مدت زمان کارکرد به دقیقه
                 DurationMin = totalDuration.TotalMinutes,
-
-                // مدت زمان کارکرد به فرمت ساعت:دقیقه
                 DurationHour = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
-
-                // آیا فرد دیر آمده است؟
                 IsLate = lateMinutes != TimeSpan.Zero && !IsWorkinginHoliday,
-
-                // مقدار دقیقه تاخیر
                 LateMinutes = lateMinutes,
-
-                // زمان اضافه کاری
                 Overtime = overtime.ToString(@"hh\:mm\:ss"),
-
-                // آیا فرد ساعت کامل کار کرده است؟
-                FullWork = fullWork,
-
-                // مقدار کسری ساعت
-                IsKasri = kasri.TotalMinutes,
-
-                // آیا کار فرد ناقص بوده است؟
+                IsFullWork = fullWork,
+                Kasri = kasri.TotalMinutes,
                 IsNaghes = isNaghes
             };
         }).ToArray();
@@ -222,7 +260,7 @@ public class AttendanceCalculationService
         var totalHours = TimeSpan.FromMinutes(totalMinutes);
 
         // تعداد روزهایی که فرد ساعت کامل کار کرده است
-        var total = groupedData.Count(x => x.FullWork);
+        var total = groupedData.Count(x => x.IsFullWork);
 
         // تعداد روزهای تاخیر
         var lateDays = groupedData.Count(x => x.IsLate);
@@ -256,7 +294,7 @@ public class AttendanceCalculationService
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
 
         // محاسبه مجموع کسری زمان
-        var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.IsKasri));
+        var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.Kasri));
 
         // محاسبه تعدیل یا اضافه کاری خالص
         var tadil = totalOvertimeMinutes - kasriTime;
@@ -313,13 +351,13 @@ public class AttendanceCalculationService
             AverageWorkdayHours = avgTimeSpan.ToString(@"hh\:mm\:ss"),
 
             // مقدار کسری به ساعت (مجموع زمان کسری فرد به صورت ساعت:دقیقه:ثانیه)
-            KasriTime = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}",
+            TotalKasriTime = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}",
 
             // مقدار تعدیل یا اضافه ساعت کاری خالص (مجموع ساعات اضافه کاری که باید تعدیل شود یا اضافه شود به صورت دقیقه)
             TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString("0") + "m"
         };
 
-        return groupedData.ToArray();
+        return groupedData.ToList();
     }
 
     public Dictionary<string, string> GetDataWithTitle()
@@ -327,7 +365,7 @@ public class AttendanceCalculationService
         return new Dictionary<string, string>
         {
             { "مجموع روز های کاری", Report.TotalWorkDays },
-            { "مجموع روز کاری کامل طبق 8 ساعت 30 دقیقه کار", Report.TotalFullWorkDays },
+            { "مجموع روز کاری کامل طبق قانون کار", Report.TotalFullWorkDays },
             { "مجموع ساعات کاری", Report.TotalWorkingHours },
             { "مجموع دقایق کاری", Report.TotalMinutesWorked },
             { "مجموع روز های ورود باتاخیر", Report.TotalLateDays },
@@ -341,7 +379,7 @@ public class AttendanceCalculationService
             { "میانگین ساعت های ورود", Report.AverageEntryTime },
             { "میانگین ساعت های خروج", Report.AverageExitTime },
             { "میانگین ساعت کاری روزانه", Report.AverageWorkdayHours },
-            { "مقدار کسری به ساعت", Report.KasriTime },
+            { "مقدار کسری به ساعت", Report.TotalKasriTime },
             { "مقدار تعدیل یا اضافه ساعت کاری خالص", Report.TotalAdjustmentOrOvertime }
         };
     }

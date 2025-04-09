@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Helpers;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -37,7 +39,7 @@ public partial class FrmCalc : Form
 
             if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($"_userId", "خطای داخلی ");
 
-            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime);
+            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime).ToDataTable();
 
             Part2_Load();
 
@@ -70,28 +72,19 @@ public partial class FrmCalc : Form
         lbl_avgentry.Text = temp.AverageEntryTime;
         lbl_avgexit.Text = temp.AverageExitTime;
         lbl_avgtimework.Text = temp.AverageWorkdayHours;
-        lbl_sumkasri.Text = temp.KasriTime;
+        lbl_sumkasri.Text = temp.TotalKasriTime;
         lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
     }
 
     private void DataGridViewConfig()
     {
-        if (dataView_Calculate?.Columns?.Count == 0) return;
+        if (dataView_Calculate?.Columns == null) return;
 
-        dataView_Calculate.Columns[0].HeaderText = @"روز در هفته";
-        dataView_Calculate.Columns[1].HeaderText = @"تاریخ";
-        dataView_Calculate.Columns[2].HeaderText = @"ساعت ورود";
-        dataView_Calculate.Columns[3].HeaderText = @"ساعت خروج";
-        dataView_Calculate.Columns[4].HeaderText = @"ساعت ورود 2";
-        dataView_Calculate.Columns[5].HeaderText = @"ساعت خروج 2";
-        dataView_Calculate.Columns[6].HeaderText = @"حضور به دقیقه";
-        dataView_Calculate.Columns[7].HeaderText = @"حضور به ساعت";
-        dataView_Calculate.Columns[8].HeaderText = @"ورود با تاخیر";
-        dataView_Calculate.Columns[9].HeaderText = @"اختلاف تاخیر به دقیقه";
-        dataView_Calculate.Columns[10].HeaderText = @"اختلاف اضافه کاری به ساعت";
-        dataView_Calculate.Columns[11].HeaderText = @"روز کاری کامل";
-        dataView_Calculate.Columns[12].HeaderText = @"مقدار کسری";
-        dataView_Calculate.Columns[13].HeaderText = @"روز ناقص";
+        for (int i = 0; i < _calcServices.PersianColumnHeader.Count; i++)
+        {
+            dataView_Calculate.Columns[i].HeaderText = _calcServices.PersianColumnHeader[i];
+        }
+
     }
 
     private void DataViewCalculateRowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
@@ -130,7 +123,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            CommonHelper.DataGridToExcel(dataView_Calculate, _calcServices.GetDataWithTitle());
+            DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle());
         }
         catch (Exception ex)
         {
