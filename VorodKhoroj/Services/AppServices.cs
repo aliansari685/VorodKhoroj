@@ -32,9 +32,8 @@
         public int[] GetUsers()
         {
             return _repository.GetUsersAttendances(Records);
+
         }
-
-
         public void LoadRecordsFromDb()
         {
             Records = _repository.GetRecordsFromDB(DbContext);

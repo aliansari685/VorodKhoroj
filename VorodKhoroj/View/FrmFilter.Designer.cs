@@ -68,7 +68,7 @@
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(151, 39);
             btn_applyfilter.TabIndex = 3;
-            btn_applyfilter.Text = "اعمال فیلتر";
+            btn_applyfilter.Text = "ثبت";
             btn_applyfilter.UseVisualStyleBackColor = true;
             btn_applyfilter.Click += btn_applyfilter_Click;
             // 

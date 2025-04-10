@@ -31,9 +31,10 @@
             menuStrip1 = new MenuStrip();
             SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             گزارشToolStripMenuItem = new ToolStripMenuItem();
-            مجموعToolStripMenuItem = new ToolStripMenuItem();
+            DetailReportToolStripMenuItem = new ToolStripMenuItem();
             MonthlyReportToolStripMenuItem = new ToolStripMenuItem();
             گزارشماهانهToolStripMenuItem1 = new ToolStripMenuItem();
+            FasrExportToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
             ویرایشکاربرانToolStripMenuItem = new ToolStripMenuItem();
@@ -49,7 +50,6 @@
             btn_clear = new Button();
             Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
-            اکسلسریعToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -76,18 +76,18 @@
             // 
             // گزارشToolStripMenuItem
             // 
-            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { مجموعToolStripMenuItem, MonthlyReportToolStripMenuItem, گزارشماهانهToolStripMenuItem1, اکسلسریعToolStripMenuItem });
+            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DetailReportToolStripMenuItem, MonthlyReportToolStripMenuItem, گزارشماهانهToolStripMenuItem1, FasrExportToolStripMenuItem });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
             گزارشToolStripMenuItem.Size = new Size(59, 24);
             گزارشToolStripMenuItem.Text = "گزارشات";
             // 
-            // مجموعToolStripMenuItem
+            // DetailReportToolStripMenuItem
             // 
-            مجموعToolStripMenuItem.Name = "مجموعToolStripMenuItem";
-            مجموعToolStripMenuItem.Size = new Size(180, 24);
-            مجموعToolStripMenuItem.Text = "ریز جزییات";
-            مجموعToolStripMenuItem.Click += MajmoEkhtelafToolStripMenuItem_Click;
+            DetailReportToolStripMenuItem.Name = "DetailReportToolStripMenuItem";
+            DetailReportToolStripMenuItem.Size = new Size(180, 24);
+            DetailReportToolStripMenuItem.Text = "ریز جزییات";
+            DetailReportToolStripMenuItem.Click += DetailReportToolStripMenuItem_Click;
             // 
             // MonthlyReportToolStripMenuItem
             // 
@@ -101,6 +101,13 @@
             گزارشماهانهToolStripMenuItem1.Name = "گزارشماهانهToolStripMenuItem1";
             گزارشماهانهToolStripMenuItem1.Size = new Size(180, 24);
             گزارشماهانهToolStripMenuItem1.Text = "گزارش روزانه";
+            // 
+            // FasrExportToolStripMenuItem
+            // 
+            FasrExportToolStripMenuItem.Name = "FasrExportToolStripMenuItem";
+            FasrExportToolStripMenuItem.Size = new Size(180, 24);
+            FasrExportToolStripMenuItem.Text = "گزارش سریع(اکسل)";
+            FasrExportToolStripMenuItem.Click += FasrExportToolStripMenuItem_Click;
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
             // 
@@ -241,12 +248,6 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
-            // اکسلسریعToolStripMenuItem
-            // 
-            اکسلسریعToolStripMenuItem.Name = "اکسلسریعToolStripMenuItem";
-            اکسلسریعToolStripMenuItem.Size = new Size(180, 24);
-            اکسلسریعToolStripMenuItem.Text = "گزارش سریع(اکسل)";
-            // 
             // Frm_Main
             // 
             AcceptButton = btn_applyfilter;
@@ -289,7 +290,7 @@
         private Label label3;
         private Button btn_clear;
         private ToolStripMenuItem گزارشToolStripMenuItem;
-        private ToolStripMenuItem مجموعToolStripMenuItem;
+        private ToolStripMenuItem DetailReportToolStripMenuItem;
         private ComboBox Userid_txtbox;
         public DataGridView dataView;
         private ToolStripMenuItem SettingToolStripMenuItem;
@@ -300,6 +301,6 @@
         private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشکاربرانToolStripMenuItem;
-        private ToolStripMenuItem اکسلسریعToolStripMenuItem;
+        private ToolStripMenuItem FasrExportToolStripMenuItem;
     }
 }

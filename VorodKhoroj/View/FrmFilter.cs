@@ -4,9 +4,9 @@ public partial class FrmFilter : Form
 {
     private readonly AppServices _services;
     private readonly AttendanceCalculationService _calcServices;
+    private readonly bool _showFrm;
 
-    public FrmFilter(AppServices service, AttendanceCalculationService calculationService, string fromDateTime,
-        string toDateTime, string userid)
+    public FrmFilter(AppServices service, AttendanceCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool showFrm = false)
     {
         InitializeComponent();
 
@@ -16,14 +16,14 @@ public partial class FrmFilter : Form
         FromDateTime_txtbox.Text = fromDateTime;
         toDateTime_txtbox.Text = toDateTime;
         Userid_txtbox.Text = userid;
+        _showFrm = showFrm;
     }
 
     private void btn_applyfilter_Click(object sender, EventArgs e)
     {
         try
         {
-            using (FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text,
-                       Userid_txtbox.Text))
+            using (FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, _showFrm))
             {
                 frm.ShowDialog();
             }

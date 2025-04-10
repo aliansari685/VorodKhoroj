@@ -1,8 +1,10 @@
-﻿namespace VorodKhoroj.Helpers;
+﻿using static OfficeOpenXml.ExcelErrorValue;
+
+namespace VorodKhoroj.Helpers;
 
 public static class DataExporter
 {
-    public static void ExportDataGrid(DataGridView grid, Dictionary<string, string>? labels = null)
+    public static void ExportDataGrid(DataGridView grid, Dictionary<string, string>? labels = null, string title = "")
     {
         try
         {
@@ -21,11 +23,15 @@ public static class DataExporter
             // داده‌ها
             for (var row = 0; row < grid.Rows.Count; row++)
                 for (var col = 0; col < grid.Columns.Count; col++)
+                {
                     worksheet.Cells[row + 2, col + 1].Value = grid.Rows[row].Cells[col].Value?.ToString();
+                }
+
+            worksheet.Cells[grid.Rows.Count, 1].Value = title;
 
             if (labels is not null && labels.Any())
             {
-                var labelRow = grid.Rows.Count + 4;
+                var labelRow = grid.Rows.Count + 5;
                 var labelCol = 1;
 
                 foreach (var (key, value) in labels)

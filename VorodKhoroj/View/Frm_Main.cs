@@ -65,7 +65,7 @@ public partial class Frm_Main : Form
         toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
     }
 
-    private void MajmoEkhtelafToolStripMenuItem_Click(object sender, EventArgs e) //Go To FrmFilter:
+    private void DetailReportToolStripMenuItem_Click(object sender, EventArgs e) //Go To FrmFilter:
     {
         try
         {
@@ -146,4 +146,20 @@ public partial class Frm_Main : Form
         }
     }
 
+    private void FasrExportToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+
+            using (FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, true))
+            {
+                frm.ShowDialog();
+            }
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+    }
 }
