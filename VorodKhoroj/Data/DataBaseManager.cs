@@ -2,7 +2,7 @@
 {
     public class DataBaseManager
     {
-      
+
         public void CreateDatabase(string filePath, AppDbContext _dbContext)
         {
             string fileName = Path.GetFileNameWithoutExtension(filePath);

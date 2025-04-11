@@ -1,5 +1,4 @@
-﻿
-namespace VorodKhoroj;
+﻿namespace VorodKhoroj;
 
 public partial class Frm_Main : Form
 {
@@ -146,13 +145,15 @@ public partial class Frm_Main : Form
         }
     }
 
-    private void FasrExportToolStripMenuItem_Click(object sender, EventArgs e)
+    private void FastExportToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
         {
             if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
 
-            using (FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, true))
+            var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
+
+            using (FrmFilter frm = new(_services, _calcServices, date, date, Userid_txtbox.Text, true))
             {
                 frm.ShowDialog();
             }

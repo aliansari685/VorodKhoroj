@@ -10,7 +10,6 @@ namespace VorodKhoroj.Classes
 
             var list = new List<Holiday>();
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             var excelPath = Application.StartupPath + @"Resources\holiday.xlsx";
 

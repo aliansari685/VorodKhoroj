@@ -295,7 +295,7 @@
             label15.Name = "label15";
             label15.Size = new Size(85, 19);
             label15.TabIndex = 32;
-            label15.Text = "مجموع روز ناقص:";
+            label15.Text = "مجموع ردیف ناقص:";
             // 
             // lbl_nofull
             // 

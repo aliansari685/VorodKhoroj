@@ -53,23 +53,23 @@ public class AttendanceCalculationService
 
     public class AttendanceReport
     {
-        public string TotalWorkDays { get; set; }
-        public string TotalFullWorkDays { get; set; }
-        public string TotalWorkingHours { get; set; }
-        public string TotalMinutesWorked { get; set; }
-        public string TotalLateDays { get; set; }
-        public string TotalLateTime { get; set; }
-        public string TotalIncompleteDays { get; set; }
-        public string TotalAbsenceDays { get; set; }
-        public string TotalOvertimeDays { get; set; }
-        public string TotalOvertimeAfterWork { get; set; }
-        public string EarliestEntryTime { get; set; }
-        public string LatestExitTime { get; set; }
-        public string AverageEntryTime { get; set; }
-        public string AverageExitTime { get; set; }
-        public string AverageWorkdayHours { get; set; }
-        public string TotalKasriTime { get; set; }
-        public string TotalAdjustmentOrOvertime { get; set; }
+        public required string TotalWorkDays { get; set; }
+        public required string TotalFullWorkDays { get; set; }
+        public required string TotalWorkingHours { get; set; }
+        public required string TotalMinutesWorked { get; set; }
+        public required string TotalLateDays { get; set; }
+        public required string TotalLateTime { get; set; }
+        public required string TotalIncompleteDays { get; set; }
+        public required string TotalAbsenceDays { get; set; }
+        public required string TotalOvertimeDays { get; set; }
+        public required string TotalOvertimeAfterWork { get; set; }
+        public required string EarliestEntryTime { get; set; }
+        public required string LatestExitTime { get; set; }
+        public required string AverageEntryTime { get; set; }
+        public required string AverageExitTime { get; set; }
+        public required string AverageWorkdayHours { get; set; }
+        public required string TotalKasriTime { get; set; }
+        public required string TotalAdjustmentOrOvertime { get; set; }
     }
 
     private readonly AppServices _recordService;
@@ -98,7 +98,7 @@ public class AttendanceCalculationService
         "اختلاف اضافه کاری به ساعت",
         "روز کاری کامل",
         "مقدار کسری",
-        "روز ناقص"
+        "ردیف ناقص"
     ];
 
     public AttendanceCalculationService(AppServices recordService)

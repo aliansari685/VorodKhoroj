@@ -59,9 +59,9 @@ namespace VorodKhoroj.Classes
                     return table;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

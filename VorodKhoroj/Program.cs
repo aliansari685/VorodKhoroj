@@ -7,17 +7,12 @@ global using System.Globalization;
 global using OfficeOpenXml;
 global using System.ComponentModel.DataAnnotations;
 global using Microsoft.EntityFrameworkCore;
-global using Microsoft.EntityFrameworkCore.Migrations;
 global using VorodKhoroj.Data;
-global using Serilog.Core;
-global using Serilog.Events;
 global using System.Runtime.CompilerServices;
-global using System.Diagnostics;
 global using VorodKhoroj.Services;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
-global using Microsoft.EntityFrameworkCore;
-
+global using VorodKhoroj.Helpers;
 
 namespace VorodKhoroj
 {
@@ -39,9 +34,10 @@ namespace VorodKhoroj
 
                 var form = host.Services.GetRequiredService<Frm_Main>();
 
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage.License.SetNonCommercialPersonal("AliAnsari");
 
                 Application.Run(form);
+
             }
             catch (Exception ex)
             {
@@ -54,7 +50,6 @@ namespace VorodKhoroj
              Host.CreateDefaultBuilder()
                  .ConfigureServices((_, services) =>
                  {
-
                      services.AddSingleton<AppServices>();
                      services.AddTransient<AttendanceCalculationService>();
                      services.AddScoped<Frm_Main>();

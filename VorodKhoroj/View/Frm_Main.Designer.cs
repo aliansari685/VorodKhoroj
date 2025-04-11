@@ -33,7 +33,6 @@
             گزارشToolStripMenuItem = new ToolStripMenuItem();
             DetailReportToolStripMenuItem = new ToolStripMenuItem();
             MonthlyReportToolStripMenuItem = new ToolStripMenuItem();
-            گزارشماهانهToolStripMenuItem1 = new ToolStripMenuItem();
             FasrExportToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
@@ -76,7 +75,7 @@
             // 
             // گزارشToolStripMenuItem
             // 
-            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DetailReportToolStripMenuItem, MonthlyReportToolStripMenuItem, گزارشماهانهToolStripMenuItem1, FasrExportToolStripMenuItem });
+            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DetailReportToolStripMenuItem, MonthlyReportToolStripMenuItem, FasrExportToolStripMenuItem });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
             گزارشToolStripMenuItem.Size = new Size(59, 24);
@@ -96,18 +95,12 @@
             MonthlyReportToolStripMenuItem.Text = "گزارش ماهانه";
             MonthlyReportToolStripMenuItem.Click += MonthlyReportToolStripMenuItem_Click;
             // 
-            // گزارشماهانهToolStripMenuItem1
-            // 
-            گزارشماهانهToolStripMenuItem1.Name = "گزارشماهانهToolStripMenuItem1";
-            گزارشماهانهToolStripMenuItem1.Size = new Size(180, 24);
-            گزارشماهانهToolStripMenuItem1.Text = "گزارش روزانه";
-            // 
             // FasrExportToolStripMenuItem
             // 
             FasrExportToolStripMenuItem.Name = "FasrExportToolStripMenuItem";
             FasrExportToolStripMenuItem.Size = new Size(180, 24);
-            FasrExportToolStripMenuItem.Text = "گزارش سریع(اکسل)";
-            FasrExportToolStripMenuItem.Click += FasrExportToolStripMenuItem_Click;
+            FasrExportToolStripMenuItem.Text = "گزارش سریع";
+            FasrExportToolStripMenuItem.Click += FastExportToolStripMenuItem_Click;
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
             // 
@@ -297,7 +290,6 @@
         private ToolStripMenuItem DBConfigToolStripMenuItem;
         private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;
         private ToolStripMenuItem MonthlyReportToolStripMenuItem;
-        private ToolStripMenuItem گزارشماهانهToolStripMenuItem1;
         private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشکاربرانToolStripMenuItem;
