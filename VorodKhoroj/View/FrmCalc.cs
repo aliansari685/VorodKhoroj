@@ -93,8 +93,12 @@ public partial class FrmCalc : Form
     {
         if (e.KeyData == Keys.Enter)
         {
-            _userid = userid_txtbox.Text;
-            ReloadGrid();
+            if (MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _userid = userid_txtbox.Text;
+                ReloadGrid();
+                CommonHelper.ShowMessage("انجام شد");
+            }
         }
     }
 
@@ -122,17 +126,19 @@ public partial class FrmCalc : Form
 
         _userid = users[now].ToString();
         ReloadGrid();
+        CommonHelper.ShowMessage("انجام شد");
     }
 
     private void DataGridConfig()
     {
         try
         {
+
             userid_txtbox.Text = _userid;
 
             if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($"_userId", "خطای داخلی ");
 
-            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime).ToDataTable();
+            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
             Part2_Load();
 

@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-namespace VorodKhoroj.Services;
+﻿namespace VorodKhoroj.Services;
 
 public class AttendanceCalculationService
 {
@@ -130,11 +128,11 @@ public class AttendanceCalculationService
         return this;
     }
 
-    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime)
+    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditnaqesrows = true)
     {
         var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
-        if (filtered?.Any() == false)
+        if (filtered?.Any() == false || filtered is null)
             throw new ArgumentNullException("داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)
@@ -154,23 +152,18 @@ public class AttendanceCalculationService
         var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
 
         // تاریخ‌های تعطیل که کارمند حضور داشته است
-        overtimeinHoliday = pr.Where(day => holidays.Contains(day)).Select(g => g.Date.Date).ToList();
+        overtimeinHoliday = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
 
         var groupedData = dataFilteredGrouped.Select(g =>
         {
             var overtime = TimeSpan.Zero; // مقدار پیش‌فرض اضافه کاری
+
             var kasri = TimeSpan.Zero; // مقدار پیش‌فرض کسری ساعت
 
             var orderedTimes = g.Select(x => x.DateTime).ToArray(); // آرایه‌ای از زمان‌های ورودی و خروجی
 
             var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
-            if (maxDateTime == DateTime.MinValue)
-                maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
-
-            // اگر زمان ورودی و خروجی دوم وجود داشته باشد
-            DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
-            DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
 
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
             var IsWorkinginHoliday = overtimeinHoliday.Contains(minDateTime.Date.Date);
@@ -180,6 +173,33 @@ public class AttendanceCalculationService
 
             // بررسی اینکه آیا روز جاری در ماه فروردین است
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
+
+            if (maxDateTime == DateTime.MinValue)
+            {
+                if (autoEditnaqesrows)
+                {
+                    var time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 16, 45, 00);
+
+                    if (isFarvardin)
+                    {
+                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 16, 00, 00);
+                    }
+                    if (isThursday)
+                    {
+                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 13, 45, 00);
+                    }
+
+                    maxDateTime = time;
+                }
+                else
+                {
+                    maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
+                }
+            }
+
+            // اگر زمان ورودی و خروجی دوم وجود داشته باشد
+            DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
+            DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
 
             // محاسبه مدت زمان حضور (ورود - خروج)
             var duration = maxDateTime - minDateTime;
@@ -193,7 +213,7 @@ public class AttendanceCalculationService
             // بررسی اینکه آیا مدت زمان کاری کمتر از یک ساعت است و فرد در تعطیلات نبوده است
             var isNaghes = totalDuration.TotalMinutes < 60 && !IsWorkinginHoliday;
 
-            // محاسبه زمان تاخیر در صورت لزوم
+            // محاسبه زمان تاخیر
             var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60 && !IsWorkinginHoliday
                 ? minDateTime.TimeOfDay - _lateTm
                 : TimeSpan.Zero;

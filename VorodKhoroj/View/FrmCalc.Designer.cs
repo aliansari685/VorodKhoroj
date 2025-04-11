@@ -34,6 +34,7 @@
             userid_txtbox = new ComboBox();
             label19 = new Label();
             panel1 = new Panel();
+            checkBox_AutoEdit = new CheckBox();
             lbl_tadil = new Label();
             label22 = new Label();
             lbl_sumkasri = new Label();
@@ -167,6 +168,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(checkBox_AutoEdit);
             panel1.Controls.Add(lbl_tadil);
             panel1.Controls.Add(label22);
             panel1.Controls.Add(lbl_sumkasri);
@@ -205,6 +207,19 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1061, 113);
             panel1.TabIndex = 21;
+            // 
+            // checkBox_AutoEdit
+            // 
+            checkBox_AutoEdit.AutoSize = true;
+            checkBox_AutoEdit.Checked = true;
+            checkBox_AutoEdit.CheckState = CheckState.Checked;
+            checkBox_AutoEdit.Font = new Font("IRANSans", 8F, FontStyle.Bold);
+            checkBox_AutoEdit.Location = new Point(9, 78);
+            checkBox_AutoEdit.Name = "checkBox_AutoEdit";
+            checkBox_AutoEdit.Size = new Size(139, 23);
+            checkBox_AutoEdit.TabIndex = 42;
+            checkBox_AutoEdit.Text = "اصلاح خودکار ردیف ناقص";
+            checkBox_AutoEdit.UseVisualStyleBackColor = true;
             // 
             // lbl_tadil
             // 
@@ -293,7 +308,7 @@
             label15.Font = new Font("IRANSans", 8F, FontStyle.Bold);
             label15.Location = new Point(773, 46);
             label15.Name = "label15";
-            label15.Size = new Size(85, 19);
+            label15.Size = new Size(96, 19);
             label15.TabIndex = 32;
             label15.Text = "مجموع ردیف ناقص:";
             // 
@@ -333,7 +348,7 @@
             // 
             lbl_MaxExitTime.AutoSize = true;
             lbl_MaxExitTime.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_MaxExitTime.Location = new Point(321, 81);
+            lbl_MaxExitTime.Location = new Point(352, 81);
             lbl_MaxExitTime.Name = "lbl_MaxExitTime";
             lbl_MaxExitTime.Size = new Size(57, 19);
             lbl_MaxExitTime.TabIndex = 29;
@@ -343,7 +358,7 @@
             // 
             label14.AutoSize = true;
             label14.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            label14.Location = new Point(384, 81);
+            label14.Location = new Point(415, 81);
             label14.Name = "label14";
             label14.Size = new Size(94, 19);
             label14.TabIndex = 28;
@@ -374,7 +389,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            label6.Location = new Point(724, 81);
+            label6.Location = new Point(734, 81);
             label6.Name = "label6";
             label6.Size = new Size(125, 19);
             label6.TabIndex = 24;
@@ -384,7 +399,7 @@
             // 
             lbl_avgtimework.AutoSize = true;
             lbl_avgtimework.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_avgtimework.Location = new Point(661, 81);
+            lbl_avgtimework.Location = new Point(671, 81);
             lbl_avgtimework.Name = "lbl_avgtimework";
             lbl_avgtimework.Size = new Size(57, 19);
             lbl_avgtimework.TabIndex = 25;
@@ -394,7 +409,7 @@
             // 
             lbl_minEntry.AutoSize = true;
             lbl_minEntry.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_minEntry.Location = new Point(493, 81);
+            lbl_minEntry.Location = new Point(516, 81);
             lbl_minEntry.Name = "lbl_minEntry";
             lbl_minEntry.Size = new Size(57, 19);
             lbl_minEntry.TabIndex = 23;
@@ -404,7 +419,7 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            label8.Location = new Point(556, 81);
+            label8.Location = new Point(579, 81);
             label8.Name = "label8";
             label8.Size = new Size(88, 19);
             label8.TabIndex = 22;
@@ -526,7 +541,7 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            label9.Location = new Point(183, 81);
+            label9.Location = new Point(225, 81);
             label9.Name = "label9";
             label9.Size = new Size(120, 19);
             label9.TabIndex = 10;
@@ -546,7 +561,7 @@
             // 
             lbl_avgentry.AutoSize = true;
             lbl_avgentry.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_avgentry.Location = new Point(100, 81);
+            lbl_avgentry.Location = new Point(162, 81);
             lbl_avgentry.Name = "lbl_avgentry";
             lbl_avgentry.Size = new Size(57, 19);
             lbl_avgentry.TabIndex = 11;
@@ -905,5 +920,6 @@
         private Button btn_next;
         private Button btn_perv;
         public ComboBox userid_txtbox;
+        private CheckBox checkBox_AutoEdit;
     }
 }
