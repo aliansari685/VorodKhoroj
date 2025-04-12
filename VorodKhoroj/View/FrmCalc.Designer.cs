@@ -630,10 +630,10 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 24);
+            tabPage_durationdays.Location = new Point(4, 29);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1072, 506);
+            tabPage_durationdays.Size = new Size(1072, 501);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -695,7 +695,7 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(1055, 369);
+            dataView_late.Size = new Size(1055, 364);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -704,10 +704,10 @@
             // tabPage_
             // 
             tabPage_.Controls.Add(groupBox2);
-            tabPage_.Location = new Point(4, 24);
+            tabPage_.Location = new Point(4, 29);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(1072, 506);
+            tabPage_.Size = new Size(1072, 501);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
@@ -726,7 +726,7 @@
             groupBox2.Dock = DockStyle.Left;
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(435, 500);
+            groupBox2.Size = new Size(435, 495);
             groupBox2.TabIndex = 35;
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";

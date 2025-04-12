@@ -128,7 +128,7 @@ public class AttendanceCalculationService
         return this;
     }
 
-    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditnaqesrows = true)
+    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
     {
         var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
 
@@ -176,9 +176,9 @@ public class AttendanceCalculationService
 
             if (maxDateTime == DateTime.MinValue)
             {
-                if (autoEditnaqesrows)
+                if (autoEditNaqesRows)
                 {
-                    var time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 16, 45, 00);
+                    var time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 17, 00, 00);
 
                     if (isFarvardin)
                     {
@@ -186,7 +186,7 @@ public class AttendanceCalculationService
                     }
                     if (isThursday)
                     {
-                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 13, 45, 00);
+                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 14, 00, 00);
                     }
 
                     maxDateTime = time;

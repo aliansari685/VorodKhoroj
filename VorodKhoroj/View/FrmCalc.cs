@@ -8,9 +8,10 @@ public partial class FrmCalc : Form
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
     private string _userid;
-    private readonly bool _justExcell;
+    private readonly bool _justExcel;
 
-    public FrmCalc(AppServices services, AttendanceCalculationService calcServices, string fromDateTime, string toDateTime, string userid, bool justExcell = false)
+    public FrmCalc(AppServices services, AttendanceCalculationService calcServices, string fromDateTime,
+        string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
         _service = services;
@@ -18,23 +19,24 @@ public partial class FrmCalc : Form
         _fromDateTime = fromDateTime;
         _toDateTime = toDateTime;
         _userid = userid;
-        _justExcell = justExcell;
+        _justExcel = justExcel;
     }
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
         lbl_FromTo.Text = @$"{_fromDateTime} -- {_toDateTime}";
-        userid_txtbox.DataSource = _service?.GetUsers();
+        userid_txtbox.DataSource = _service.GetUsers();
         ReloadGrid();
         if (dataView_Calculate.DataSource == null)
         {
-            this.Close();
+            Close();
             return;
         }
-        if (_justExcell)
+
+        if (_justExcel)
         {
             OutputExcelToolStripMenuItem_Click(this, e);
-            this.Close();
+            Close();
         }
     }
 
@@ -80,7 +82,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            string title = @$"{lbl_FromTo.Text} {'\t'}{'\t'} User:{_userid}";
+            var title = @$"{lbl_FromTo.Text} {'\t'}{'\t'} User:{_userid}";
             DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle(), title);
         }
         catch (Exception ex)
@@ -92,14 +94,13 @@ public partial class FrmCalc : Form
     private void userid_txtbox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyData == Keys.Enter)
-        {
-            if (MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 _userid = userid_txtbox.Text;
                 ReloadGrid();
                 CommonHelper.ShowMessage("انجام شد");
             }
-        }
     }
 
     private void btn_next_Click(object sender, EventArgs e)
@@ -133,12 +134,12 @@ public partial class FrmCalc : Form
     {
         try
         {
-
             userid_txtbox.Text = _userid;
 
-            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($"_userId", "خطای داخلی ");
+            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"_userId", @$"خطای داخلی ");
 
-            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
+            dataView_Calculate.DataSource = _calcServices
+                .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
             Part2_Load();
 
@@ -156,11 +157,8 @@ public partial class FrmCalc : Form
     {
         if (dataView_Calculate.DataSource == null) return;
 
-        for (int i = 0; i < _calcServices.PersianColumnHeader.Count; i++)
-        {
+        for (var i = 0; i < _calcServices.PersianColumnHeader.Count; i++)
             dataView_Calculate.Columns[i].HeaderText = _calcServices.PersianColumnHeader[i];
-        }
-
     }
 
     private void UpdateLabels()
@@ -191,5 +189,4 @@ public partial class FrmCalc : Form
         DataGridConfig();
         DataGridViewConfig();
     }
-
 }
