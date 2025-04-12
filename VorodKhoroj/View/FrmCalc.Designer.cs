@@ -77,11 +77,22 @@
             tabPage_durationdays = new TabPage();
             button1 = new Button();
             groupBox1 = new GroupBox();
+            radioButton1 = new RadioButton();
             radioButton_holidays = new RadioButton();
             radioButton_qeybat = new RadioButton();
             dataView_late = new DataGridView();
             tabPage_ = new TabPage();
             groupBox2 = new GroupBox();
+            maskedTextBox5 = new MaskedTextBox();
+            label27 = new Label();
+            maskedTextBox4 = new MaskedTextBox();
+            label26 = new Label();
+            maskedTextBox3 = new MaskedTextBox();
+            label25 = new Label();
+            maskedTextBox2 = new MaskedTextBox();
+            label24 = new Label();
+            maskedTextBox1 = new MaskedTextBox();
+            label1 = new Label();
             txtbox_late = new MaskedTextBox();
             txtbox_fullwork_farvardin = new MaskedTextBox();
             btn_submit = new Button();
@@ -630,19 +641,19 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 29);
+            tabPage_durationdays.Location = new Point(4, 24);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1072, 501);
+            tabPage_durationdays.Size = new Size(1072, 506);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
-            button1.Location = new Point(8, 8);
+            button1.Location = new Point(21, 20);
             button1.Name = "button1";
-            button1.Size = new Size(71, 67);
+            button1.Size = new Size(71, 82);
             button1.TabIndex = 23;
             button1.Text = "اکسل";
             button1.UseVisualStyleBackColor = true;
@@ -650,14 +661,26 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(radioButton1);
             groupBox1.Controls.Add(radioButton_holidays);
             groupBox1.Controls.Add(radioButton_qeybat);
-            groupBox1.Location = new Point(451, 6);
+            groupBox1.Location = new Point(124, 3);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(251, 75);
+            groupBox1.Size = new Size(251, 107);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "انتخاب لیست:";
+            // 
+            // radioButton1
+            // 
+            radioButton1.AutoSize = true;
+            radioButton1.Location = new Point(87, 75);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(107, 24);
+            radioButton1.TabIndex = 28;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "لیست ماه رمضان";
+            radioButton1.UseVisualStyleBackColor = true;
             // 
             // radioButton_holidays
             // 
@@ -690,12 +713,12 @@
             dataView_late.AllowUserToDeleteRows = false;
             dataView_late.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_late.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_late.Location = new Point(3, 87);
+            dataView_late.Location = new Point(-5, 116);
             dataView_late.Name = "dataView_late";
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(1055, 364);
+            dataView_late.Size = new Size(1069, 330);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -714,6 +737,16 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(maskedTextBox5);
+            groupBox2.Controls.Add(label27);
+            groupBox2.Controls.Add(maskedTextBox4);
+            groupBox2.Controls.Add(label26);
+            groupBox2.Controls.Add(maskedTextBox3);
+            groupBox2.Controls.Add(label25);
+            groupBox2.Controls.Add(maskedTextBox2);
+            groupBox2.Controls.Add(label24);
+            groupBox2.Controls.Add(maskedTextBox1);
+            groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(txtbox_late);
             groupBox2.Controls.Add(txtbox_fullwork_farvardin);
             groupBox2.Controls.Add(btn_submit);
@@ -726,14 +759,119 @@
             groupBox2.Dock = DockStyle.Left;
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(435, 495);
+            groupBox2.Size = new Size(561, 495);
             groupBox2.TabIndex = 35;
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";
             // 
+            // maskedTextBox5
+            // 
+            maskedTextBox5.Location = new Point(326, 134);
+            maskedTextBox5.Mask = "00:00:00";
+            maskedTextBox5.Name = "maskedTextBox5";
+            maskedTextBox5.RightToLeft = RightToLeft.No;
+            maskedTextBox5.Size = new Size(59, 28);
+            maskedTextBox5.TabIndex = 44;
+            maskedTextBox5.Text = "074500";
+            maskedTextBox5.TextAlign = HorizontalAlignment.Center;
+            maskedTextBox5.ValidatingType = typeof(DateTime);
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(404, 138);
+            label27.Name = "label27";
+            label27.Size = new Size(151, 20);
+            label27.TabIndex = 43;
+            label27.Text = "شرط ساعت کاری کامل رمضان:";
+            // 
+            // maskedTextBox4
+            // 
+            maskedTextBox4.Location = new Point(6, 134);
+            maskedTextBox4.Mask = "00:00:00";
+            maskedTextBox4.Name = "maskedTextBox4";
+            maskedTextBox4.RightToLeft = RightToLeft.No;
+            maskedTextBox4.Size = new Size(59, 28);
+            maskedTextBox4.TabIndex = 42;
+            maskedTextBox4.Text = "164500";
+            maskedTextBox4.TextAlign = HorizontalAlignment.Center;
+            maskedTextBox4.ValidatingType = typeof(DateTime);
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(98, 138);
+            label26.Name = "label26";
+            label26.Size = new Size(189, 20);
+            label26.TabIndex = 41;
+            label26.Text = "شرط اصلاح ردیف های ناقص(رمضان):";
+            // 
+            // maskedTextBox3
+            // 
+            maskedTextBox3.Location = new Point(6, 173);
+            maskedTextBox3.Mask = "00:00:00";
+            maskedTextBox3.Name = "maskedTextBox3";
+            maskedTextBox3.RightToLeft = RightToLeft.No;
+            maskedTextBox3.Size = new Size(59, 28);
+            maskedTextBox3.TabIndex = 40;
+            maskedTextBox3.Text = "164500";
+            maskedTextBox3.TextAlign = HorizontalAlignment.Center;
+            maskedTextBox3.ValidatingType = typeof(DateTime);
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Location = new Point(91, 177);
+            label25.Name = "label25";
+            label25.Size = new Size(196, 20);
+            label25.TabIndex = 39;
+            label25.Text = "شرط اصلاح ردیف های ناقص(فروردین):";
+            // 
+            // maskedTextBox2
+            // 
+            maskedTextBox2.Location = new Point(6, 99);
+            maskedTextBox2.Mask = "00:00:00";
+            maskedTextBox2.Name = "maskedTextBox2";
+            maskedTextBox2.RightToLeft = RightToLeft.No;
+            maskedTextBox2.Size = new Size(59, 28);
+            maskedTextBox2.TabIndex = 38;
+            maskedTextBox2.Text = "164500";
+            maskedTextBox2.TextAlign = HorizontalAlignment.Center;
+            maskedTextBox2.ValidatingType = typeof(DateTime);
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(86, 103);
+            label24.Name = "label24";
+            label24.Size = new Size(201, 20);
+            label24.TabIndex = 37;
+            label24.Text = "شرط اصلاح ردیف های ناقص(پنج شنبه):";
+            // 
+            // maskedTextBox1
+            // 
+            maskedTextBox1.Location = new Point(326, 173);
+            maskedTextBox1.Mask = "00:00:00";
+            maskedTextBox1.Name = "maskedTextBox1";
+            maskedTextBox1.RightToLeft = RightToLeft.No;
+            maskedTextBox1.Size = new Size(59, 28);
+            maskedTextBox1.TabIndex = 36;
+            maskedTextBox1.Text = "164500";
+            maskedTextBox1.TextAlign = HorizontalAlignment.Center;
+            maskedTextBox1.ValidatingType = typeof(DateTime);
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(407, 177);
+            label1.Name = "label1";
+            label1.Size = new Size(148, 20);
+            label1.TabIndex = 35;
+            label1.Text = "شرط اصلاح ردیف های ناقص:";
+            // 
             // txtbox_late
             // 
-            txtbox_late.Location = new Point(6, 27);
+            txtbox_late.Location = new Point(177, 18);
             txtbox_late.Mask = "00:00:00";
             txtbox_late.Name = "txtbox_late";
             txtbox_late.RightToLeft = RightToLeft.No;
@@ -745,7 +883,7 @@
             // 
             // txtbox_fullwork_farvardin
             // 
-            txtbox_fullwork_farvardin.Location = new Point(198, 65);
+            txtbox_fullwork_farvardin.Location = new Point(326, 99);
             txtbox_fullwork_farvardin.Mask = "00:00:00";
             txtbox_fullwork_farvardin.Name = "txtbox_fullwork_farvardin";
             txtbox_fullwork_farvardin.RightToLeft = RightToLeft.No;
@@ -757,9 +895,9 @@
             // 
             // btn_submit
             // 
-            btn_submit.Location = new Point(5, 99);
+            btn_submit.Location = new Point(24, 223);
             btn_submit.Name = "btn_submit";
-            btn_submit.Size = new Size(421, 63);
+            btn_submit.Size = new Size(508, 63);
             btn_submit.TabIndex = 20;
             btn_submit.Text = "اعمال";
             btn_submit.UseVisualStyleBackColor = true;
@@ -768,7 +906,7 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(262, 65);
+            label23.Location = new Point(396, 103);
             label23.Name = "label23";
             label23.Size = new Size(159, 20);
             label23.TabIndex = 33;
@@ -777,7 +915,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(70, 31);
+            label3.Location = new Point(241, 22);
             label3.Name = "label3";
             label3.Size = new Size(109, 20);
             label3.TabIndex = 21;
@@ -785,7 +923,7 @@
             // 
             // txtbox_fullwork_thursday
             // 
-            txtbox_fullwork_thursday.Location = new Point(198, 31);
+            txtbox_fullwork_thursday.Location = new Point(326, 66);
             txtbox_fullwork_thursday.Mask = "00:00:00";
             txtbox_fullwork_thursday.Name = "txtbox_fullwork_thursday";
             txtbox_fullwork_thursday.RightToLeft = RightToLeft.No;
@@ -798,7 +936,7 @@
             // label20
             // 
             label20.AutoSize = true;
-            label20.Location = new Point(70, 65);
+            label20.Location = new Point(170, 70);
             label20.Name = "label20";
             label20.Size = new Size(117, 20);
             label20.TabIndex = 27;
@@ -807,7 +945,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(262, 35);
+            label21.Location = new Point(391, 70);
             label21.Name = "label21";
             label21.Size = new Size(164, 20);
             label21.TabIndex = 29;
@@ -815,7 +953,7 @@
             // 
             // txtbox_fullwork
             // 
-            txtbox_fullwork.Location = new Point(6, 65);
+            txtbox_fullwork.Location = new Point(6, 66);
             txtbox_fullwork.Mask = "00:00:00";
             txtbox_fullwork.Name = "txtbox_fullwork";
             txtbox_fullwork.RightToLeft = RightToLeft.No;
@@ -921,5 +1059,16 @@
         private Button btn_perv;
         public ComboBox userid_txtbox;
         private CheckBox checkBox_AutoEdit;
+        private MaskedTextBox maskedTextBox1;
+        public Label label1;
+        private MaskedTextBox maskedTextBox2;
+        public Label label24;
+        private MaskedTextBox maskedTextBox3;
+        public Label label25;
+        private MaskedTextBox maskedTextBox4;
+        public Label label26;
+        private MaskedTextBox maskedTextBox5;
+        public Label label27;
+        private RadioButton radioButton1;
     }
 }
