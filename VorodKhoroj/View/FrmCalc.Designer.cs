@@ -77,21 +77,21 @@
             tabPage_durationdays = new TabPage();
             button1 = new Button();
             groupBox1 = new GroupBox();
-            radioButton1 = new RadioButton();
+            radioButton_ramadan = new RadioButton();
             radioButton_holidays = new RadioButton();
             radioButton_qeybat = new RadioButton();
             dataView_late = new DataGridView();
             tabPage_ = new TabPage();
             groupBox2 = new GroupBox();
-            maskedTextBox5 = new MaskedTextBox();
+            txtbox_fullwork_ramadan = new MaskedTextBox();
             label27 = new Label();
-            maskedTextBox4 = new MaskedTextBox();
+            txtbox_naqes_ramazan = new MaskedTextBox();
             label26 = new Label();
-            maskedTextBox3 = new MaskedTextBox();
+            txtbox_naqes_farvardin = new MaskedTextBox();
             label25 = new Label();
-            maskedTextBox2 = new MaskedTextBox();
+            txtbox_naqes_thrusday = new MaskedTextBox();
             label24 = new Label();
-            maskedTextBox1 = new MaskedTextBox();
+            txtbox_naqes_normal = new MaskedTextBox();
             label1 = new Label();
             txtbox_late = new MaskedTextBox();
             txtbox_fullwork_farvardin = new MaskedTextBox();
@@ -129,7 +129,7 @@
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(1072, 501);
+            tabpage_detailvorodkhoroj.Size = new Size(1072, 554);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
             // 
@@ -598,7 +598,7 @@
             dataView_Calculate.ReadOnly = true;
             dataView_Calculate.RightToLeft = RightToLeft.No;
             dataView_Calculate.RowHeadersWidth = 70;
-            dataView_Calculate.Size = new Size(1066, 318);
+            dataView_Calculate.Size = new Size(1066, 371);
             dataView_Calculate.TabIndex = 0;
             dataView_Calculate.VirtualMode = true;
             dataView_Calculate.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -633,7 +633,7 @@
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1080, 534);
+            tabControl1.Size = new Size(1080, 587);
             tabControl1.TabIndex = 0;
             // 
             // tabPage_durationdays
@@ -641,10 +641,10 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 24);
+            tabPage_durationdays.Location = new Point(4, 29);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1072, 506);
+            tabPage_durationdays.Size = new Size(1072, 554);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -661,7 +661,7 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(radioButton1);
+            groupBox1.Controls.Add(radioButton_ramadan);
             groupBox1.Controls.Add(radioButton_holidays);
             groupBox1.Controls.Add(radioButton_qeybat);
             groupBox1.Location = new Point(124, 3);
@@ -671,16 +671,16 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "انتخاب لیست:";
             // 
-            // radioButton1
+            // radioButton_ramadan
             // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(87, 75);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(107, 24);
-            radioButton1.TabIndex = 28;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "لیست ماه رمضان";
-            radioButton1.UseVisualStyleBackColor = true;
+            radioButton_ramadan.AutoSize = true;
+            radioButton_ramadan.Location = new Point(87, 75);
+            radioButton_ramadan.Name = "radioButton_ramadan";
+            radioButton_ramadan.Size = new Size(107, 24);
+            radioButton_ramadan.TabIndex = 28;
+            radioButton_ramadan.TabStop = true;
+            radioButton_ramadan.Text = "لیست ماه رمضان";
+            radioButton_ramadan.UseVisualStyleBackColor = true;
             // 
             // radioButton_holidays
             // 
@@ -718,7 +718,7 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(1069, 330);
+            dataView_late.Size = new Size(1069, 438);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -737,15 +737,15 @@
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(maskedTextBox5);
+            groupBox2.Controls.Add(txtbox_fullwork_ramadan);
             groupBox2.Controls.Add(label27);
-            groupBox2.Controls.Add(maskedTextBox4);
+            groupBox2.Controls.Add(txtbox_naqes_ramazan);
             groupBox2.Controls.Add(label26);
-            groupBox2.Controls.Add(maskedTextBox3);
+            groupBox2.Controls.Add(txtbox_naqes_farvardin);
             groupBox2.Controls.Add(label25);
-            groupBox2.Controls.Add(maskedTextBox2);
+            groupBox2.Controls.Add(txtbox_naqes_thrusday);
             groupBox2.Controls.Add(label24);
-            groupBox2.Controls.Add(maskedTextBox1);
+            groupBox2.Controls.Add(txtbox_naqes_normal);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(txtbox_late);
             groupBox2.Controls.Add(txtbox_fullwork_farvardin);
@@ -764,17 +764,17 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";
             // 
-            // maskedTextBox5
+            // txtbox_fullwork_ramadan
             // 
-            maskedTextBox5.Location = new Point(326, 134);
-            maskedTextBox5.Mask = "00:00:00";
-            maskedTextBox5.Name = "maskedTextBox5";
-            maskedTextBox5.RightToLeft = RightToLeft.No;
-            maskedTextBox5.Size = new Size(59, 28);
-            maskedTextBox5.TabIndex = 44;
-            maskedTextBox5.Text = "074500";
-            maskedTextBox5.TextAlign = HorizontalAlignment.Center;
-            maskedTextBox5.ValidatingType = typeof(DateTime);
+            txtbox_fullwork_ramadan.Location = new Point(326, 134);
+            txtbox_fullwork_ramadan.Mask = "00:00:00";
+            txtbox_fullwork_ramadan.Name = "txtbox_fullwork_ramadan";
+            txtbox_fullwork_ramadan.RightToLeft = RightToLeft.No;
+            txtbox_fullwork_ramadan.Size = new Size(59, 28);
+            txtbox_fullwork_ramadan.TabIndex = 44;
+            txtbox_fullwork_ramadan.Text = "074500";
+            txtbox_fullwork_ramadan.TextAlign = HorizontalAlignment.Center;
+            txtbox_fullwork_ramadan.ValidatingType = typeof(DateTime);
             // 
             // label27
             // 
@@ -785,17 +785,17 @@
             label27.TabIndex = 43;
             label27.Text = "شرط ساعت کاری کامل رمضان:";
             // 
-            // maskedTextBox4
+            // txtbox_naqes_ramazan
             // 
-            maskedTextBox4.Location = new Point(6, 134);
-            maskedTextBox4.Mask = "00:00:00";
-            maskedTextBox4.Name = "maskedTextBox4";
-            maskedTextBox4.RightToLeft = RightToLeft.No;
-            maskedTextBox4.Size = new Size(59, 28);
-            maskedTextBox4.TabIndex = 42;
-            maskedTextBox4.Text = "164500";
-            maskedTextBox4.TextAlign = HorizontalAlignment.Center;
-            maskedTextBox4.ValidatingType = typeof(DateTime);
+            txtbox_naqes_ramazan.Location = new Point(16, 134);
+            txtbox_naqes_ramazan.Mask = "00:00:00";
+            txtbox_naqes_ramazan.Name = "txtbox_naqes_ramazan";
+            txtbox_naqes_ramazan.RightToLeft = RightToLeft.No;
+            txtbox_naqes_ramazan.Size = new Size(59, 28);
+            txtbox_naqes_ramazan.TabIndex = 42;
+            txtbox_naqes_ramazan.Text = "164500";
+            txtbox_naqes_ramazan.TextAlign = HorizontalAlignment.Center;
+            txtbox_naqes_ramazan.ValidatingType = typeof(DateTime);
             // 
             // label26
             // 
@@ -806,17 +806,17 @@
             label26.TabIndex = 41;
             label26.Text = "شرط اصلاح ردیف های ناقص(رمضان):";
             // 
-            // maskedTextBox3
+            // txtbox_naqes_farvardin
             // 
-            maskedTextBox3.Location = new Point(6, 173);
-            maskedTextBox3.Mask = "00:00:00";
-            maskedTextBox3.Name = "maskedTextBox3";
-            maskedTextBox3.RightToLeft = RightToLeft.No;
-            maskedTextBox3.Size = new Size(59, 28);
-            maskedTextBox3.TabIndex = 40;
-            maskedTextBox3.Text = "164500";
-            maskedTextBox3.TextAlign = HorizontalAlignment.Center;
-            maskedTextBox3.ValidatingType = typeof(DateTime);
+            txtbox_naqes_farvardin.Location = new Point(16, 173);
+            txtbox_naqes_farvardin.Mask = "00:00:00";
+            txtbox_naqes_farvardin.Name = "txtbox_naqes_farvardin";
+            txtbox_naqes_farvardin.RightToLeft = RightToLeft.No;
+            txtbox_naqes_farvardin.Size = new Size(59, 28);
+            txtbox_naqes_farvardin.TabIndex = 40;
+            txtbox_naqes_farvardin.Text = "164500";
+            txtbox_naqes_farvardin.TextAlign = HorizontalAlignment.Center;
+            txtbox_naqes_farvardin.ValidatingType = typeof(DateTime);
             // 
             // label25
             // 
@@ -827,17 +827,17 @@
             label25.TabIndex = 39;
             label25.Text = "شرط اصلاح ردیف های ناقص(فروردین):";
             // 
-            // maskedTextBox2
+            // txtbox_naqes_thrusday
             // 
-            maskedTextBox2.Location = new Point(6, 99);
-            maskedTextBox2.Mask = "00:00:00";
-            maskedTextBox2.Name = "maskedTextBox2";
-            maskedTextBox2.RightToLeft = RightToLeft.No;
-            maskedTextBox2.Size = new Size(59, 28);
-            maskedTextBox2.TabIndex = 38;
-            maskedTextBox2.Text = "164500";
-            maskedTextBox2.TextAlign = HorizontalAlignment.Center;
-            maskedTextBox2.ValidatingType = typeof(DateTime);
+            txtbox_naqes_thrusday.Location = new Point(16, 99);
+            txtbox_naqes_thrusday.Mask = "00:00:00";
+            txtbox_naqes_thrusday.Name = "txtbox_naqes_thrusday";
+            txtbox_naqes_thrusday.RightToLeft = RightToLeft.No;
+            txtbox_naqes_thrusday.Size = new Size(59, 28);
+            txtbox_naqes_thrusday.TabIndex = 38;
+            txtbox_naqes_thrusday.Text = "164500";
+            txtbox_naqes_thrusday.TextAlign = HorizontalAlignment.Center;
+            txtbox_naqes_thrusday.ValidatingType = typeof(DateTime);
             // 
             // label24
             // 
@@ -848,17 +848,17 @@
             label24.TabIndex = 37;
             label24.Text = "شرط اصلاح ردیف های ناقص(پنج شنبه):";
             // 
-            // maskedTextBox1
+            // txtbox_naqes_normal
             // 
-            maskedTextBox1.Location = new Point(326, 173);
-            maskedTextBox1.Mask = "00:00:00";
-            maskedTextBox1.Name = "maskedTextBox1";
-            maskedTextBox1.RightToLeft = RightToLeft.No;
-            maskedTextBox1.Size = new Size(59, 28);
-            maskedTextBox1.TabIndex = 36;
-            maskedTextBox1.Text = "164500";
-            maskedTextBox1.TextAlign = HorizontalAlignment.Center;
-            maskedTextBox1.ValidatingType = typeof(DateTime);
+            txtbox_naqes_normal.Location = new Point(326, 173);
+            txtbox_naqes_normal.Mask = "00:00:00";
+            txtbox_naqes_normal.Name = "txtbox_naqes_normal";
+            txtbox_naqes_normal.RightToLeft = RightToLeft.No;
+            txtbox_naqes_normal.Size = new Size(59, 28);
+            txtbox_naqes_normal.TabIndex = 36;
+            txtbox_naqes_normal.Text = "164500";
+            txtbox_naqes_normal.TextAlign = HorizontalAlignment.Center;
+            txtbox_naqes_normal.ValidatingType = typeof(DateTime);
             // 
             // label1
             // 
@@ -953,7 +953,7 @@
             // 
             // txtbox_fullwork
             // 
-            txtbox_fullwork.Location = new Point(6, 66);
+            txtbox_fullwork.Location = new Point(16, 66);
             txtbox_fullwork.Mask = "00:00:00";
             txtbox_fullwork.Name = "txtbox_fullwork";
             txtbox_fullwork.RightToLeft = RightToLeft.No;
@@ -967,7 +967,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1080, 534);
+            ClientSize = new Size(1080, 587);
             Controls.Add(tabControl1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -1059,16 +1059,16 @@
         private Button btn_perv;
         public ComboBox userid_txtbox;
         private CheckBox checkBox_AutoEdit;
-        private MaskedTextBox maskedTextBox1;
+        private MaskedTextBox txtbox_naqes_normal;
         public Label label1;
-        private MaskedTextBox maskedTextBox2;
+        private MaskedTextBox txtbox_naqes_thrusday;
         public Label label24;
-        private MaskedTextBox maskedTextBox3;
+        private MaskedTextBox txtbox_naqes_farvardin;
         public Label label25;
-        private MaskedTextBox maskedTextBox4;
+        private MaskedTextBox txtbox_naqes_ramazan;
         public Label label26;
-        private MaskedTextBox maskedTextBox5;
+        private MaskedTextBox txtbox_fullwork_ramadan;
         public Label label27;
-        private RadioButton radioButton1;
+        private RadioButton radioButton_ramadan;
     }
 }
