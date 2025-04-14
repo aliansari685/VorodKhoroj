@@ -73,7 +73,7 @@ public partial class FrmCalc : Form
                 row.DefaultCellStyle.BackColor = Color.Orange;
 
             else if (DateTime.TryParse(row?.Cells["Date"]?.Value?.ToString(), out var date)
-                     && _calcServices.overtimeinHoliday.Contains(date))
+                     && _calcServices.OvertimeinHoliday.Contains(date))
                 row.DefaultCellStyle.BackColor = Color.CadetBlue;
         }
     }

@@ -79,7 +79,8 @@ public class AttendanceCalculationService
 
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
-    public List<DateTime> overtimeinHoliday { get; private set; }
+    public List<DateTime> RamadanDaysList { get; private set; }
+    public List<DateTime> OvertimeinHoliday { get; private set; }
 
     public List<string> PersianColumnHeader =
     [
@@ -152,7 +153,7 @@ public class AttendanceCalculationService
         var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
 
         // تاریخ‌های تعطیل که کارمند حضور داشته است
-        overtimeinHoliday = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
+        OvertimeinHoliday = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
 
         var groupedData = dataFilteredGrouped.Select(g =>
         {
@@ -166,7 +167,7 @@ public class AttendanceCalculationService
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
 
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
-            var IsWorkinginHoliday = overtimeinHoliday.Contains(minDateTime.Date.Date);
+            var IsWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
 
             // بررسی اینکه آیا روز جاری پنجشنبه است
             var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;

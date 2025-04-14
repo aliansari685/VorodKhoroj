@@ -3,12 +3,49 @@ namespace VorodKhoroj.Classes
 {
     public class PersianDateHelper
     {
-        public static List<Holiday> GetHolidays()
+
+        public static List<TemplateDays> GetRamadanDays()
+        {
+            var days = new List<int> { 1, 2, 3, 4, 12, 13 };
+
+            var list = new List<TemplateDays>();
+
+            var excelPath = Application.StartupPath + @"Resources\ramadan.xlsx";
+
+            using (var package = new ExcelPackage(new FileInfo(excelPath)))
+            {
+                var worksheet = package.Workbook.Worksheets[0]; // اولین شیت
+
+                var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
+                for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
+                {
+                    var title = worksheet.Cells[row, 1].Text; // ستون title
+                    var dateString = worksheet.Cells[row, 2].Text; // ستون date
+
+                    if (DateTime.TryParse(dateString, out var date))
+                        list.Add(new TemplateDays { Title = title, Date = date });
+                    else
+                        throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
+                }
+            }
+
+            for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
+            {
+                if (dt.DayOfWeek == DayOfWeek.Friday)
+                {
+                    list.Add(new TemplateDays { Title = "جمعه", Date = dt });
+                }
+            }
+
+            return list;
+        }
+
+        public static List<TemplateDays> GetHolidays()
         {
             var farvardinHolidays = new List<int> { 1, 2, 3, 4, 12, 13 };
 
 
-            var list = new List<Holiday>();
+            var list = new List<TemplateDays>();
 
 
             var excelPath = Application.StartupPath + @"Resources\holiday.xlsx";
@@ -24,7 +61,7 @@ namespace VorodKhoroj.Classes
                     var dateString = worksheet.Cells[row, 2].Text; // ستون date
 
                     if (DateTime.TryParse(dateString, out var date))
-                        list.Add(new Holiday { Title = title, Date = date });
+                        list.Add(new TemplateDays { Title = title, Date = date });
                     else
                         throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
                 }
@@ -35,11 +72,11 @@ namespace VorodKhoroj.Classes
             {
                 if (dt.DayOfWeek == DayOfWeek.Friday)
                 {
-                    list.Add(new Holiday { Title = "جمعه", Date = dt });
+                    list.Add(new TemplateDays { Title = "جمعه", Date = dt });
                 }
                 if (PersianCalendar.GetMonth(dt) == 1 && farvardinHolidays.Contains(PersianCalendar.GetDayOfMonth(dt)))
                 {
-                    list.Add(new Holiday { Title = "نوروز", Date = dt });
+                    list.Add(new TemplateDays { Title = "نوروز", Date = dt });
                 }
             }
 
@@ -104,7 +141,7 @@ namespace VorodKhoroj.Classes
         }
 
     }
-    public class Holiday
+    public class TemplateDays
     {
         public string Title { get; set; }
         public DateTime Date { get; set; }

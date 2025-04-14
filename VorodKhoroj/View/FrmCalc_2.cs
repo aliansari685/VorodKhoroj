@@ -20,7 +20,7 @@ public partial class FrmCalc
     }
     private void dataView_late_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
-        if (_calcServices.overtimeinHoliday.Contains(DateTime.Parse(dataView_late?.Rows[e.RowIndex]?.Cells["Date"]?.Value?.ToString())))
+        if (_calcServices.OvertimeinHoliday.Contains(DateTime.Parse(dataView_late?.Rows[e.RowIndex]?.Cells["Date"]?.Value?.ToString())))
             dataView_late.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.CadetBlue;
     }
     private void BtnExportExcelClick(object sender, EventArgs e)
@@ -38,6 +38,13 @@ public partial class FrmCalc
                     Date = g.Date.ToString("yyyy/MM/dd")
                 }).ToList().ToDataTable();
 
+
+            if (radioButton_holidays.Checked)
+                dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
+                {
+                    DayOfWeek = g.Date.ToString("dddd"),
+                    Date = g.Date.ToString("yyyy/MM/dd"),
+                }).ToList().ToDataTable();
 
             if (radioButton_holidays.Checked)
                 dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
