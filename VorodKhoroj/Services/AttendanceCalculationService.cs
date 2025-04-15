@@ -80,6 +80,7 @@ public class AttendanceCalculationService
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
     public List<DateTime> RamadanDaysList { get; private set; }
+    public List<TemplateDays> RamadanDaysList1 { get; private set; }
     public List<DateTime> OvertimeinHoliday { get; private set; }
 
     public List<string> PersianColumnHeader =
@@ -131,13 +132,17 @@ public class AttendanceCalculationService
 
     public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
     {
-        var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId));
+        RamadanDaysList1 = PersianDateHelper.GetRamadanDays();
+        var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
         if (filtered?.Any() == false || filtered is null)
-            throw new ArgumentNullException("داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
+            throw new ArgumentNullException($"داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
+
+        //رمضان
+        var ramadanDays = PersianDateHelper.GetRamadanDays().Select(d => d.Date).ToHashSet();
 
         // مرتب کردن داده‌ها بر اساس تاریخ و زمان
         var dataFiltered = filtered.Select(x => new { x.UserId, x.DateTime })
@@ -154,6 +159,9 @@ public class AttendanceCalculationService
 
         // تاریخ‌های تعطیل که کارمند حضور داشته است
         OvertimeinHoliday = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
+
+        //رمضان
+        RamadanDaysList = pr.Where(ramadanDays.Contains).Select(g => g.Date.Date).ToList();
 
         var groupedData = dataFilteredGrouped.Select(g =>
         {

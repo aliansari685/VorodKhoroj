@@ -29,6 +29,8 @@ public partial class FrmCalc
     }
     private void radioButton_CheckedChanged(object? sender, EventArgs? e)
     {
+        var fromDt = DateTime.Parse(_fromDateTime);
+        var toDt = DateTime.Parse(_toDateTime);
         try
         {
             if (radioButton_qeybat.Checked)
@@ -38,7 +40,6 @@ public partial class FrmCalc
                     Date = g.Date.ToString("yyyy/MM/dd")
                 }).ToList().ToDataTable();
 
-
             if (radioButton_holidays.Checked)
                 dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
                 {
@@ -46,14 +47,16 @@ public partial class FrmCalc
                     Date = g.Date.ToString("yyyy/MM/dd"),
                 }).ToList().ToDataTable();
 
-            if (radioButton_holidays.Checked)
-                dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
+            if (radioButton_ramadan.Checked)
+                dataView_late.DataSource = _calcServices.RamadanDaysList1.Where(x => x.Date.Date >= fromDt && x.Date.Date <= toDt).Select(g => new
                 {
+
+                    Title = g.Title,
                     DayOfWeek = g.Date.ToString("dddd"),
                     Date = g.Date.ToString("yyyy/MM/dd"),
                 }).ToList().ToDataTable();
 
-            DataGridViewConfig1();
+            //        DataGridViewConfig1();
         }
         catch (Exception ex)
         {

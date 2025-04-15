@@ -6,8 +6,6 @@ namespace VorodKhoroj.Classes
 
         public static List<TemplateDays> GetRamadanDays()
         {
-            var days = new List<int> { 1, 2, 3, 4, 12, 13 };
-
             var list = new List<TemplateDays>();
 
             var excelPath = Application.StartupPath + @"Resources\ramadan.xlsx";
@@ -26,14 +24,6 @@ namespace VorodKhoroj.Classes
                         list.Add(new TemplateDays { Title = title, Date = date });
                     else
                         throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
-                }
-            }
-
-            for (var dt = DateTime.Parse("1400/01/01"); dt <= (DateTime.Now); dt = dt.AddDays(1))
-            {
-                if (dt.DayOfWeek == DayOfWeek.Friday)
-                {
-                    list.Add(new TemplateDays { Title = "جمعه", Date = dt });
                 }
             }
 
