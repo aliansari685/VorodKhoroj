@@ -40,6 +40,7 @@ public partial class FrmCalc
                     Date = g.Date.ToString("yyyy/MM/dd")
                 }).ToList().ToDataTable();
 
+
             if (radioButton_holidays.Checked)
                 dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
                 {
@@ -47,11 +48,12 @@ public partial class FrmCalc
                     Date = g.Date.ToString("yyyy/MM/dd"),
                 }).ToList().ToDataTable();
 
-            if (radioButton_ramadan.Checked)
-                dataView_late.DataSource = _calcServices.RamadanDaysList1.Where(x => x.Date.Date >= fromDt && x.Date.Date <= toDt).Select(g => new
-                {
 
-                    Title = g.Title,
+            if (radioButton_ramadan.Checked)
+                dataView_late.DataSource = _calcServices.RamadanDaysList.Where(x => x.Date.Date >= fromDt && x.Date.Date <= toDt).Select(g =>
+                new
+                {
+                    g.Title,
                     DayOfWeek = g.Date.ToString("dddd"),
                     Date = g.Date.ToString("yyyy/MM/dd"),
                 }).ToList().ToDataTable();
