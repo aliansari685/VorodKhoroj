@@ -73,9 +73,16 @@ public class AttendanceCalculationService
     private readonly AppServices _recordService;
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
+
     private TimeSpan _fullWorkTm = TimeSpan.Parse("08:30:00");
     private TimeSpan _fullWorkThursdayTm = TimeSpan.Parse("05:30:00");
     private TimeSpan _fullWorkFarvardinTm = TimeSpan.Parse("07:45:00");
+    private TimeSpan _fullWorkRamadanTm = TimeSpan.Parse("06:45:00");
+
+    private TimeSpan _naqesWorkTm = TimeSpan.Parse("16:45:00");
+    private TimeSpan _naqesWorkThursdayTm = TimeSpan.Parse("13:45:00");
+    private TimeSpan _naqesWorkFarvardinTm = TimeSpan.Parse("15:45:00");
+    private TimeSpan _naqesWorkRamadanTm = TimeSpan.Parse("14:45:00");
 
     public List<DateTime> QeybathaDaysList { get; private set; }
     public List<DateTime> HolidaysDaysList { get; private set; }
@@ -129,6 +136,36 @@ public class AttendanceCalculationService
         return this;
     }
 
+    public AttendanceCalculationService WithFullWorkRamadanTime(TimeSpan ramadanTime)
+    {
+        _fullWorkRamadanTm = ramadanTime;
+        return this;
+    }
+
+    public AttendanceCalculationService WithNaqesWorkTime(TimeSpan fullWorkTime)
+    {
+        _naqesWorkTm = fullWorkTime;
+        return this;
+    }
+
+    public AttendanceCalculationService WithNaqesWorkThursdayTime(TimeSpan thursdayTime)
+    {
+        _naqesWorkThursdayTm = thursdayTime;
+        return this;
+    }
+
+    public AttendanceCalculationService WithNaqesWorkFarvardinTime(TimeSpan farvardinTime)
+    {
+        _naqesWorkFarvardinTm = farvardinTime;
+        return this;
+    }
+
+    public AttendanceCalculationService WithNaqesWorkRamadanTime(TimeSpan ramadanTime)
+    {
+        _naqesWorkRamadanTm = ramadanTime;
+        return this;
+    }
+
     public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
     {
         var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
@@ -140,7 +177,8 @@ public class AttendanceCalculationService
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
 
         //رمضان
-        var ramadanDays = PersianDateHelper.GetRamadanDays().Select(d => d.Date).ToHashSet();
+        RamadanDaysList = PersianDateHelper.GetRamadanDays();
+        var ramadanDays = RamadanDaysList.Select(d => d.Date).ToHashSet();
 
         // مرتب کردن داده‌ها بر اساس تاریخ و زمان
         var dataFiltered = filtered.Select(x => new { x.UserId, x.DateTime })
@@ -172,36 +210,38 @@ public class AttendanceCalculationService
             var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
 
+            if (orderedTimes.Length == 1 && minDateTime.Hour < 14)
+            {
+                minDateTime = minDateTime.Date + new TimeSpan(08, 15, 00);
+                maxDateTime = orderedTimes.First();
+            }
+
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
             var IsWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
 
             // بررسی اینکه آیا روز جاری پنجشنبه است
             var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
 
+            //ایا رمضان است روز جاری؟
+            var isRamadan = ramadanDaysList.Contains((minDateTime.Date));
+
             // بررسی اینکه آیا روز جاری در ماه فروردین است
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
 
+            //ناقص
+            var naqes = _naqesWorkTm;
+            if (isThursday)
+                naqes = _naqesWorkThursdayTm;
+            if (isRamadan)
+                naqes = _naqesWorkRamadanTm;
+            if (isFarvardin)
+                naqes = _naqesWorkFarvardinTm;
+
             if (maxDateTime == DateTime.MinValue)
             {
-                if (autoEditNaqesRows)
-                {
-                    var time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 17, 00, 00);
-
-                    if (isFarvardin)
-                    {
-                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 16, 00, 00);
-                    }
-                    if (isThursday)
-                    {
-                        time = new DateTime(minDateTime.Date.Year, minDateTime.Date.Month, minDateTime.Date.Day, 14, 00, 00);
-                    }
-
-                    maxDateTime = time;
-                }
-                else
-                {
-                    maxDateTime = minDateTime; // اگر زمان خروج وجود نداشت، زمان ورودی را جایگزین می‌کنیم
-                }
+                maxDateTime = autoEditNaqesRows
+                    ? minDateTime.Date + naqes
+                    : minDateTime;
             }
 
             // اگر زمان ورودی و خروجی دوم وجود داشته باشد
@@ -228,6 +268,7 @@ public class AttendanceCalculationService
             // تعیین ساعات کاری استاندارد بر اساس روز هفته
             var standardWorkTime = isThursday ? _fullWorkThursdayTm
                 : isFarvardin ? _fullWorkFarvardinTm
+                : isRamadan ? _fullWorkRamadanTm
                 : _fullWorkTm;
 
             // بررسی اینکه آیا فرد ساعت کامل کار کرده است یا نه

@@ -53,7 +53,12 @@ public partial class FrmCalc : Form
             .WithLateTime(TimeSpan.Parse(txtbox_late.Text))
             .WithFullWorkTime(TimeSpan.Parse(txtbox_fullwork.Text))
             .WithFullWorkThursdayTime(TimeSpan.Parse(txtbox_fullwork_thursday.Text))
-            .WithFullWorkFarvardinTime(TimeSpan.Parse(txtbox_fullwork_farvardin.Text));
+            .WithFullWorkFarvardinTime(TimeSpan.Parse(txtbox_fullwork_farvardin.Text))
+            .WithFullWorkRamadanTime(TimeSpan.Parse(txtbox_fullwork_ramadan.Text))
+            .WithNaqesWorkTime(TimeSpan.Parse(txtbox_naqes_normal.Text))
+            .WithNaqesWorkThursdayTime(TimeSpan.Parse(txtbox_naqes_thrusday.Text))
+            .WithNaqesWorkFarvardinTime(TimeSpan.Parse(txtbox_naqes_farvardin.Text))
+            .WithNaqesWorkRamadanTime(TimeSpan.Parse(txtbox_naqes_ramazan.Text));
 
         ReloadGrid();
 

@@ -641,10 +641,10 @@
             tabPage_durationdays.Controls.Add(button1);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 29);
+            tabPage_durationdays.Location = new Point(4, 24);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1072, 554);
+            tabPage_durationdays.Size = new Size(1072, 559);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -728,10 +728,10 @@
             // tabPage_
             // 
             tabPage_.Controls.Add(groupBox2);
-            tabPage_.Location = new Point(4, 24);
+            tabPage_.Location = new Point(4, 29);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(1072, 559);
+            tabPage_.Size = new Size(1072, 554);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
@@ -760,7 +760,7 @@
             groupBox2.Dock = DockStyle.Left;
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(561, 553);
+            groupBox2.Size = new Size(561, 548);
             groupBox2.TabIndex = 35;
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";
@@ -773,7 +773,7 @@
             txtbox_fullwork_ramadan.RightToLeft = RightToLeft.No;
             txtbox_fullwork_ramadan.Size = new Size(59, 28);
             txtbox_fullwork_ramadan.TabIndex = 44;
-            txtbox_fullwork_ramadan.Text = "074500";
+            txtbox_fullwork_ramadan.Text = "064500";
             txtbox_fullwork_ramadan.TextAlign = HorizontalAlignment.Center;
             txtbox_fullwork_ramadan.ValidatingType = typeof(DateTime);
             // 
@@ -794,7 +794,7 @@
             txtbox_naqes_ramazan.RightToLeft = RightToLeft.No;
             txtbox_naqes_ramazan.Size = new Size(59, 28);
             txtbox_naqes_ramazan.TabIndex = 42;
-            txtbox_naqes_ramazan.Text = "164500";
+            txtbox_naqes_ramazan.Text = "144500";
             txtbox_naqes_ramazan.TextAlign = HorizontalAlignment.Center;
             txtbox_naqes_ramazan.ValidatingType = typeof(DateTime);
             // 
@@ -815,7 +815,7 @@
             txtbox_naqes_farvardin.RightToLeft = RightToLeft.No;
             txtbox_naqes_farvardin.Size = new Size(59, 28);
             txtbox_naqes_farvardin.TabIndex = 40;
-            txtbox_naqes_farvardin.Text = "164500";
+            txtbox_naqes_farvardin.Text = "154500";
             txtbox_naqes_farvardin.TextAlign = HorizontalAlignment.Center;
             txtbox_naqes_farvardin.ValidatingType = typeof(DateTime);
             // 
@@ -836,7 +836,7 @@
             txtbox_naqes_thrusday.RightToLeft = RightToLeft.No;
             txtbox_naqes_thrusday.Size = new Size(59, 28);
             txtbox_naqes_thrusday.TabIndex = 38;
-            txtbox_naqes_thrusday.Text = "164500";
+            txtbox_naqes_thrusday.Text = "134500";
             txtbox_naqes_thrusday.TextAlign = HorizontalAlignment.Center;
             txtbox_naqes_thrusday.ValidatingType = typeof(DateTime);
             // 
