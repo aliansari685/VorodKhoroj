@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.Services;
+﻿using System.ComponentModel;
+
+namespace VorodKhoroj.Services;
 
 public class AttendanceCalculationService
 {
@@ -7,6 +9,9 @@ public class AttendanceCalculationService
     public class WorkRecord
     {
         // روز هفته
+
+
+        [DisplayName("تست")]
         public string DayOfWeek { get; set; }
 
         // تاریخ روز
@@ -451,4 +456,25 @@ public class AttendanceCalculationService
             { "مقدار تعدیل یا اضافه ساعت کاری خالص", Report.TotalAdjustmentOrOvertime }
         };
     }
+    public Dictionary<string, string> GetDataWithTitle(AttendanceReport report)
+    {
+        var result = new Dictionary<string, string>();
+        var props = report.GetType().GetProperties();
+
+        foreach (var prop in props)
+        {
+            var displayNameAttr = prop.GetCustomAttributes(typeof(DisplayNameAttribute), false)
+                .Cast<DisplayNameAttribute>()
+                .FirstOrDefault();
+
+            var displayName = displayNameAttr?.DisplayName ?? prop.Name; // اگر اتریبیوت نبود، اسم پراپرتی
+
+            var value = prop.GetValue(report)?.ToString() ?? "";
+
+            result[displayName] = value;
+        }
+
+        return result;
+    }
+
 }

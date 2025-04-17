@@ -1,4 +1,5 @@
-﻿using Serilog.Context;
+﻿using System.ComponentModel;
+using Serilog.Context;
 
 namespace VorodKhoroj.Classes
 {
@@ -64,6 +65,28 @@ namespace VorodKhoroj.Classes
                 throw;
             }
         }
+
+        //public static Dictionary<string, string> GetDataWithDisplayName()
+        //{
+        //    var result = new Dictionary<string, string>();
+        //    var props = Report.GetType().GetProperties();
+
+        //    foreach (var prop in props)
+        //    {
+        //        var displayNameAttr = prop.GetCustomAttributes(typeof(DisplayNameAttribute), false)
+        //            .Cast<DisplayNameAttribute>()
+        //            .FirstOrDefault();
+
+        //        var displayName = displayNameAttr?.DisplayName ?? prop.Name; // اگر اتریبیوت نبود، اسم پراپرتی
+
+        //        var value = prop.GetValue(Report)?.ToString() ?? "";
+
+        //        result[displayName] = value;
+        //    }
+
+        //    return result;
+        //}
+
 
     }
 }

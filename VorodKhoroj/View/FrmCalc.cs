@@ -146,6 +146,7 @@ public partial class FrmCalc : Form
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
+
             Part2_Load();
 
             UpdateLabels();
