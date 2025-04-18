@@ -17,7 +17,7 @@ namespace VorodKhoroj.Classes
                 var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
                 for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
                 {
-                    var title = worksheet.Cells[row, 1].Text; // ستون title
+                    var title = worksheet.Cells[row, 1].Text; // ستون TitleReport
                     var dateString = worksheet.Cells[row, 2].Text; // ستون date
 
                     if (DateTime.TryParse(dateString, out var date))
@@ -47,7 +47,7 @@ namespace VorodKhoroj.Classes
                 var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
                 for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
                 {
-                    var title = worksheet.Cells[row, 1].Text; // ستون title
+                    var title = worksheet.Cells[row, 1].Text; // ستون TitleReport
                     var dateString = worksheet.Cells[row, 2].Text; // ستون date
 
                     if (DateTime.TryParse(dateString, out var date))

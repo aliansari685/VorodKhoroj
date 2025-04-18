@@ -49,6 +49,7 @@ public partial class FrmCalc : Form
 
     private void btn_Submit_Click(object sender, EventArgs e)
     {
+        MessageBox.Show(_calcServices.Report.TotalFullWorkDays);
         _calcServices
             .WithLateTime(TimeSpan.Parse(txtbox_late.Text))
             .WithFullWorkTime(TimeSpan.Parse(txtbox_fullwork.Text))
@@ -87,8 +88,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            var title = @$"{lbl_FromTo.Text} {'\t'}{'\t'} User:{_userid}";
-            DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle(), title);
+            DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle(), _calcServices.TitleReport);
         }
         catch (Exception ex)
         {
@@ -123,10 +123,10 @@ public partial class FrmCalc : Form
         var users = _service.GetUsers();
         var now = Array.IndexOf(users, int.Parse(_userid));
 
-        if (plusNumber && now < users.Length - 1)
+        if (plusNumber && (now < users.Length - 1))
             now++;
         else if (!plusNumber && now > 0)
-            now++;
+            now--;
         else
             return;
 
@@ -143,9 +143,7 @@ public partial class FrmCalc : Form
 
             if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"_userId", @$"خطای داخلی ");
 
-            dataView_Calculate.DataSource = _calcServices
-                .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
-
+            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
             Part2_Load();
 
@@ -163,8 +161,7 @@ public partial class FrmCalc : Form
     {
         if (dataView_Calculate.DataSource == null) return;
 
-        for (var i = 0; i < _calcServices.PersianColumnHeader.Count; i++)
-            dataView_Calculate.Columns[i].HeaderText = _calcServices.PersianColumnHeader[i];
+        CommonHelper.SetDisplayNameInDataGrid(new WorkRecord(), dataView_Calculate);
     }
 
     private void UpdateLabels()

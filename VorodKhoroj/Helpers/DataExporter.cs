@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.Helpers;
+﻿using Azure.Identity;
+
+namespace VorodKhoroj.Helpers;
 
 public static class DataExporter
 {
@@ -14,7 +16,7 @@ public static class DataExporter
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Data");
 
-        
+
             // عنوان ستون‌ها
             for (var col = 0; col < grid.Columns.Count; col++)
                 worksheet.Cells[1, col + 1].Value = grid.Columns[col].HeaderText;
@@ -69,12 +71,12 @@ public static class DataExporter
             var startDate = $"{year}/{month:D2}/01";
             var endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
 
-            var headers = calcService.PersianColumnHeader;
+            var headers = new WorkRecord().GetDisplayNames();
             var records = calcService.Calculate(userId, startDate, endDate);
             if (records.Count == 0)
                 return;
 
-            var properties = typeof(AttendanceCalculationService.WorkRecord).GetProperties();
+            var properties = typeof(WorkRecord).GetProperties();
 
             // عنوان ستون‌ها
             for (var col = 0; col < headers.Count; col++) worksheet.Cells[1, col + 1].Value = headers[col];
@@ -87,10 +89,12 @@ public static class DataExporter
                     worksheet.Cells[row + 2, col + 1].Value = value?.ToString() ?? "";
                 }
 
+            worksheet.Cells[records.Count + 3, 1].Value = calcService.TitleReport;
+
             // لیبل‌ها
             if (includeLabels)
             {
-                var labelRow = records.Count + 4;
+                var labelRow = records.Count + 5;
                 var labelCol = 1;
                 var labels = calcService.GetDataWithTitle();
 

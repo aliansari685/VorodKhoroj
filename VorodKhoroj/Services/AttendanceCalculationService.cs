@@ -1,81 +1,10 @@
-﻿using System.ComponentModel;
+﻿namespace VorodKhoroj.Services;
 
-namespace VorodKhoroj.Services;
-
-public class AttendanceCalculationService
+public class AttendanceCalculationService(AppServices recordService)
 {
-    public AttendanceReport Report { get; set; }
+    private readonly AppServices _recordService = recordService;
 
-    public class WorkRecord
-    {
-        // روز هفته
-
-
-        [DisplayName("تست")]
-        public string DayOfWeek { get; set; }
-
-        // تاریخ روز
-        public string Date { get; set; }
-
-        // زمان ورود
-        public string EntryTime { get; set; }
-
-        // زمان خروج
-        public string ExitTime { get; set; }
-
-        // زمان ورود دوم (قابل null بودن)
-        public string? EntryTime2 { get; set; }
-
-        // زمان خروج دوم (قابل null بودن)
-        public string? ExitTime2 { get; set; }
-
-        // مدت زمان کارکرد به دقیقه
-        public double DurationMin { get; set; }
-
-        // مدت زمان کارکرد به فرمت ساعت:دقیقه
-        public string DurationHour { get; set; }
-
-        // آیا فرد دیر آمده است؟
-        public bool IsLate { get; set; }
-
-        // مقدار دقیقه تاخیر
-        public TimeSpan LateMinutes { get; set; }
-
-        // زمان اضافه کاری
-        public string Overtime { get; set; }
-
-        // آیا فرد ساعت کامل کار کرده است؟
-        public bool IsFullWork { get; set; }
-
-        // مقدار کسری ساعت
-        public double Kasri { get; set; }
-
-        // آیا کار فرد ناقص بوده است؟
-        public bool IsNaghes { get; set; }
-    }
-
-    public class AttendanceReport
-    {
-        public required string TotalWorkDays { get; set; }
-        public required string TotalFullWorkDays { get; set; }
-        public required string TotalWorkingHours { get; set; }
-        public required string TotalMinutesWorked { get; set; }
-        public required string TotalLateDays { get; set; }
-        public required string TotalLateTime { get; set; }
-        public required string TotalIncompleteDays { get; set; }
-        public required string TotalAbsenceDays { get; set; }
-        public required string TotalOvertimeDays { get; set; }
-        public required string TotalOvertimeAfterWork { get; set; }
-        public required string EarliestEntryTime { get; set; }
-        public required string LatestExitTime { get; set; }
-        public required string AverageEntryTime { get; set; }
-        public required string AverageExitTime { get; set; }
-        public required string AverageWorkdayHours { get; set; }
-        public required string TotalKasriTime { get; set; }
-        public required string TotalAdjustmentOrOvertime { get; set; }
-    }
-
-    private readonly AppServices _recordService;
+    public AttendanceReport Report { get; private set; }
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
 
@@ -89,33 +18,11 @@ public class AttendanceCalculationService
     private TimeSpan _naqesWorkFarvardinTm = TimeSpan.Parse("15:45:00");
     private TimeSpan _naqesWorkRamadanTm = TimeSpan.Parse("14:45:00");
 
+    public string TitleReport { get; private set; } = "";
     public List<DateTime> QeybathaDaysList { get; private set; }
-    public List<DateTime> HolidaysDaysList { get; private set; }
+    public List<DateTime>? HolidaysDaysList { get; private set; }
     public List<TemplateDays> RamadanDaysList { get; private set; }
     public List<DateTime> OvertimeinHoliday { get; private set; }
-
-    public List<string> PersianColumnHeader =
-    [
-        "روز در هفته",
-        "تاریخ",
-        "ساعت ورود",
-        "ساعت خروج",
-        "ساعت ورود 2",
-        "ساعت خروج 2",
-        "حضور به دقیقه",
-        "حضور به ساعت",
-        "ورود با تاخیر",
-        "اختلاف تاخیر به دقیقه",
-        "اختلاف اضافه کاری به ساعت",
-        "روز کاری کامل",
-        "مقدار کسری",
-        "ردیف ناقص"
-    ];
-
-    public AttendanceCalculationService(AppServices recordService)
-    {
-        _recordService = recordService;
-    }
 
     public AttendanceCalculationService WithLateTime(TimeSpan lateTime)
     {
@@ -176,7 +83,9 @@ public class AttendanceCalculationService
         var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
         if (filtered?.Any() == false || filtered is null)
-            throw new ArgumentNullException($"داده ای وجود ندارد"); // اگر داده‌ای وجود نداشت، استثنا ایجاد می‌شود
+            throw new ArgumentNullException($"داده ای وجود ندارد");
+
+        TitleReport = @$"{fromDateTime} -- {toDateTime} {'\t'}{'\t'} User:{userId}";
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
@@ -215,7 +124,7 @@ public class AttendanceCalculationService
             var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
 
-            if (orderedTimes.Length == 1 && minDateTime.Hour < 14)
+            if (orderedTimes.Length == 1 && minDateTime.Hour > 14)
             {
                 minDateTime = minDateTime.Date + new TimeSpan(08, 15, 00);
                 maxDateTime = orderedTimes.First();
@@ -244,6 +153,10 @@ public class AttendanceCalculationService
 
             if (maxDateTime == DateTime.MinValue)
             {
+                //    MessageBox.Show(autoEditNaqesRows.ToString());
+
+                //    MessageBox.Show(autoEditNaqesRows.ToString());
+
                 maxDateTime = autoEditNaqesRows
                     ? minDateTime.Date + naqes
                     : minDateTime;
@@ -393,7 +306,7 @@ public class AttendanceCalculationService
 
             // مجموع تاخیرها به ساعت (زمان تاخیر کل در فرمت ساعت:دقیقه:ثانیه)
             TotalLateTime =
-                $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
+                    $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
 
             // مجموع روزهای ناقص (تعداد روزهایی که فرد کار ناقص داشته)
             TotalIncompleteDays = totalling.ToString(),
@@ -406,7 +319,7 @@ public class AttendanceCalculationService
 
             // مجموع اضافه کاری بعد از ساعت کاری (زمان اضافه کاری کل فرد بعد از ساعت کاری رسمی در فرمت ساعت:دقیقه:ثانیه)
             TotalOvertimeAfterWork =
-                $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
+                    $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
 
             // زودترین زمان ورود (اولین زمان ورود فرد در طول دوره)
             EarliestEntryTime = minEntryTime.ToString(@"hh\:mm\:ss"),
@@ -437,44 +350,25 @@ public class AttendanceCalculationService
     {
         return new Dictionary<string, string>
         {
-            { "مجموع روز های کاری", Report.TotalWorkDays },
-            { "مجموع روز کاری کامل طبق قانون کار", Report.TotalFullWorkDays },
-            { "مجموع ساعات کاری", Report.TotalWorkingHours },
-            { "مجموع دقایق کاری", Report.TotalMinutesWorked },
-            { "مجموع روز های ورود باتاخیر", Report.TotalLateDays },
-            { "مجموع تاخیر ها به ساعت", Report.TotalLateTime },
-            { "مجموع روز های ناقص", Report.TotalIncompleteDays },
-            { "مجموع غیبت (غیر تعطیلات)", Report.TotalAbsenceDays },
-            { "مجموع اضافه کاری", Report.TotalOvertimeDays },
-            { "مجموع اضافه کاری بعد ساعت کاری", Report.TotalOvertimeAfterWork },
-            { "زودترین زمان ورود", Report.EarliestEntryTime },
-            { "دیرترین زمان خروج", Report.LatestExitTime },
-            { "میانگین ساعت های ورود", Report.AverageEntryTime },
-            { "میانگین ساعت های خروج", Report.AverageExitTime },
-            { "میانگین ساعت کاری روزانه", Report.AverageWorkdayHours },
-            { "مقدار کسری به ساعت", Report.TotalKasriTime },
-            { "مقدار تعدیل یا اضافه ساعت کاری خالص", Report.TotalAdjustmentOrOvertime }
+    { Report.GetDisplayName(x => x.TotalWorkDays), Report.TotalWorkDays },
+    { Report.GetDisplayName(x => x.TotalFullWorkDays), Report.TotalFullWorkDays },
+    { Report.GetDisplayName(x => x.TotalWorkingHours), Report.TotalWorkingHours },
+    { Report.GetDisplayName(x => x.TotalMinutesWorked), Report.TotalMinutesWorked },
+    { Report.GetDisplayName(x => x.TotalLateDays), Report.TotalLateDays },
+    { Report.GetDisplayName(x => x.TotalLateTime), Report.TotalLateTime },
+    { Report.GetDisplayName(x => x.TotalIncompleteDays), Report.TotalIncompleteDays },
+    { Report.GetDisplayName(x => x.TotalAbsenceDays), Report.TotalAbsenceDays },
+    { Report.GetDisplayName(x => x.TotalOvertimeDays), Report.TotalOvertimeDays },
+    { Report.GetDisplayName(x => x.TotalOvertimeAfterWork), Report.TotalOvertimeAfterWork },
+    { Report.GetDisplayName(x => x.EarliestEntryTime), Report.EarliestEntryTime },
+    { Report.GetDisplayName(x => x.LatestExitTime), Report.LatestExitTime },
+    { Report.GetDisplayName(x => x.AverageEntryTime), Report.AverageEntryTime },
+    { Report.GetDisplayName(x => x.AverageExitTime), Report.AverageExitTime },
+    { Report.GetDisplayName(x => x.AverageWorkdayHours), Report.AverageWorkdayHours },
+    { Report.GetDisplayName(x => x.TotalKasriTime), Report.TotalKasriTime },
+    { Report.GetDisplayName(x => x.TotalAdjustmentOrOvertime), Report.TotalAdjustmentOrOvertime }
         };
-    }
-    public Dictionary<string, string> GetDataWithTitle(AttendanceReport report)
-    {
-        var result = new Dictionary<string, string>();
-        var props = report.GetType().GetProperties();
 
-        foreach (var prop in props)
-        {
-            var displayNameAttr = prop.GetCustomAttributes(typeof(DisplayNameAttribute), false)
-                .Cast<DisplayNameAttribute>()
-                .FirstOrDefault();
-
-            var displayName = displayNameAttr?.DisplayName ?? prop.Name; // اگر اتریبیوت نبود، اسم پراپرتی
-
-            var value = prop.GetValue(report)?.ToString() ?? "";
-
-            result[displayName] = value;
-        }
-
-        return result;
     }
 
 }

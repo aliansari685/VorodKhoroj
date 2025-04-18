@@ -2,6 +2,11 @@
 {
     public class AppServices : IDisposable
     {
+        public AppServices()
+        {
+            _repository = new();
+            _dataBaseManager = new();
+        }
 
         public enum DataTypes
         {
@@ -18,11 +23,6 @@
         private readonly DataRepository _repository;
         private readonly DataBaseManager _dataBaseManager;
 
-        public AppServices()
-        {
-            _repository = new();
-            _dataBaseManager = new();
-        }
         public void LoadRecordsFromFile(string fileName)
         {
             Records = _repository.GetRecordsFromFile(fileName);

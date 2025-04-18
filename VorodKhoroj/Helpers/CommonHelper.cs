@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reflection;
 using Serilog.Context;
 
 namespace VorodKhoroj.Classes
@@ -66,27 +68,47 @@ namespace VorodKhoroj.Classes
             }
         }
 
-        //public static Dictionary<string, string> GetDataWithDisplayName()
-        //{
-        //    var result = new Dictionary<string, string>();
-        //    var props = Report.GetType().GetProperties();
+        public static void SetDisplayNameInDataGrid<T>(this T obj, DataGridView dataGrid)
+        {
+            var temp = obj.GetDisplayNames();
+            for (var i = 0; i < temp.Count; i++)
+            {
+                dataGrid.Columns[i].HeaderText = temp[i];
+            }
+        }
 
-        //    foreach (var prop in props)
-        //    {
-        //        var displayNameAttr = prop.GetCustomAttributes(typeof(DisplayNameAttribute), false)
-        //            .Cast<DisplayNameAttribute>()
-        //            .FirstOrDefault();
+        public static List<string> GetDisplayNames<T>(this T obj)
+        {
+            return typeof(T)
+                .GetProperties()
+                .Select(prop => prop.GetCustomAttribute<DisplayNameAttribute>())
+                .Where(attr => attr != null)
+                .Select(attr => attr.DisplayName)
+                .ToList();
+        }
 
-        //        var displayName = displayNameAttr?.DisplayName ?? prop.Name; // اگر اتریبیوت نبود، اسم پراپرتی
+        public static string GetDisplayName<T, TProperty>(this T obj, Expression<Func<T, TProperty>> expression)
+        {
+            if (expression.Body is MemberExpression member)
+            {
+                var prop = typeof(T).GetProperty(member.Member.Name);
+                if (prop != null)
+                {
+                    var attr = prop.GetCustomAttribute<DisplayNameAttribute>();
+                    return attr?.DisplayName ?? prop.Name;
+                }
+            }
+            else if (expression.Body is UnaryExpression unary && unary.Operand is MemberExpression unaryMember)
+            {
+                var prop = typeof(T).GetProperty(unaryMember.Member.Name);
+                if (prop != null)
+                {
+                    var attr = prop.GetCustomAttribute<DisplayNameAttribute>();
+                    return attr?.DisplayName ?? prop.Name;
+                }
+            }
 
-        //        var value = prop.GetValue(Report)?.ToString() ?? "";
-
-        //        result[displayName] = value;
-        //    }
-
-        //    return result;
-        //}
-
-
+            return string.Empty;
+        }
     }
 }

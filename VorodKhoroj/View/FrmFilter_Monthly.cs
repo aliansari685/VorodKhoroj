@@ -33,7 +33,7 @@ namespace VorodKhoroj.View
 
         private void Btn_submit_Click(object sender, EventArgs e)
         {
-            try
+         //   try
             {
                 _userId = userid_txtbox.Text;
                 using (SaveFileDialog sfd = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" })
@@ -47,10 +47,10 @@ namespace VorodKhoroj.View
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
+            //catch (Exception ex)
+            //{
+            //    CommonHelper.ShowMessage(ex);
+            //}
         }
 
         private Dictionary<int, bool> GetMonthlyCheckedList()

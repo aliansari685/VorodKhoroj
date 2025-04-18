@@ -13,6 +13,8 @@ global using VorodKhoroj.Services;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using VorodKhoroj.Helpers;
+global using System.ComponentModel;
+global using VorodKhoroj.Models;
 
 namespace VorodKhoroj
 {

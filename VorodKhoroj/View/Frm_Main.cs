@@ -31,9 +31,7 @@ public partial class Frm_Main : Form
     {
         dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
-        dataView.Columns[0].HeaderText = "کاربر";
-        dataView.Columns[1].HeaderText = "تاریخ و زمان ورود و خروج";
-        dataView.Columns[2].HeaderText = " نوع ورود";
+        CommonHelper.SetDisplayNameInDataGrid(new Attendance(), dataView);
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
