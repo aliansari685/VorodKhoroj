@@ -4,7 +4,7 @@ public class AttendanceCalculationService(AppServices recordService)
 {
     private readonly AppServices _recordService = recordService;
 
-    public AttendanceReport Report { get; private set; }
+    public AttendanceReport? Report { get; private set; } 
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
 
@@ -153,10 +153,6 @@ public class AttendanceCalculationService(AppServices recordService)
 
             if (maxDateTime == DateTime.MinValue)
             {
-                //    MessageBox.Show(autoEditNaqesRows.ToString());
-
-                //    MessageBox.Show(autoEditNaqesRows.ToString());
-
                 maxDateTime = autoEditNaqesRows
                     ? minDateTime.Date + naqes
                     : minDateTime;
@@ -184,10 +180,9 @@ public class AttendanceCalculationService(AppServices recordService)
                 : TimeSpan.Zero;
 
             // تعیین ساعات کاری استاندارد بر اساس روز هفته
-            var standardWorkTime = isThursday ? _fullWorkThursdayTm
-                : isFarvardin ? _fullWorkFarvardinTm
-                : isRamadan ? _fullWorkRamadanTm
-                : _fullWorkTm;
+            var standardWorkTime =
+            isRamadan ? _fullWorkRamadanTm : isFarvardin ? _fullWorkFarvardinTm
+            : isThursday ? _fullWorkThursdayTm : _fullWorkTm;
 
             // بررسی اینکه آیا فرد ساعت کامل کار کرده است یا نه
             var fullWork = false;
@@ -196,7 +191,7 @@ public class AttendanceCalculationService(AppServices recordService)
                 overtime = totalDuration - standardWorkTime; // اضافه کاری محاسبه می‌شود
                 fullWork = true;
             }
-            else if (totalDuration < standardWorkTime && !IsWorkinginHoliday && !isNaghes)
+            if (totalDuration < standardWorkTime && !IsWorkinginHoliday && !isNaghes)
             {
                 kasri = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
             }
@@ -213,8 +208,8 @@ public class AttendanceCalculationService(AppServices recordService)
                 DurationHour = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
                 IsLate = lateMinutes != TimeSpan.Zero && !IsWorkinginHoliday,
                 LateMinutes = lateMinutes,
-                Overtime = overtime.ToString(@"hh\:mm\:ss"),
                 IsFullWork = fullWork,
+                Overtime = overtime.ToString(@"hh\:mm\:ss"),
                 Kasri = kasri.TotalMinutes,
                 IsNaghes = isNaghes
             };

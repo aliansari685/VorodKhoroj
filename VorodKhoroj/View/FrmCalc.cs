@@ -49,7 +49,6 @@ public partial class FrmCalc : Form
 
     private void btn_Submit_Click(object sender, EventArgs e)
     {
-        MessageBox.Show(_calcServices.Report.TotalFullWorkDays);
         _calcServices
             .WithLateTime(TimeSpan.Parse(txtbox_late.Text))
             .WithFullWorkTime(TimeSpan.Parse(txtbox_fullwork.Text))
@@ -66,21 +65,31 @@ public partial class FrmCalc : Form
         CommonHelper.ShowMessage("انجام شد");
     }
 
+    private void checkBox_ApplyStyles_CheckedChanged(object sender, EventArgs e)
+    {
+   //     dataView_Calculate.RowPrePaint += DataViewCalculateRowPrePaint;
+        dataView_Calculate.Invalidate();
+    }
+
     private void DataViewCalculateRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
         if (dataView_Calculate?.Rows?.Count > e.RowIndex)
         {
             var row = dataView_Calculate.Rows[e.RowIndex];
 
-            if (row?.Cells["IsLate"]?.Value is true)
+            if (row?.Cells["IsLate"]?.Value is true && checkBox_Islate.Checked)
                 row.DefaultCellStyle.BackColor = Color.Red;
 
-            else if (row?.Cells["IsNaghes"]?.Value is true)
+            else if (row?.Cells["IsNaghes"]?.Value is true && checkBox_IsNaqes.Checked)
                 row.DefaultCellStyle.BackColor = Color.Orange;
 
-            else if (DateTime.TryParse(row?.Cells["Date"]?.Value?.ToString(), out var date)
+            else if (checkBox_workinholiday.Checked && DateTime.TryParse(row?.Cells["Date"]?.Value?.ToString(), out var date)
                      && _calcServices.OvertimeinHoliday.Contains(date))
                 row.DefaultCellStyle.BackColor = Color.CadetBlue;
+            else
+            {
+                row.DefaultCellStyle.BackColor = Color.White;
+            }
         }
     }
 
@@ -98,14 +107,12 @@ public partial class FrmCalc : Form
 
     private void userid_txtbox_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.KeyData == Keys.Enter)
-            if (MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                _userid = userid_txtbox.Text;
-                ReloadGrid();
-                CommonHelper.ShowMessage("انجام شد");
-            }
+        if (e.KeyData == Keys.Enter && MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
+            _userid = userid_txtbox.Text;
+            ReloadGrid();
+            CommonHelper.ShowMessage("انجام شد");
+        }
     }
 
     private void btn_next_Click(object sender, EventArgs e)
@@ -192,4 +199,6 @@ public partial class FrmCalc : Form
         DataGridConfig();
         DataGridViewConfig();
     }
+
+
 }

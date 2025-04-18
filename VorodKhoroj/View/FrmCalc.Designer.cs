@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             tabpage_detailvorodkhoroj = new TabPage();
+            groupBox3 = new GroupBox();
+            checkBox_workinholiday = new CheckBox();
+            checkBox_IsNaqes = new CheckBox();
+            checkBox_Islate = new CheckBox();
             btn_perv = new Button();
             btn_next = new Button();
             userid_txtbox = new ComboBox();
@@ -103,13 +107,14 @@
             label21 = new Label();
             txtbox_fullwork = new MaskedTextBox();
             tabpage_detailvorodkhoroj.SuspendLayout();
+            groupBox3.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_Calculate).BeginInit();
+            ((ISupportInitialize)dataView_Calculate).BeginInit();
             menuStrip2.SuspendLayout();
             tabControl1.SuspendLayout();
             tabPage_durationdays.SuspendLayout();
             groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_late).BeginInit();
+            ((ISupportInitialize)dataView_late).BeginInit();
             tabPage_.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -117,6 +122,7 @@
             // tabpage_detailvorodkhoroj
             // 
             tabpage_detailvorodkhoroj.BackColor = Color.Transparent;
+            tabpage_detailvorodkhoroj.Controls.Add(groupBox3);
             tabpage_detailvorodkhoroj.Controls.Add(btn_perv);
             tabpage_detailvorodkhoroj.Controls.Add(btn_next);
             tabpage_detailvorodkhoroj.Controls.Add(userid_txtbox);
@@ -129,9 +135,60 @@
             tabpage_detailvorodkhoroj.Margin = new Padding(3, 4, 3, 4);
             tabpage_detailvorodkhoroj.Name = "tabpage_detailvorodkhoroj";
             tabpage_detailvorodkhoroj.Padding = new Padding(3, 4, 3, 4);
-            tabpage_detailvorodkhoroj.Size = new Size(1072, 554);
+            tabpage_detailvorodkhoroj.Size = new Size(1273, 554);
             tabpage_detailvorodkhoroj.TabIndex = 0;
             tabpage_detailvorodkhoroj.Text = "جزییات ورود خروج";
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(checkBox_workinholiday);
+            groupBox3.Controls.Add(checkBox_IsNaqes);
+            groupBox3.Controls.Add(checkBox_Islate);
+            groupBox3.Location = new Point(1072, 56);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(194, 123);
+            groupBox3.TabIndex = 27;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "اعمال استایل";
+            // 
+            // checkBox_workinholiday
+            // 
+            checkBox_workinholiday.AutoSize = true;
+            checkBox_workinholiday.Checked = true;
+            checkBox_workinholiday.CheckState = CheckState.Checked;
+            checkBox_workinholiday.Location = new Point(69, 88);
+            checkBox_workinholiday.Name = "checkBox_workinholiday";
+            checkBox_workinholiday.Size = new Size(103, 24);
+            checkBox_workinholiday.TabIndex = 30;
+            checkBox_workinholiday.Text = "کار در روز تعطیل";
+            checkBox_workinholiday.UseVisualStyleBackColor = true;
+            checkBox_workinholiday.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            // 
+            // checkBox_IsNaqes
+            // 
+            checkBox_IsNaqes.AutoSize = true;
+            checkBox_IsNaqes.Checked = true;
+            checkBox_IsNaqes.CheckState = CheckState.Checked;
+            checkBox_IsNaqes.Location = new Point(54, 58);
+            checkBox_IsNaqes.Name = "checkBox_IsNaqes";
+            checkBox_IsNaqes.Size = new Size(118, 24);
+            checkBox_IsNaqes.TabIndex = 29;
+            checkBox_IsNaqes.Text = "ورود ناقص و خراب";
+            checkBox_IsNaqes.UseVisualStyleBackColor = true;
+            checkBox_IsNaqes.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            // 
+            // checkBox_Islate
+            // 
+            checkBox_Islate.AutoSize = true;
+            checkBox_Islate.Checked = true;
+            checkBox_Islate.CheckState = CheckState.Checked;
+            checkBox_Islate.Location = new Point(82, 28);
+            checkBox_Islate.Name = "checkBox_Islate";
+            checkBox_Islate.Size = new Size(90, 24);
+            checkBox_Islate.TabIndex = 28;
+            checkBox_Islate.Text = "ورود ب تاخیر";
+            checkBox_Islate.UseVisualStyleBackColor = true;
+            checkBox_Islate.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
             // 
             // btn_perv
             // 
@@ -179,6 +236,7 @@
             // 
             // panel1
             // 
+            panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(checkBox_AutoEdit);
             panel1.Controls.Add(lbl_tadil);
             panel1.Controls.Add(label22);
@@ -598,7 +656,7 @@
             dataView_Calculate.ReadOnly = true;
             dataView_Calculate.RightToLeft = RightToLeft.No;
             dataView_Calculate.RowHeadersWidth = 70;
-            dataView_Calculate.Size = new Size(1066, 371);
+            dataView_Calculate.Size = new Size(1267, 371);
             dataView_Calculate.TabIndex = 0;
             dataView_Calculate.VirtualMode = true;
             dataView_Calculate.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -610,7 +668,7 @@
             menuStrip2.Items.AddRange(new ToolStripItem[] { OutputExcelToolStripMenuItem });
             menuStrip2.Location = new Point(3, 4);
             menuStrip2.Name = "menuStrip2";
-            menuStrip2.Size = new Size(1066, 27);
+            menuStrip2.Size = new Size(1267, 27);
             menuStrip2.TabIndex = 22;
             menuStrip2.Text = "menuStrip2";
             // 
@@ -633,7 +691,7 @@
             tabControl1.RightToLeft = RightToLeft.Yes;
             tabControl1.RightToLeftLayout = true;
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1080, 587);
+            tabControl1.Size = new Size(1281, 587);
             tabControl1.TabIndex = 0;
             // 
             // tabPage_durationdays
@@ -644,7 +702,7 @@
             tabPage_durationdays.Location = new Point(4, 24);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1072, 559);
+            tabPage_durationdays.Size = new Size(1273, 559);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
@@ -728,10 +786,10 @@
             // tabPage_
             // 
             tabPage_.Controls.Add(groupBox2);
-            tabPage_.Location = new Point(4, 29);
+            tabPage_.Location = new Point(4, 24);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(1072, 554);
+            tabPage_.Size = new Size(1273, 559);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
@@ -760,7 +818,7 @@
             groupBox2.Dock = DockStyle.Left;
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(561, 548);
+            groupBox2.Size = new Size(561, 553);
             groupBox2.TabIndex = 35;
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";
@@ -968,26 +1026,29 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1080, 587);
+            ClientSize = new Size(1281, 587);
             Controls.Add(tabControl1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmCalc";
             Text = "FrmCalc";
+            WindowState = FormWindowState.Maximized;
             Load += FrmCalc_Load;
             tabpage_detailvorodkhoroj.ResumeLayout(false);
             tabpage_detailvorodkhoroj.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_Calculate).EndInit();
+            ((ISupportInitialize)dataView_Calculate).EndInit();
             menuStrip2.ResumeLayout(false);
             menuStrip2.PerformLayout();
             tabControl1.ResumeLayout(false);
             tabPage_durationdays.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView_late).EndInit();
+            ((ISupportInitialize)dataView_late).EndInit();
             tabPage_.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
@@ -1071,5 +1132,9 @@
         private MaskedTextBox txtbox_fullwork_ramadan;
         public Label label27;
         private RadioButton radioButton_ramadan;
+        private GroupBox groupBox3;
+        private CheckBox checkBox_Islate;
+        private CheckBox checkBox_IsNaqes;
+        private CheckBox checkBox_workinholiday;
     }
 }
