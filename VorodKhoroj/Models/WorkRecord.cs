@@ -33,7 +33,7 @@
         public TimeSpan LateMinutes { get; set; }
 
         [DisplayName("اختلاف اضافه کاری به ساعت")]
-        public string? Overtime { get; set; }
+        public string? Overtime { get; set; } = "";
 
         [DisplayName("روز کاری کامل")]
         public bool IsFullWork { get; set; }

@@ -2,9 +2,7 @@
 
 public class AttendanceCalculationService(AppServices recordService)
 {
-    private readonly AppServices _recordService = recordService;
-
-    public AttendanceReport? Report { get; private set; } 
+    public AttendanceReport? Report { get; private set; }
 
     private TimeSpan _lateTm = TimeSpan.Parse("08:30:00");
 
@@ -19,10 +17,10 @@ public class AttendanceCalculationService(AppServices recordService)
     private TimeSpan _naqesWorkRamadanTm = TimeSpan.Parse("14:45:00");
 
     public string TitleReport { get; private set; } = "";
-    public List<DateTime> QeybathaDaysList { get; private set; }
-    public List<DateTime>? HolidaysDaysList { get; private set; }
-    public List<TemplateDays> RamadanDaysList { get; private set; }
-    public List<DateTime> OvertimeinHoliday { get; private set; }
+    public List<DateTime> QeybathaDaysList { get; private set; } = [];
+    public List<DateTime> HolidaysDaysList { get; private set; } = [];
+    public List<TemplateDays> RamadanDaysList { get; private set; } = [];
+    public List<DateTime> OvertimeinHoliday { get; private set; } = [];
 
     public AttendanceCalculationService WithLateTime(TimeSpan lateTime)
     {
@@ -80,9 +78,9 @@ public class AttendanceCalculationService(AppServices recordService)
 
     public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
     {
-        var filtered = DataFilterService.ApplyFilter(_recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
+        var filtered = DataFilterService.ApplyFilter(recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
-        if (filtered?.Any() == false || filtered is null)
+        if (filtered.Any() == false || filtered is null)
             throw new ArgumentNullException($"داده ای وجود ندارد");
 
         TitleReport = @$"{fromDateTime} -- {toDateTime} {'\t'}{'\t'} User:{userId}";
@@ -131,7 +129,7 @@ public class AttendanceCalculationService(AppServices recordService)
             }
 
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
-            var IsWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
+            var isWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
 
             // بررسی اینکه آیا روز جاری پنجشنبه است
             var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
@@ -172,10 +170,10 @@ public class AttendanceCalculationService(AppServices recordService)
             var totalDuration = duration + duration2;
 
             // بررسی اینکه آیا مدت زمان کاری کمتر از یک ساعت است و فرد در تعطیلات نبوده است
-            var isNaghes = totalDuration.TotalMinutes < 60 && !IsWorkinginHoliday;
+            var isNaghes = totalDuration.TotalMinutes < 60 && !isWorkinginHoliday;
 
             // محاسبه زمان تاخیر
-            var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60 && !IsWorkinginHoliday
+            var lateMinutes = minDateTime.TimeOfDay > _lateTm && totalDuration.TotalMinutes > 60 && !isWorkinginHoliday
                 ? minDateTime.TimeOfDay - _lateTm
                 : TimeSpan.Zero;
 
@@ -191,7 +189,7 @@ public class AttendanceCalculationService(AppServices recordService)
                 overtime = totalDuration - standardWorkTime; // اضافه کاری محاسبه می‌شود
                 fullWork = true;
             }
-            if (totalDuration < standardWorkTime && !IsWorkinginHoliday && !isNaghes)
+            if (totalDuration < standardWorkTime && !isWorkinginHoliday && !isNaghes)
             {
                 kasri = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
             }
@@ -206,7 +204,7 @@ public class AttendanceCalculationService(AppServices recordService)
                 ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
                 DurationMin = totalDuration.TotalMinutes,
                 DurationHour = $"{(int)totalDuration.TotalHours:D2}h {totalDuration.Minutes:D2}m",
-                IsLate = lateMinutes != TimeSpan.Zero && !IsWorkinginHoliday,
+                IsLate = lateMinutes != TimeSpan.Zero && !isWorkinginHoliday,
                 LateMinutes = lateMinutes,
                 IsFullWork = fullWork,
                 Overtime = overtime.ToString(@"hh\:mm\:ss"),
@@ -221,7 +219,8 @@ public class AttendanceCalculationService(AppServices recordService)
         var totalLateMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => x.LateMinutes.TotalMinutes));
 
         // محاسبه جمع دقیقه‌های اضافه کاری
-        var totalOvertimeMinutes = TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime).TotalMinutes));
+        var totalOvertimeMinutes =
+            TimeSpan.FromMinutes(groupedData.Sum(x => TimeSpan.Parse(x.Overtime ?? string.Empty).TotalMinutes));
 
         // تعداد روزهای ناقص که مدت زمان آن‌ها کمتر از یک ساعت بوده است
         var totalling = groupedData.Count(x => x.DurationMin < 60);
