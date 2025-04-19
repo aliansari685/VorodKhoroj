@@ -221,7 +221,7 @@
             userid_txtbox.Name = "userid_txtbox";
             userid_txtbox.Size = new Size(82, 27);
             userid_txtbox.TabIndex = 24;
-            userid_txtbox.KeyDown += userid_txtbox_KeyDown;
+            userid_txtbox.KeyDown += userid_txtBox_KeyDown;
             // 
             // label19
             // 

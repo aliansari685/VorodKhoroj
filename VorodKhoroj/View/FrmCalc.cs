@@ -67,23 +67,23 @@ public partial class FrmCalc : Form
 
     private void checkBox_ApplyStyles_CheckedChanged(object sender, EventArgs e)
     {
-   //     dataView_Calculate.RowPrePaint += DataViewCalculateRowPrePaint;
+        //     dataView_Calculate.RowPrePaint += DataViewCalculateRowPrePaint;
         dataView_Calculate.Invalidate();
     }
 
     private void DataViewCalculateRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
-        if (dataView_Calculate?.Rows?.Count > e.RowIndex)
+        if (dataView_Calculate?.Rows.Count > e.RowIndex)
         {
             var row = dataView_Calculate.Rows[e.RowIndex];
 
-            if (row?.Cells["IsLate"]?.Value is true && checkBox_Islate.Checked)
+            if (row.Cells["IsLate"]?.Value is true && checkBox_Islate.Checked)
                 row.DefaultCellStyle.BackColor = Color.Red;
 
-            else if (row?.Cells["IsNaghes"]?.Value is true && checkBox_IsNaqes.Checked)
+            else if (row.Cells["IsNaghes"]?.Value is true && checkBox_IsNaqes.Checked)
                 row.DefaultCellStyle.BackColor = Color.Orange;
 
-            else if (checkBox_workinholiday.Checked && DateTime.TryParse(row?.Cells["Date"]?.Value?.ToString(), out var date)
+            else if (checkBox_workinholiday.Checked && DateTime.TryParse(row.Cells["Date"]?.Value?.ToString(), out var date)
                      && _calcServices.OvertimeinHoliday.Contains(date))
                 row.DefaultCellStyle.BackColor = Color.CadetBlue;
             else
@@ -105,7 +105,7 @@ public partial class FrmCalc : Form
         }
     }
 
-    private void userid_txtbox_KeyDown(object sender, KeyEventArgs e)
+    private void userid_txtBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyData == Keys.Enter && MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
@@ -148,7 +148,7 @@ public partial class FrmCalc : Form
         {
             userid_txtbox.Text = _userid;
 
-            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"_userId", @$"خطای داخلی ");
+            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"{nameof(_userid)}", @"خطای داخلی ");
 
             dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
@@ -168,30 +168,31 @@ public partial class FrmCalc : Form
     {
         if (dataView_Calculate.DataSource == null) return;
 
-        CommonHelper.SetDisplayNameInDataGrid(new WorkRecord(), dataView_Calculate);
+        new WorkRecord().SetDisplayNameInDataGrid(dataView_Calculate);
     }
 
     private void UpdateLabels()
     {
-        var temp = _calcServices.Report;
-
-        lbl_sumdayworker.Text = temp.TotalWorkDays;
-        lbl_fullwork.Text = temp.TotalFullWorkDays;
-        lbl_sumhour.Text = temp.TotalWorkingHours;
-        lbl_summinute.Text = temp.TotalMinutesWorked;
-        lbl_sumentryDelay.Text = temp.TotalLateDays;
-        lbl_sumlate.Text = temp.TotalLateTime;
-        lbl_nofull.Text = temp.TotalIncompleteDays;
-        lbl_sumOff.Text = temp.TotalAbsenceDays;
-        lbl_sumaddwork.Text = temp.TotalOvertimeDays;
-        lbl_sumaddworkhour.Text = temp.TotalOvertimeAfterWork;
-        lbl_minEntry.Text = temp.EarliestEntryTime;
-        lbl_MaxExitTime.Text = temp.LatestExitTime;
-        lbl_avgentry.Text = temp.AverageEntryTime;
-        lbl_avgexit.Text = temp.AverageExitTime;
-        lbl_avgtimework.Text = temp.AverageWorkdayHours;
-        lbl_sumkasri.Text = temp.TotalKasriTime;
-        lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
+        if (_calcServices.Report is not null and var temp)
+        {
+            lbl_sumdayworker.Text = temp.TotalWorkDays;
+            lbl_fullwork.Text = temp.TotalFullWorkDays;
+            lbl_sumhour.Text = temp.TotalWorkingHours;
+            lbl_summinute.Text = temp.TotalMinutesWorked;
+            lbl_sumentryDelay.Text = temp.TotalLateDays;
+            lbl_sumlate.Text = temp.TotalLateTime;
+            lbl_nofull.Text = temp.TotalIncompleteDays;
+            lbl_sumOff.Text = temp.TotalAbsenceDays;
+            lbl_sumaddwork.Text = temp.TotalOvertimeDays;
+            lbl_sumaddworkhour.Text = temp.TotalOvertimeAfterWork;
+            lbl_minEntry.Text = temp.EarliestEntryTime;
+            lbl_MaxExitTime.Text = temp.LatestExitTime;
+            lbl_avgentry.Text = temp.AverageEntryTime;
+            lbl_avgexit.Text = temp.AverageExitTime;
+            lbl_avgtimework.Text = temp.AverageWorkdayHours;
+            lbl_sumkasri.Text = temp.TotalKasriTime;
+            lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
+        }
     }
 
     private void ReloadGrid()
@@ -199,6 +200,4 @@ public partial class FrmCalc : Form
         DataGridConfig();
         DataGridViewConfig();
     }
-
-
 }

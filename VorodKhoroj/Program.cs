@@ -15,6 +15,9 @@ global using Microsoft.Extensions.Hosting;
 global using VorodKhoroj.Helpers;
 global using System.ComponentModel;
 global using VorodKhoroj.Models;
+global using System.Linq.Expressions;
+global using System.Reflection;
+global using Serilog.Context;
 
 namespace VorodKhoroj
 {
@@ -52,6 +55,8 @@ namespace VorodKhoroj
              Host.CreateDefaultBuilder()
                  .ConfigureServices((_, services) =>
                  {
+                     services.AddSingleton<DataRepository>();
+                     services.AddSingleton<DataBaseManager>();
                      services.AddSingleton<AppServices>();
                      services.AddTransient<AttendanceCalculationService>();
                      services.AddScoped<Frm_Main>();

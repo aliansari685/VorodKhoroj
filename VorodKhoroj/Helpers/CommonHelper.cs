@@ -1,9 +1,4 @@
-﻿using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Reflection;
-using Serilog.Context;
-
-namespace VorodKhoroj.Classes
+﻿namespace VorodKhoroj.Classes
 {
     public static class CommonHelper
     {
@@ -83,7 +78,7 @@ namespace VorodKhoroj.Classes
                 .GetProperties()
                 .Select(prop => prop.GetCustomAttribute<DisplayNameAttribute>())
                 .Where(attr => attr != null)
-                .Select(attr => attr.DisplayName)
+                .Select(attr => attr?.DisplayName ?? string.Empty)
                 .ToList();
         }
 

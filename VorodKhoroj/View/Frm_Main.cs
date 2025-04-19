@@ -15,6 +15,13 @@ public partial class Frm_Main : Form
     private void Frm_Main_Load(object sender, EventArgs e)
     {
         TextBoxClear();
+        WorkRecord g = new()
+        {
+            Date = String.Empty,
+            DayOfWeek = "",
+            EntryTime = "",
+            ExitTime = "",
+        };
     }
 
     public void DataGridConfig()
@@ -31,7 +38,7 @@ public partial class Frm_Main : Form
     {
         dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
-        CommonHelper.SetDisplayNameInDataGrid(new Attendance(), dataView);
+        new Attendance().SetDisplayNameInDataGrid(dataView);
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)

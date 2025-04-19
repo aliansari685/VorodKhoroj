@@ -1,12 +1,12 @@
 ﻿namespace VorodKhoroj.Services
 {
-    public class AppServices : IDisposable
+    public class AppServices(DataRepository repository, DataBaseManager dataBaseManager) : IDisposable
     {
-        public AppServices()
-        {
-            _repository = new();
-            _dataBaseManager = new();
-        }
+        public DataTypes DataType { get; set; }
+        public AppDbContext? DbContext { get; set; }
+        public required AppDbContext DbContextMaster { get; set; }
+        public required List<Attendance> Records { get; set; }
+        public required DataTable TempDataTable { get; set; }
 
         public enum DataTypes
         {
@@ -14,29 +14,20 @@
             DataBase
         }
 
-        public DataTypes DataType { get; set; }
-        public AppDbContext DbContext { get; set; }
-        public AppDbContext DbContextMaster { get; set; }
-        public List<Attendance> Records { get; set; }
-        public DataTable TempDataTable { get; set; }
-
-        private readonly DataRepository _repository;
-        private readonly DataBaseManager _dataBaseManager;
-
         public void LoadRecordsFromFile(string fileName)
         {
-            Records = _repository.GetRecordsFromFile(fileName);
+            Records = repository.GetRecordsFromFile(fileName);
             SetTempDataTable();
         }
 
         public int[] GetUsers()
         {
-            return _repository.GetUsersAttendances(Records);
+            return repository.GetUsersAttendances(Records);
 
         }
         public void LoadRecordsFromDb()
         {
-            Records = _repository.GetRecordsFromDB(DbContext);
+            if (DbContext is not null) Records = repository.GetRecordsFromDB(DbContext);
             SetTempDataTable();
         }
 
@@ -45,37 +36,37 @@
             TempDataTable = Records.ToDataTable();
         }
 
-        public void InitializeDbContext(string _servername, string dbname, AppDbContext.DataBaseLocation databaseLocation)
+        public void InitializeDbContext(string serverName, string dbname, AppDbContext.DataBaseLocation databaseLocation)
         {
             DbContext?.Dispose();
-            DbContext = new(_servername, dbname, databaseLocation);
+            DbContext = new AppDbContext(serverName, dbname, databaseLocation);
         }
 
-        public void InitializeDbContext_Master(string _servername)
+        public void InitializeDbContext_Master(string serverName)
         {
-            DbContextMaster?.Dispose();
-            DbContextMaster = new(_servername, "master", AppDbContext.DataBaseLocation.InternalDataBase);
+            DbContextMaster.Dispose();
+            DbContextMaster = new(serverName, "master", AppDbContext.DataBaseLocation.InternalDataBase);
         }
 
         public void HandleCreateDatabase(string filepath)
         {
-            _dataBaseManager.CreateDatabase(filepath, DbContextMaster);
+            dataBaseManager.CreateDatabase(filepath, DbContextMaster);
         }
         public void HandleCreateTables()
         {
-            _dataBaseManager.CreateTables(DbContext);
+            if (DbContext != null) dataBaseManager.CreateTables(DbContext);
         }
         public void HandleDetachDatabase(string filepath)
         {
-            _dataBaseManager.DetachDatabase(filepath, DbContextMaster);
+            dataBaseManager.DetachDatabase(filepath, DbContextMaster);
         }
         public void AddAttendancesRecord(List<Attendance> rec)
         {
-            _repository.AddAttendances(rec, DbContext);
+            if (DbContext != null) repository.AddAttendances(rec, DbContext);
         }
         public void AddAttendancesRecord(Attendance rec)
         {
-            _repository.AddAttendances(new List<Attendance> { rec }, DbContext);
+            if (DbContext != null) repository.AddAttendances(new List<Attendance> { rec }, DbContext);
         }
 
 
@@ -88,7 +79,7 @@
         }
         public void Dispose()
         {
-            DbContextMaster?.Dispose();
+            DbContextMaster.Dispose();
             DbContext?.Dispose();
             GC.SuppressFinalize(this);
         }
