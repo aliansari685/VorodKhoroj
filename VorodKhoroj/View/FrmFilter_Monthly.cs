@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Helpers;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmFilter_Monthly : Form
     {
@@ -18,7 +16,7 @@ namespace VorodKhoroj.View
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services?.GetUsers();
+            userid_txtbox.DataSource = _services.GetUsers();
 
         }
         private void btn_clear_Click(object sender, EventArgs e)
@@ -33,24 +31,22 @@ namespace VorodKhoroj.View
 
         private void Btn_submit_Click(object sender, EventArgs e)
         {
-         //   try
+            try
             {
                 _userId = userid_txtbox.Text;
-                using (SaveFileDialog sfd = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" })
+                using SaveFileDialog sfd = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" };
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        var monthList = GetMonthlyCheckedList().Where(m => m.Value).Select(m => m.Key).ToList();
-                        DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
+                    var monthList = GetMonthlyCheckedList().Where(m => m.Value).Select(m => m.Key).ToList();
+                    DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
                         checkBox_withlabels.Checked, sfd.FileName, _calcServices);
-                        CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
-                    }
+                    CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
                 }
             }
-            //catch (Exception ex)
-            //{
-            //    CommonHelper.ShowMessage(ex);
-            //}
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
 
         private Dictionary<int, bool> GetMonthlyCheckedList()

@@ -229,11 +229,11 @@ public class AttendanceCalculationService(AppServices recordService)
         var totalMinutes = groupedData.Sum(x => x.DurationMin);
 
         // محاسبه میانگین زمان ورود
-        var entryTimes = groupedData.Select(x => TimeSpan.Parse(x.EntryTime)).ToList();
+        var entryTimes = groupedData.Select(x => TimeSpan.Parse(x.EntryTime ?? string.Empty)).ToList();
         var avgEntryTime = TimeSpan.FromTicks((long)entryTimes.Average(t => t.Ticks));
 
         // محاسبه میانگین زمان خروج
-        var exitTimes = groupedData.Select(x => TimeSpan.Parse(x.ExitTime)).ToList();
+        var exitTimes = groupedData.Select(x => TimeSpan.Parse(x.ExitTime ?? string.Empty)).ToList();
         var avgExitTime = TimeSpan.FromTicks((long)exitTimes.Average(t => t.Ticks));
 
         // جمع ساعات کاری کل
@@ -251,7 +251,7 @@ public class AttendanceCalculationService(AppServices recordService)
             .ToList();
 
         // محاسبه روزهای غیبت
-        var absence = workDays.Where(day => !pr.Contains(day) && !holidays.Contains(day));
+        var absence = workDays.Where(day => !pr.Contains(day) && !holidays.Contains(day)).ToArray();
         var absenceCount = absence.Count();
 
         // تعیین روزهای غیبت و تعطیلات
@@ -284,7 +284,7 @@ public class AttendanceCalculationService(AppServices recordService)
         Report = new AttendanceReport
         {
             // مجموع روزهای کاری (تعداد کل روزهای کاری که فرد در سیستم ثبت کرده است)
-            TotalWorkDays = $"{groupedData?.Count()} از {groupedData.Count() + absenceCount}",
+            TotalWorkDays = $"{groupedData.Count()} از {groupedData.Count() + absenceCount}",
 
             // مجموع روزهای کاری کامل طبق 8 ساعت و 30 دقیقه کار (تعداد روزهای کاری که فرد کار کامل داشته)
             TotalFullWorkDays = total.ToString(),
@@ -342,27 +342,27 @@ public class AttendanceCalculationService(AppServices recordService)
 
     public Dictionary<string, string> GetDataWithTitle()
     {
-        return new Dictionary<string, string>
-        {
-    { Report.GetDisplayName(x => x.TotalWorkDays), Report.TotalWorkDays },
-    { Report.GetDisplayName(x => x.TotalFullWorkDays), Report.TotalFullWorkDays },
-    { Report.GetDisplayName(x => x.TotalWorkingHours), Report.TotalWorkingHours },
-    { Report.GetDisplayName(x => x.TotalMinutesWorked), Report.TotalMinutesWorked },
-    { Report.GetDisplayName(x => x.TotalLateDays), Report.TotalLateDays },
-    { Report.GetDisplayName(x => x.TotalLateTime), Report.TotalLateTime },
-    { Report.GetDisplayName(x => x.TotalIncompleteDays), Report.TotalIncompleteDays },
-    { Report.GetDisplayName(x => x.TotalAbsenceDays), Report.TotalAbsenceDays },
-    { Report.GetDisplayName(x => x.TotalOvertimeDays), Report.TotalOvertimeDays },
-    { Report.GetDisplayName(x => x.TotalOvertimeAfterWork), Report.TotalOvertimeAfterWork },
-    { Report.GetDisplayName(x => x.EarliestEntryTime), Report.EarliestEntryTime },
-    { Report.GetDisplayName(x => x.LatestExitTime), Report.LatestExitTime },
-    { Report.GetDisplayName(x => x.AverageEntryTime), Report.AverageEntryTime },
-    { Report.GetDisplayName(x => x.AverageExitTime), Report.AverageExitTime },
-    { Report.GetDisplayName(x => x.AverageWorkdayHours), Report.AverageWorkdayHours },
-    { Report.GetDisplayName(x => x.TotalKasriTime), Report.TotalKasriTime },
-    { Report.GetDisplayName(x => x.TotalAdjustmentOrOvertime), Report.TotalAdjustmentOrOvertime }
-        };
 
+        return new Dictionary<string, string>
+            {
+                { Report.GetDisplayName(x => x!.TotalWorkDays), Report!.TotalWorkDays },
+                { Report.GetDisplayName(x => x.TotalFullWorkDays), Report.TotalFullWorkDays },
+                { Report.GetDisplayName(x => x.TotalWorkingHours), Report.TotalWorkingHours },
+                { Report.GetDisplayName(x => x.TotalMinutesWorked), Report.TotalMinutesWorked },
+                { Report.GetDisplayName(x => x.TotalLateDays), Report.TotalLateDays },
+                { Report.GetDisplayName(x => x.TotalLateTime), Report.TotalLateTime },
+                { Report.GetDisplayName(x => x.TotalIncompleteDays), Report.TotalIncompleteDays },
+                { Report.GetDisplayName(x => x.TotalAbsenceDays), Report.TotalAbsenceDays },
+                { Report.GetDisplayName(x => x.TotalOvertimeDays), Report.TotalOvertimeDays },
+                { Report.GetDisplayName(x => x.TotalOvertimeAfterWork), Report.TotalOvertimeAfterWork },
+                { Report.GetDisplayName(x => x.EarliestEntryTime), Report.EarliestEntryTime },
+                { Report.GetDisplayName(x => x.LatestExitTime), Report.LatestExitTime },
+                { Report.GetDisplayName(x => x.AverageEntryTime), Report.AverageEntryTime },
+                { Report.GetDisplayName(x => x.AverageExitTime), Report.AverageExitTime },
+                { Report.GetDisplayName(x => x.AverageWorkdayHours), Report.AverageWorkdayHours },
+                { Report.GetDisplayName(x => x.TotalKasriTime), Report.TotalKasriTime },
+                { Report.GetDisplayName(x => x.TotalAdjustmentOrOvertime), Report.TotalAdjustmentOrOvertime }
+            };
     }
 
 }
