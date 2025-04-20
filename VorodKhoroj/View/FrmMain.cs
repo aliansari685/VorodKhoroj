@@ -1,11 +1,11 @@
 ﻿namespace VorodKhoroj;
 
-public partial class Frm_Main : Form
+public partial class FrmMain : Form
 {
     private readonly AppServices _services;
     private readonly AttendanceCalculationService _calcServices;
 
-    public Frm_Main(AppServices services, AttendanceCalculationService calculationService)
+    public FrmMain(AppServices services, AttendanceCalculationService calculationService)
     {
         InitializeComponent();
         _services = services;
@@ -15,22 +15,15 @@ public partial class Frm_Main : Form
     private void Frm_Main_Load(object sender, EventArgs e)
     {
         TextBoxClear();
-        WorkRecord g = new()
-        {
-            Date = String.Empty,
-            DayOfWeek = "",
-            EntryTime = "",
-            ExitTime = "",
-        };
     }
 
     public void DataGridConfig()
     {
-        if (_services?.Records == null) return;
+        if (_services.Records.Count == 0) return;
 
         dataView.DataSource = _services.TempDataTable;
         DataGridViewConfig();
-        Userid_txtbox.DataSource = _services?.GetUsers();
+        Userid_txtbox.DataSource = _services.GetUsers();
 
     }
 
@@ -43,7 +36,7 @@ public partial class Frm_Main : Form
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
     {
-        if (_services?.Records == null) return;
+        if (_services.Records.Count == 0) return;
 
         try
         {
@@ -73,12 +66,10 @@ public partial class Frm_Main : Form
     {
         try
         {
-            if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+            if (_services.Records.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
 
-            using (FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text))
-            {
-                frm.ShowDialog();
-            }
+            using FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
+            frm.ShowDialog();
         }
         catch (Exception ex)
         {
@@ -96,12 +87,10 @@ public partial class Frm_Main : Form
     {
         try
         {
-            if (dataView.Rows.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+            if (dataView.Rows.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
 
-            using (FrmSetting frm = new(_services))
-            {
-                frm.ShowDialog();
-            }
+            using FrmSetting frm = new(_services);
+            frm.ShowDialog();
         }
         catch (Exception ex)
         {
@@ -118,6 +107,8 @@ public partial class Frm_Main : Form
                 frm.ShowDialog();
             }
 
+            if (_services.Records.Count == 0) return;
+
             DataGridConfig();
         }
         catch (Exception ex)
@@ -133,10 +124,8 @@ public partial class Frm_Main : Form
 
     private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using (FrmFilter_Monthly frm = new(_services, _calcServices, Userid_txtbox.Text))
-        {
-            frm.ShowDialog();
-        }
+        using FrmFilter_Monthly frm = new(_services, _calcServices, Userid_txtbox.Text);
+        frm.ShowDialog();
     }
     private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
     {
@@ -146,7 +135,7 @@ public partial class Frm_Main : Form
         }
         else
         {
-            _services?.Dispose();
+            _services.Dispose();
         }
     }
 
@@ -154,14 +143,12 @@ public partial class Frm_Main : Form
     {
         try
         {
-            if (_services?.Records?.Count == 0) throw new ArgumentNullException("داده ای وجود ندارد");
+            if (_services.Records.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
 
-            using (FrmFilter frm = new(_services, _calcServices, date, date, Userid_txtbox.Text, true))
-            {
-                frm.ShowDialog();
-            }
+            using FrmFilter frm = new(_services, _calcServices, date, date, Userid_txtbox.Text, true);
+            frm.ShowDialog();
         }
         catch (Exception ex)
         {

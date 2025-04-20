@@ -37,7 +37,7 @@ namespace VorodKhoroj
 
                 var host = CreateHostBuilder().Build();
 
-                var form = host.Services.GetRequiredService<Frm_Main>();
+                var form = host.Services.GetRequiredService<FrmMain>();
 
                 ExcelPackage.License.SetNonCommercialPersonal("AliAnsari");
 
@@ -59,7 +59,7 @@ namespace VorodKhoroj
                      services.AddSingleton<DataBaseManager>();
                      services.AddSingleton<AppServices>();
                      services.AddTransient<AttendanceCalculationService>();
-                     services.AddScoped<Frm_Main>();
+                     services.AddScoped<FrmMain>();
                  });
     }
 }

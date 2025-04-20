@@ -4,8 +4,8 @@
     {
         public DataTypes DataType { get; set; }
         public AppDbContext? DbContext { get; set; }
-        public required AppDbContext DbContextMaster { get; set; }
-        public required List<Attendance> Records { get; set; }
+        public required AppDbContext? DbContextMaster { get; set; }
+        public required List<Attendance> Records { get; set; } = [];
         public required DataTable TempDataTable { get; set; }
 
         public enum DataTypes
@@ -44,7 +44,7 @@
 
         public void InitializeDbContext_Master(string serverName)
         {
-            DbContextMaster.Dispose();
+            DbContextMaster?.Dispose();
             DbContextMaster = new(serverName, "master", AppDbContext.DataBaseLocation.InternalDataBase);
         }
 
@@ -79,7 +79,7 @@
         }
         public void Dispose()
         {
-            DbContextMaster.Dispose();
+            DbContextMaster?.Dispose();
             DbContext?.Dispose();
             GC.SuppressFinalize(this);
         }

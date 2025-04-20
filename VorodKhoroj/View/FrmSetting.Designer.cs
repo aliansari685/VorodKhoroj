@@ -40,7 +40,7 @@
             btn_testdb.Margin = new Padding(3, 4, 3, 4);
             btn_testdb.Name = "btn_testdb";
             btn_testdb.Size = new Size(75, 28);
-            btn_testdb.TabIndex = 0;
+            btn_testdb.TabIndex = 1;
             btn_testdb.Text = "تست اتصال";
             btn_testdb.UseVisualStyleBackColor = true;
             btn_testdb.Click += Btn_testdb_Click;
@@ -51,7 +51,7 @@
             btn_CreateDatabase.Margin = new Padding(3, 4, 3, 4);
             btn_CreateDatabase.Name = "btn_CreateDatabase";
             btn_CreateDatabase.Size = new Size(319, 44);
-            btn_CreateDatabase.TabIndex = 1;
+            btn_CreateDatabase.TabIndex = 2;
             btn_CreateDatabase.Text = "ایجاد پایگاه داده و انتقال داده ها";
             btn_CreateDatabase.UseVisualStyleBackColor = true;
             btn_CreateDatabase.Click += btn_CreateDatabase_Click;
@@ -62,7 +62,7 @@
             txt_ServerName.Margin = new Padding(3, 4, 3, 4);
             txt_ServerName.Name = "txt_ServerName";
             txt_ServerName.Size = new Size(131, 28);
-            txt_ServerName.TabIndex = 2;
+            txt_ServerName.TabIndex = 0;
             // 
             // label1
             // 

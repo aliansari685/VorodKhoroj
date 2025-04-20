@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Services;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmSetting : Form
 {
@@ -36,24 +34,22 @@ public partial class FrmSetting : Form
         {
             if (_flag == false) throw new Exception("نام سرور پایگاه داده معتبر نیس");
 
-            using (SaveFileDialog _saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" })
+            using SaveFileDialog _saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" };
+            if (_saveFile.ShowDialog() == DialogResult.OK)
             {
-                if (_saveFile.ShowDialog() == DialogResult.OK)
-                {
-                    var dbname = Path.GetFileNameWithoutExtension(_saveFile.FileName);
+                var dbname = Path.GetFileNameWithoutExtension(_saveFile.FileName);
 
-                    _service.InitializeDbContext(txt_ServerName.Text, dbname, AppDbContext.DataBaseLocation.InternalDataBase);
+                _service.InitializeDbContext(txt_ServerName.Text, dbname, AppDbContext.DataBaseLocation.InternalDataBase);
 
-                    _service.HandleCreateDatabase(_saveFile.FileName);
+                _service.HandleCreateDatabase(_saveFile.FileName);
 
-                    _service.HandleCreateTables();
+                _service.HandleCreateTables();
 
-                    _service.AddAttendancesRecord(_service.Records);
+                _service.AddAttendancesRecord(_service.Records);
 
-                    _service.HandleDetachDatabase(_saveFile.FileName);
+                _service.HandleDetachDatabase(_saveFile.FileName);
 
-                    CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
-                }
+                CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
             }
         }
         catch (Exception ex)

@@ -10,21 +10,19 @@ namespace VorodKhoroj.Classes
 
             var excelPath = Application.StartupPath + @"Resources\ramadan.xlsx";
 
-            using (var package = new ExcelPackage(new FileInfo(excelPath)))
+            using var package = new ExcelPackage(new FileInfo(excelPath));
+            var worksheet = package.Workbook.Worksheets[0]; // اولین شیت
+
+            var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
+            for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
             {
-                var worksheet = package.Workbook.Worksheets[0]; // اولین شیت
+                var title = worksheet.Cells[row, 1].Text; // ستون TitleReport
+                var dateString = worksheet.Cells[row, 2].Text; // ستون date
 
-                var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
-                for (var row = 2; row <= rowCount; row++) // از ردیف 2 (بعد از هدر)
-                {
-                    var title = worksheet.Cells[row, 1].Text; // ستون TitleReport
-                    var dateString = worksheet.Cells[row, 2].Text; // ستون date
-
-                    if (DateTime.TryParse(dateString, out var date))
-                        list.Add(new TemplateDays { Title = title, Date = date });
-                    else
-                        throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
-                }
+                if (DateTime.TryParse(dateString, out var date))
+                    list.Add(new TemplateDays { Title = title, Date = date });
+                else
+                    throw new Exception($"خطا در تبدیل تاریخ برای سطر {row}");
             }
 
             return list;

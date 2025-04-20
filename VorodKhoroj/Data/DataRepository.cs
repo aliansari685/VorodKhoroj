@@ -50,9 +50,10 @@
 
         public void AddAttendances(IEnumerable<Attendance> records, AppDbContext _context)
         {
-            _context.Attendances.AddRangeAsync(records);
+            _context.Attendances.AddRange(records);
             _context.SaveChangesAsync();
             _context.Database.GetDbConnection().Close();
+            Task.Delay(1000);
         }
     }
 }

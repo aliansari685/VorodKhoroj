@@ -342,7 +342,6 @@ public class AttendanceCalculationService(AppServices recordService)
 
     public Dictionary<string, string> GetDataWithTitle()
     {
-
         return new Dictionary<string, string>
             {
                 { Report.GetDisplayName(x => x!.TotalWorkDays), Report!.TotalWorkDays },

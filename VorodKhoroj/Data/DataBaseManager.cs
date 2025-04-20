@@ -3,33 +3,25 @@
     public class DataBaseManager
     {
 
-        public void CreateDatabase(string filePath, AppDbContext _dbContext)
+        public void CreateDatabase(string filePath, AppDbContext dbContext)
         {
             string fileName = Path.GetFileNameWithoutExtension(filePath);
-            string logFile = Path.ChangeExtension(filePath, "ldf");
-
             string createDbQuery = $@"
             CREATE DATABASE {fileName}
             ON PRIMARY (
                 NAME = '{fileName}_Data',
                 FILENAME = '{filePath}',
-                SIZE = 5MB
-            )
-            LOG ON (
-                NAME = '{fileName}_Log',
-                FILENAME = '{logFile}',
-                SIZE = 5MB
-            );";
+                SIZE = 5MB );";
 
-            _dbContext.Database.ExecuteSqlRaw(createDbQuery);
+            dbContext.Database.ExecuteSqlRaw(createDbQuery);
         }
 
-        public void CreateTables(AppDbContext _dbContext)
+        public void CreateTables(AppDbContext dbContext)
         {
-            _dbContext.Database.EnsureCreated();
+            dbContext.Database.EnsureCreated();
         }
 
-        public void DetachDatabase(string fileName, AppDbContext _dbContext)
+        public void DetachDatabase(string fileName, AppDbContext dbContext)
         {
             var dbname = Path.GetFileNameWithoutExtension(fileName);
 
@@ -38,11 +30,11 @@
                               FROM sys.dm_exec_sessions
                               WHERE database_id = DB_ID('{dbname}');
                               EXEC(@kill);";
-            _dbContext.Database.ExecuteSqlRaw(qur);
+            dbContext.Database.ExecuteSqlRaw(qur);
 
             var detachDbQuery = $"EXEC sp_detach_db '{dbname}', 'true';";
 
-            _dbContext.Database.ExecuteSqlRaw(detachDbQuery);
+            dbContext.Database.ExecuteSqlRaw(detachDbQuery);
         }
     }
 

@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Services;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmSetSource : Form
 {
@@ -17,33 +15,29 @@ public partial class FrmSetSource : Form
         try
         {
             if (radiobtn_textfile.Checked)
-                using (var OpenFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" })
+            {
+                using var openFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" };
+                if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    if (OpenFile.ShowDialog() == DialogResult.OK)
-                    {
-                        _services.LoadRecordsFromFile(OpenFile.FileName);
-                        _services.DataType = AppServices.DataTypes.Text;
-                        Close();
-                    }
+                    _services.LoadRecordsFromFile(openFile.FileName);
+                    _services.DataType = AppServices.DataTypes.Text;
+                    Close();
                 }
+            }
 
             if (radiobtn_database.Checked)
             {
-                if (!CommonHelper.Validation(txt_ServerName.Text) ||
-                    !_services.TestServerName(txt_ServerName.Text))
-                    throw new ArgumentNullException("خطا در نام سرور پایگاه داده");
+                if (!CommonHelper.IsValid(txt_ServerName.Text) || !_services.TestServerName(txt_ServerName.Text))
+                    throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
 
-                using (var OpenFile = new OpenFileDialog { Filter = @"DB Files|*.mdf" })
+                using var openFile = new OpenFileDialog { Filter = @"DB Files|*.mdf" };
+                if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    if (OpenFile.ShowDialog() == DialogResult.OK)
-                    {
-                        var dbname = Path.GetFileNameWithoutExtension(OpenFile.FileName);
-                        _services.InitializeDbContext(txt_ServerName.Text, OpenFile.FileName,
-                            AppDbContext.DataBaseLocation.AttachDbFilename);
-                        _services.LoadRecordsFromDb();
-                        _services.DataType = AppServices.DataTypes.DataBase;
-                        Close();
-                    }
+                    //   var dbname = Path.GetFileNameWithoutExtension(openFile.FileName);
+                    _services.InitializeDbContext(txt_ServerName.Text, openFile.FileName, AppDbContext.DataBaseLocation.AttachDbFilename);
+                    _services.LoadRecordsFromDb();
+                    _services.DataType = AppServices.DataTypes.DataBase;
+                    Close();
                 }
             }
         }

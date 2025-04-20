@@ -23,10 +23,8 @@ public partial class FrmFilter : Form
     {
         try
         {
-            using (FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, _justExcell))
-            {
-                frm.ShowDialog();
-            }
+            using FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, _justExcell);
+            frm.ShowDialog();
         }
         catch (Exception ex)
         {

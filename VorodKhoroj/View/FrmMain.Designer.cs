@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj
 {
-    partial class Frm_Main
+    partial class FrmMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -261,7 +261,7 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
-            Name = "Frm_Main";
+            Name = "FrmMain";
             Text = "Main";
             FormClosing += Frm_Main_FormClosing;
             Load += Frm_Main_Load;

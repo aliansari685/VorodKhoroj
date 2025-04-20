@@ -1,6 +1,4 @@
-﻿using Azure.Identity;
-
-namespace VorodKhoroj.Helpers;
+﻿namespace VorodKhoroj.Helpers;
 
 public static class DataExporter
 {
