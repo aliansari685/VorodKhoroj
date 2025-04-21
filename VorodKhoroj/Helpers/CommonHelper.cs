@@ -25,19 +25,15 @@
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static bool IsValid(params string[] str)
-        {
-            //   if (_services.Records.Count == 0) return;
-            return !str.Any(string.IsNullOrWhiteSpace);
-        }
-        public static bool IsValid(params int[] values)
-        {
-            return values != null && values.Length > 0 && values.All(v => v != 0);
-        }
+        public static bool IsValid(params string[] str) => !str.Any(string.IsNullOrWhiteSpace);
 
-        public static bool IsValid(params object[] objs)
+        public static bool IsValid(params int[] values) => values is { Length: > 0 } && values.All(v => v != 0);
+
+        public static bool IsValid(params object[]? obj)
         {
-            return objs != null && objs.Length > 0 && objs.All(o => o != null);
+
+            return obj is { Length: > 0 } && obj.All(o => o is not null);
+
         }
 
 
