@@ -17,7 +17,6 @@ global using System.ComponentModel;
 global using VorodKhoroj.Models;
 global using System.Linq.Expressions;
 global using System.Reflection;
-global using Serilog.Context;
 
 namespace VorodKhoroj
 {
@@ -31,7 +30,7 @@ namespace VorodKhoroj
         {
             try
             {
-                Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}] {Method} {NewLine}{Message:lj}{NewLine}{Exception}").CreateLogger();
+                Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}]: {Message:lj}{NewLine}{Exception}{NewLine}").CreateLogger();
 
                 ApplicationConfiguration.Initialize();
 

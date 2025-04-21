@@ -10,7 +10,7 @@
 
         public int[] GetUsersAttendances(List<Attendance> list)
         {
-            return list?.Select(x => x.UserId)?.Distinct()?.ToArray() ?? [];
+            return list.Select(x => x.UserId).Distinct().ToArray() ;
         }
 
         public string LoginType_String(string number)
@@ -19,15 +19,15 @@
             return ((LoginTypeEnum)num).ToString();
         }
 
-        public List<Attendance> GetRecordsFromFile(string FileAddress)
+        public List<Attendance> GetRecordsFromFile(string fileAddress)
         {
-            List<Attendance> _records = new();
-            foreach (var line in File.ReadAllLines(FileAddress))
+            List<Attendance> records = new();
+            foreach (var line in File.ReadAllLines(fileAddress))
             {
                 var values = line.Split('\t');
                 if (values.Length == 6)
                 {
-                    _records.Add(new Attendance
+                    records.Add(new Attendance
                     {
                         UserId = int.Parse(values[0]),
                         DateTime = PersianDateHelper.ConvertToShamsi(values[1]),
@@ -36,23 +36,23 @@
                 }
             }
 
-            return _records;
+            return records;
         }
 
-        public List<Attendance> GetRecordsFromDB(AppDbContext _context)
+        public List<Attendance> GetRecordsFromDb(AppDbContext context)
         {
-            return _context.Attendances.ToList();
+            return context.Attendances.ToList();
         }
-        public object GetRecordsFromDB_Bind(AppDbContext _context)
+        public object GetRecordsFromDB_Bind(AppDbContext context)
         {
-            return _context.Attendances.Local;
+            return context.Attendances.Local;
         }
 
-        public void AddAttendances(IEnumerable<Attendance> records, AppDbContext _context)
+        public void AddAttendances(IEnumerable<Attendance> records, AppDbContext context)
         {
-            _context.Attendances.AddRange(records);
-            _context.SaveChangesAsync();
-            _context.Database.GetDbConnection().Close();
+            context.Attendances.AddRange(records);
+            context.SaveChangesAsync();
+            context.Database.GetDbConnection().Close();
             Task.Delay(1000);
         }
     }

@@ -27,7 +27,7 @@
         }
         public void LoadRecordsFromDb()
         {
-            if (DbContext is not null) Records = repository.GetRecordsFromDB(DbContext);
+            if (DbContext is not null) Records = repository.GetRecordsFromDb(DbContext);
             SetTempDataTable();
         }
 
