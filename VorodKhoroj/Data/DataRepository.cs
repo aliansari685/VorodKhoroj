@@ -27,7 +27,7 @@
                 var values = line.Split('\t');
                 if (values.Length == 6)
                 {
-                    _records.Add(new()
+                    _records.Add(new Attendance
                     {
                         UserId = int.Parse(values[0]),
                         DateTime = PersianDateHelper.ConvertToShamsi(values[1]),

@@ -6,7 +6,7 @@ public static class DataExporter
     {
         try
         {
-            using SaveFileDialog saveDialog = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" };
+            using SaveFileDialog saveDialog = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" };
 
             if (saveDialog.ShowDialog() != DialogResult.OK)
                 return;

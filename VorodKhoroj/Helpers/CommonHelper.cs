@@ -25,83 +25,21 @@
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public static bool IsValid(params string[] str) => !(str.Any(string.IsNullOrWhiteSpace));
-
-
-        public static DataTable ToDataTable<T>(this List<T> list)
+        public static bool IsValid(params string[] str)
         {
-            try
-            {
-                using DataTable table = new();
-                // ایجاد ستون‌ها بر اساس پراپرتی‌های کلاس
-                var properties = typeof(T).GetProperties();
-                foreach (var prop in properties)
-                {
-                    table.Columns.Add(prop.Name,
-                        Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-                }
-
-                // اضافه کردن داده‌ها
-                foreach (var item in list)
-                {
-                    var row = table.NewRow();
-                    foreach (var prop in properties)
-                    {
-                        row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
-                    }
-
-                    table.Rows.Add(row);
-                }
-
-                return table;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            //   if (_services.Records.Count == 0) return;
+            return !str.Any(string.IsNullOrWhiteSpace);
+        }
+        public static bool IsValid(params int[] values)
+        {
+            return values != null && values.Length > 0 && values.All(v => v != 0);
         }
 
-        public static void SetDisplayNameInDataGrid<T>(this T obj, DataGridView dataGrid)
+        public static bool IsValid(params object[] objs)
         {
-            var temp = obj.GetDisplayNames();
-            for (var i = 0; i < temp.Count; i++)
-            {
-                dataGrid.Columns[i].HeaderText = temp[i];
-            }
+            return objs != null && objs.Length > 0 && objs.All(o => o != null);
         }
 
-        public static List<string> GetDisplayNames<T>(this T obj)
-        {
-            return typeof(T)
-                .GetProperties()
-                .Select(prop => prop.GetCustomAttribute<DisplayNameAttribute>())
-                .Where(attr => attr != null)
-                .Select(attr => attr?.DisplayName ?? string.Empty)
-                .ToList();
-        }
 
-        public static string GetDisplayName<T, TProperty>(this T obj, Expression<Func<T, TProperty>> expression)
-        {
-            if (expression.Body is MemberExpression member)
-            {
-                var prop = typeof(T).GetProperty(member.Member.Name);
-                if (prop != null)
-                {
-                    var attr = prop.GetCustomAttribute<DisplayNameAttribute>();
-                    return attr?.DisplayName ?? prop.Name;
-                }
-            }
-            else if (expression.Body is UnaryExpression unary && unary.Operand is MemberExpression unaryMember)
-            {
-                var prop = typeof(T).GetProperty(unaryMember.Member.Name);
-                if (prop != null)
-                {
-                    var attr = prop.GetCustomAttribute<DisplayNameAttribute>();
-                    return attr?.DisplayName ?? prop.Name;
-                }
-            }
-
-            return string.Empty;
-        }
     }
 }

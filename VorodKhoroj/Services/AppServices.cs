@@ -50,7 +50,7 @@
 
         public void HandleCreateDatabase(string filepath)
         {
-            dataBaseManager.CreateDatabase(filepath, DbContextMaster);
+            if (DbContextMaster != null) dataBaseManager.CreateDatabase(filepath, DbContextMaster);
         }
         public void HandleCreateTables()
         {
@@ -58,7 +58,7 @@
         }
         public void HandleDetachDatabase(string filepath)
         {
-            dataBaseManager.DetachDatabase(filepath, DbContextMaster);
+            if (DbContextMaster != null) dataBaseManager.DetachDatabase(filepath, DbContextMaster);
         }
         public void AddAttendancesRecord(List<Attendance> rec)
         {
@@ -74,7 +74,7 @@
         public bool TestServerName(string servername)
         {
             InitializeDbContext_Master(servername);
-            DbContextMaster.Database.ExecuteSqlRaw("SELECT 1");
+            DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
             return true;
         }
         public void Dispose()

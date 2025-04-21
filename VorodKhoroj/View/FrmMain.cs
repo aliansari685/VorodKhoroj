@@ -129,7 +129,7 @@ public partial class FrmMain : Form
     }
     private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
     {
-        if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", "خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", @"خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
         {
             e.Cancel = true;
         }
