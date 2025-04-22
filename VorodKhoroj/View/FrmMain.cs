@@ -133,10 +133,6 @@ public partial class FrmMain : Form
         {
             e.Cancel = true;
         }
-        else
-        {
-            _services.Dispose();
-        }
     }
 
     private void FastExportToolStripMenuItem_Click(object sender, EventArgs e)
