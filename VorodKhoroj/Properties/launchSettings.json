@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VorodKhoroj": {
+      "commandName": "Project",
+      "sqlDebugging": true,
+      "jsWebView2Debugging": false,
+      "nativeDebugging": false
+    }
+  }
+}

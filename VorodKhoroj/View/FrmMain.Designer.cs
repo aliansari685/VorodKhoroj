@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(FrmMain));
             menuStrip1 = new MenuStrip();
             SwitchDataSourceToolStripMenuItem = new ToolStripMenuItem();
             گزارشToolStripMenuItem = new ToolStripMenuItem();
@@ -50,7 +51,7 @@
             Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView).BeginInit();
+            ((ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -84,21 +85,21 @@
             // DetailReportToolStripMenuItem
             // 
             DetailReportToolStripMenuItem.Name = "DetailReportToolStripMenuItem";
-            DetailReportToolStripMenuItem.Size = new Size(180, 24);
+            DetailReportToolStripMenuItem.Size = new Size(141, 24);
             DetailReportToolStripMenuItem.Text = "ریز جزییات";
             DetailReportToolStripMenuItem.Click += DetailReportToolStripMenuItem_Click;
             // 
             // MonthlyReportToolStripMenuItem
             // 
             MonthlyReportToolStripMenuItem.Name = "MonthlyReportToolStripMenuItem";
-            MonthlyReportToolStripMenuItem.Size = new Size(180, 24);
+            MonthlyReportToolStripMenuItem.Size = new Size(141, 24);
             MonthlyReportToolStripMenuItem.Text = "گزارش ماهانه";
             MonthlyReportToolStripMenuItem.Click += MonthlyReportToolStripMenuItem_Click;
             // 
             // FasrExportToolStripMenuItem
             // 
             FasrExportToolStripMenuItem.Name = "FasrExportToolStripMenuItem";
-            FasrExportToolStripMenuItem.Size = new Size(180, 24);
+            FasrExportToolStripMenuItem.Size = new Size(141, 24);
             FasrExportToolStripMenuItem.Text = "گزارش سریع";
             FasrExportToolStripMenuItem.Click += FastExportToolStripMenuItem_Click;
             // 
@@ -241,7 +242,7 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
-            // Frm_Main
+            // FrmMain
             // 
             AcceptButton = btn_applyfilter;
             AutoScaleDimensions = new SizeF(7F, 20F);
@@ -259,6 +260,7 @@
             Controls.Add(menuStrip1);
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FrmMain";
@@ -267,7 +269,7 @@
             Load += Frm_Main_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataView).EndInit();
+            ((ISupportInitialize)dataView).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
