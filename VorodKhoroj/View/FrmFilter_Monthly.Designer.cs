@@ -291,9 +291,9 @@
             checkBox_withlabels.Location = new Point(37, 469);
             checkBox_withlabels.Margin = new Padding(3, 4, 3, 4);
             checkBox_withlabels.Name = "checkBox_withlabels";
-            checkBox_withlabels.Size = new Size(127, 24);
+            checkBox_withlabels.Size = new Size(137, 24);
             checkBox_withlabels.TabIndex = 21;
-            checkBox_withlabels.Text = "خلاصه داده ها باشد؟";
+            checkBox_withlabels.Text = "خلاصه محاسبات باشد؟";
             checkBox_withlabels.UseVisualStyleBackColor = true;
             // 
             // FrmFilter_Monthly

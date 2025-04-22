@@ -33,14 +33,43 @@
         {
             try
             {
+                var monthList = GetMonthlyCheckedList().Where(m => m.Value).Select(m => m.Key).ToList();
+
                 _userId = userid_txtbox.Text;
-                using SaveFileDialog sfd = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" };
+
+                using SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" };
+
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    var monthList = GetMonthlyCheckedList().Where(m => m.Value).Select(m => m.Key).ToList();
-                    DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
-                        checkBox_withlabels.Checked, sfd.FileName, _calcServices);
-                    CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
+
+                    if (CommonHelper.IsValid(_userId) == false || _userId == "0")
+                    {
+                        var directory = Path.GetDirectoryName(sfd.FileName);
+                        var fileNameWithoutExt = Path.GetFileNameWithoutExtension(sfd.FileName);
+                        var extension = Path.GetExtension(sfd.FileName);
+                        var fullPath = sfd.FileName;
+
+                        var userlist = _services.GetUsers();
+
+                        foreach (var coll in userlist)
+                        {
+
+                            fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
+
+                            DataExporter.ExportAttendanceData(coll.ToString(), int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
+                        }
+                        CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
+
+                    }
+
+                    else
+                    {
+
+                        DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
+                            checkBox_withlabels.Checked, sfd.FileName, _calcServices);
+
+                        CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
+                    }
                 }
             }
             catch (Exception ex)

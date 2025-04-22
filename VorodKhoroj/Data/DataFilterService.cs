@@ -2,18 +2,26 @@
 {
     public class DataFilterService
     {
-        public static IEnumerable<Attendance> ApplyFilter(IList<Attendance> _records, string fromDate, string toDate, int userid)
+        public static IEnumerable<Attendance> ApplyFilter(IList<Attendance> records, string fromDate, string toDate, int userid)
         {
             try
             {
-                return _records.Where(x =>
-                    x.DateTime >= DateTime.Parse(fromDate) &&
-                    x.DateTime <= DateTime.Parse(toDate).AddDays(1).AddSeconds(-1) && x.UserId == userid);
+                var from = DateTime.Parse(fromDate);
+                var to = DateTime.Parse(toDate).Date.AddDays(1).AddSeconds(-1);
+
+                var result = records.Where(x => x.DateTime >= from && x.DateTime < to);
+
+                if (userid != 0)
+                {
+                    result = result.Where(x => x.UserId == userid);
+                }
+
+                return result;
 
             }
             catch (Exception ex)
             {
-                throw new ArgumentException($@"خطا در فیلتر کردن داده‌ها: {'\n'} {ex.Message}");
+                throw new FormatException($@"خطا در فیلتر کردن داده‌ها: {'\n'} {ex.Message}");
             }
         }
     }

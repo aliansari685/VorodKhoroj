@@ -149,7 +149,8 @@ public partial class FrmCalc : Form
 
             if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"{nameof(_userid)}", @"خطای داخلی ");
 
-            dataView_Calculate.DataSource = _calcServices.Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
+            dataView_Calculate.DataSource = _calcServices
+                .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
 
             Part2_Load();
 

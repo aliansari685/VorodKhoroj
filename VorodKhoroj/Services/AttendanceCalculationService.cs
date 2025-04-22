@@ -78,12 +78,15 @@ public class AttendanceCalculationService(AppServices recordService)
 
     public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
     {
+        if (CommonHelper.IsValid(userId) == false) userId = "0";
+
         var filtered = DataFilterService.ApplyFilter(recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
-        if (filtered.Any() == false || filtered is null)
-            throw new ArgumentNullException($"داده ای وجود ندارد");
+        if (filtered.Any() == false)
+            //    throw new ArgumentNullException($"داده ای وجود ندارد");
+            return [];
 
-        TitleReport = @$"{fromDateTime} -- {toDateTime} {'\t'}{'\t'} User:{userId}";
+        TitleReport = $"{fromDateTime} -- {toDateTime} {'\t'}{'\t'} User:{userId}";
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();
@@ -122,12 +125,6 @@ public class AttendanceCalculationService(AppServices recordService)
             var minDateTime = orderedTimes.First(); // زمان ورودی اولین کارمند
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
 
-            if (orderedTimes.Length == 1 && minDateTime.Hour > 14)
-            {
-                minDateTime = minDateTime.Date + new TimeSpan(08, 15, 00);
-                maxDateTime = orderedTimes.First();
-            }
-
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
             var isWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
 
@@ -140,19 +137,33 @@ public class AttendanceCalculationService(AppServices recordService)
             // بررسی اینکه آیا روز جاری در ماه فروردین است
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
 
-            //ناقص
-            var naqes = _naqesWorkTm;
+
+            // اصلاح خودکار ورود ناقص
+            if (autoEditNaqesRows && orderedTimes.Length == 1)
+            {
+                var isLateThursday = isThursday && minDateTime.Hour >= 13;
+                var isLateStandardDay = !isThursday && minDateTime.Hour > 14;
+
+                if (isLateThursday || isLateStandardDay)
+                {
+                    minDateTime = minDateTime.Date + new TimeSpan(08, 15, 00);
+                    maxDateTime = orderedTimes.First();
+                }
+            }
+
+            //خروج ناقص
+            var exitNaqesWorkTm = _naqesWorkTm;
             if (isThursday)
-                naqes = _naqesWorkThursdayTm;
+                exitNaqesWorkTm = _naqesWorkThursdayTm;
             if (isRamadan)
-                naqes = _naqesWorkRamadanTm;
+                exitNaqesWorkTm = _naqesWorkRamadanTm;
             if (isFarvardin)
-                naqes = _naqesWorkFarvardinTm;
+                exitNaqesWorkTm = _naqesWorkFarvardinTm;
 
             if (maxDateTime == DateTime.MinValue)
             {
                 maxDateTime = autoEditNaqesRows
-                    ? minDateTime.Date + naqes
+                    ? minDateTime.Date + exitNaqesWorkTm
                     : minDateTime;
             }
 
