@@ -28,6 +28,7 @@ public static class DataExporter
 
             worksheet.Cells[grid.Rows.Count + 3, 1].Value = title;
 
+
             //خلاصه محاسبات
             if (labels is not null && labels.Any())
             {
@@ -70,7 +71,7 @@ public static class DataExporter
             var endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
 
             var records = calcService.Calculate(userId, startDate, endDate);
-            if (records.Count == 0) return;
+            if (CommonHelper.IsValid(records.Count)) return;
 
             // داده‌ها با ستون ها
             worksheet.Cells["A1"].LoadFromCollection(records, true);

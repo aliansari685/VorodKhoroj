@@ -40,6 +40,6 @@ public partial class FrmFilter : Form
 
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _services?.GetUsers();
+        Userid_txtbox.DataSource = _services.GetUsers();
     }
 }

@@ -19,7 +19,7 @@ public partial class FrmMain : Form
 
     public void DataGridConfig()
     {
-        if (_services.Records.Count == 0) return;
+        if (CommonHelper.IsValid(_services.Records.Count)) return;
 
         dataView.DataSource = _services.TempDataTable;
         DataGridViewConfig();
@@ -36,7 +36,7 @@ public partial class FrmMain : Form
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
     {
-        if (_services.Records.Count == 0) return;
+        if (CommonHelper.IsValid(_services.Records.Count)) return;
 
         try
         {
@@ -66,7 +66,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (_services.Records.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_services.Records.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             using FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
             frm.ShowDialog();
@@ -87,7 +87,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (dataView.Rows.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(dataView.Rows.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             using FrmSetting frm = new(_services);
             frm.ShowDialog();
@@ -107,7 +107,7 @@ public partial class FrmMain : Form
                 frm.ShowDialog();
             }
 
-            if (_services.Records.Count == 0) return;
+            if (CommonHelper.IsValid(_services.Records.Count)) return;
 
             DataGridConfig();
         }
@@ -139,7 +139,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (_services.Records.Count == 0) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_services.Records.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
 

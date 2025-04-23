@@ -10,7 +10,8 @@
 
         public int[] GetUsersAttendances(List<Attendance> list)
         {
-            return list.Select(x => x.UserId).Distinct().ToArray() ;
+            return list.Select(x => x.UserId).Distinct().ToArray();
+
         }
 
         public string LoginType_String(string number)
