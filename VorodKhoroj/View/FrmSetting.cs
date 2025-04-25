@@ -32,22 +32,23 @@ public partial class FrmSetting : Form
     {
         try
         {
-            if (_flag == false) throw new Exception("نام سرور پایگاه داده معتبر نیس");
+            if (_flag == false) throw new Exception("نام سرور پایگاه داده معتبر نیس ، لطفا اول تست کنید");
 
             using SaveFileDialog _saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" };
             if (_saveFile.ShowDialog() == DialogResult.OK)
             {
-                var dbname = Path.GetFileNameWithoutExtension(_saveFile.FileName);
+                _service.DbName = Path.GetFileNameWithoutExtension(_saveFile.FileName);//exam:db
+                _service.DbPathName = _saveFile.FileName;//exam: d://db.mdf
 
-                _service.InitializeDbContext(txt_ServerName.Text, dbname, AppDbContext.DataBaseLocation.InternalDataBase);
+                _service.HandleCreateDatabase();
 
-                _service.HandleCreateDatabase(_saveFile.FileName);
+                _service.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.InternalDataBase);
 
                 _service.HandleCreateTables();
 
                 _service.AddAttendancesRecord(_service.Records);
 
-                _service.HandleDetachDatabase(_saveFile.FileName);
+                _service.HandleDetachDatabase();
 
                 CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
             }

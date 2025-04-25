@@ -37,7 +37,7 @@
             FasrExportToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
-            ویرایشکاربرانToolStripMenuItem = new ToolStripMenuItem();
+            UsersEditToolStripMenuItem = new ToolStripMenuItem();
             SettingToolStripMenuItem = new ToolStripMenuItem();
             DBConfigToolStripMenuItem = new ToolStripMenuItem();
             راهاندازیمجددToolStripMenuItem = new ToolStripMenuItem();
@@ -105,7 +105,7 @@
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
             // 
-            ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ویرایشردیفناقصToolStripMenuItem, ویرایشکاربرانToolStripMenuItem });
+            ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ویرایشردیفناقصToolStripMenuItem, UsersEditToolStripMenuItem });
             ویرایشردیفهایناقصToolStripMenuItem.Font = new Font("IRANSans", 9F);
             ویرایشردیفهایناقصToolStripMenuItem.Name = "ویرایشردیفهایناقصToolStripMenuItem";
             ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(92, 24);
@@ -114,14 +114,15 @@
             // ویرایشردیفناقصToolStripMenuItem
             // 
             ویرایشردیفناقصToolStripMenuItem.Name = "ویرایشردیفناقصToolStripMenuItem";
-            ویرایشردیفناقصToolStripMenuItem.Size = new Size(175, 24);
+            ویرایشردیفناقصToolStripMenuItem.Size = new Size(180, 24);
             ویرایشردیفناقصToolStripMenuItem.Text = "ویرایش ردیف ناقص";
             // 
-            // ویرایشکاربرانToolStripMenuItem
+            // UsersEditToolStripMenuItem
             // 
-            ویرایشکاربرانToolStripMenuItem.Name = "ویرایشکاربرانToolStripMenuItem";
-            ویرایشکاربرانToolStripMenuItem.Size = new Size(175, 24);
-            ویرایشکاربرانToolStripMenuItem.Text = "ویرایش کاربران";
+            UsersEditToolStripMenuItem.Name = "UsersEditToolStripMenuItem";
+            UsersEditToolStripMenuItem.Size = new Size(180, 24);
+            UsersEditToolStripMenuItem.Text = "ویرایش کاربران";
+            UsersEditToolStripMenuItem.Click += UsersEditToolStripMenuItem_Click;
             // 
             // SettingToolStripMenuItem
             // 
@@ -294,7 +295,7 @@
         private ToolStripMenuItem MonthlyReportToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
-        private ToolStripMenuItem ویرایشکاربرانToolStripMenuItem;
+        private ToolStripMenuItem UsersEditToolStripMenuItem;
         private ToolStripMenuItem FasrExportToolStripMenuItem;
     }
 }

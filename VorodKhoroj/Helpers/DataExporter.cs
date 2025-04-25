@@ -71,7 +71,7 @@ public static class DataExporter
             var endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
 
             var records = calcService.Calculate(userId, startDate, endDate);
-            if (CommonHelper.IsValid(records.Count)) return;
+            if (CommonHelper.IsValid(records.Count)==false) return;
 
             // داده‌ها با ستون ها
             worksheet.Cells["A1"].LoadFromCollection(records, true);

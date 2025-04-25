@@ -53,8 +53,8 @@
 
                         foreach (var coll in userlist)
                         {
-
-                            fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
+                            if (directory != null)
+                                fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
 
                             DataExporter.ExportAttendanceData(coll.ToString(), int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
                         }

@@ -2,6 +2,7 @@
 
 public partial class FrmMain : Form
 {
+    private bool _isRestarting = false;
     private readonly AppServices _services;
     private readonly AttendanceCalculationService _calcServices;
 
@@ -19,7 +20,7 @@ public partial class FrmMain : Form
 
     public void DataGridConfig()
     {
-        if (CommonHelper.IsValid(_services.Records.Count)) return;
+        if (CommonHelper.IsValid(_services.Records.Count) == false) return;
 
         dataView.DataSource = _services.TempDataTable;
         DataGridViewConfig();
@@ -29,17 +30,19 @@ public partial class FrmMain : Form
 
     private void DataGridViewConfig()
     {
-        dataView.Columns[1].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+        dataView.Columns[2].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
+        dataView.Columns["User"].Visible = false;
         new Attendance().SetDisplayNameInDataGrid(dataView);
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
     {
-        if (CommonHelper.IsValid(_services.Records.Count)) return;
-
         try
         {
+            if (CommonHelper.IsValid(_services.Records.Count) == false)
+                throw new NullReferenceException("داده ای وجود ندارد");
+
             dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
                 toDateTime_txtbox.Text, int.Parse(Userid_txtbox.Text)).ToList().ToDataTable();
             DataGridViewConfig();
@@ -66,7 +69,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (CommonHelper.IsValid(_services.Records.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_services.Records.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             using FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
             frm.ShowDialog();
@@ -87,7 +90,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (CommonHelper.IsValid(dataView.Rows.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(dataView.Rows.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             using FrmSetting frm = new(_services);
             frm.ShowDialog();
@@ -104,10 +107,9 @@ public partial class FrmMain : Form
         {
             using (FrmSetSource frm = new(_services))
             {
+                dataView.DataSource = null;
                 frm.ShowDialog();
             }
-
-            if (CommonHelper.IsValid(_services.Records.Count)) return;
 
             DataGridConfig();
         }
@@ -117,29 +119,17 @@ public partial class FrmMain : Form
         }
     }
 
-    private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        Application.Restart();
-    }
-
     private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
         using FrmFilter_Monthly frm = new(_services, _calcServices, Userid_txtbox.Text);
         frm.ShowDialog();
-    }
-    private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
-    {
-        if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", @"خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-        {
-            e.Cancel = true;
-        }
     }
 
     private void FastExportToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
         {
-            if (CommonHelper.IsValid(_services.Records.Count)) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_services.Records.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
 
@@ -150,5 +140,24 @@ public partial class FrmMain : Form
         {
             CommonHelper.ShowMessage(ex);
         }
+    }
+    private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        _isRestarting = true;
+        Application.Restart();
+    }
+    private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (_isRestarting) return;
+
+        if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", @"خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        {
+            e.Cancel = true;
+        }
+    }
+
+    private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
     }
 }

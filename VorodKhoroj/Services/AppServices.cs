@@ -2,6 +2,9 @@
 {
     public class AppServices(DataRepository repository, DataBaseManager dataBaseManager) : IDisposable
     {
+        public string DbName { get; set; } = "";
+        public string DbPathName { get; set; } = "";
+
         public DataTypes DataType { get; set; }
         public AppDbContext? DbContext { get; set; }
         public required AppDbContext? DbContextMaster { get; set; }
@@ -23,7 +26,6 @@
         public int[] GetUsers()
         {
             return repository.GetUsersAttendances(Records);
-
         }
         public void LoadRecordsFromDb()
         {
@@ -36,29 +38,30 @@
             TempDataTable = Records.ToDataTable();
         }
 
-        public void InitializeDbContext(string serverName, string dbname, AppDbContext.DataBaseLocation databaseLocation)
+        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation databaseLocation)
         {
             DbContext?.Dispose();
-            DbContext = new AppDbContext(serverName, dbname, databaseLocation);
+            DbContext = new AppDbContext(serverName, DbPathName, DbName, databaseLocation);
         }
 
         public void InitializeDbContext_Master(string serverName)
         {
             DbContextMaster?.Dispose();
-            DbContextMaster = new(serverName, "master", AppDbContext.DataBaseLocation.InternalDataBase);
+            DbContextMaster = new AppDbContext(serverName, DbPathName, "master", AppDbContext.DataBaseLocation.InternalDataBase);
         }
 
-        public void HandleCreateDatabase(string filepath)
+        public void HandleCreateDatabase()
         {
-            if (DbContextMaster != null) dataBaseManager.CreateDatabase(filepath, DbContextMaster);
+            if (DbContextMaster != null) dataBaseManager.CreateDatabase(DbPathName, DbName, DbContextMaster);
         }
         public void HandleCreateTables()
         {
             if (DbContext != null) dataBaseManager.CreateTables(DbContext);
         }
-        public void HandleDetachDatabase(string filepath)
+        public void HandleDetachDatabase()
         {
-            if (DbContextMaster != null) dataBaseManager.DetachDatabase(filepath, DbContextMaster);
+            //  if (DbContextMaster != null) dataBaseManager.DetachDatabase(DbPathName, DbName, DbContextMaster);
+            if (DbContext != null) dataBaseManager.DetachDatabase(DbPathName, DbName, DbContext);
         }
         public void AddAttendancesRecord(List<Attendance> rec)
         {
@@ -66,7 +69,7 @@
         }
         public void AddAttendancesRecord(Attendance rec)
         {
-            if (DbContext != null) repository.AddAttendances(new List<Attendance> { rec }, DbContext);
+            if (DbContext != null) repository.AddAttendances([rec], DbContext);
         }
 
 
@@ -77,6 +80,9 @@
             DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
             return true;
         }
+
+
+
         public void Dispose()
         {
             DbContextMaster?.Dispose();

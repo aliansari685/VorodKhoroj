@@ -17,6 +17,11 @@ global using System.ComponentModel;
 global using VorodKhoroj.Models;
 global using System.Linq.Expressions;
 global using System.Reflection;
+global using Microsoft.EntityFrameworkCore.ChangeTracking;
+global using VorodKhoroj.Context;
+global using System.ComponentModel.DataAnnotations.Schema;
+
+
 
 namespace VorodKhoroj
 {

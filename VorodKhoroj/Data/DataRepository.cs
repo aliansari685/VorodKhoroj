@@ -1,28 +1,13 @@
-﻿namespace VorodKhoroj.Data
+﻿using System.Collections.Immutable;
+using VorodKhoroj.Context;
+
+namespace VorodKhoroj.Data
 {
     public class DataRepository
     {
-        private enum LoginTypeEnum
-        {
-            Face = 15,
-            Finger = 1
-        }
-
-        public int[] GetUsersAttendances(List<Attendance> list)
-        {
-            return list.Select(x => x.UserId).Distinct().ToArray();
-
-        }
-
-        public string LoginType_String(string number)
-        {
-            var num = int.Parse(number);
-            return ((LoginTypeEnum)num).ToString();
-        }
-
         public List<Attendance> GetRecordsFromFile(string fileAddress)
         {
-            List<Attendance> records = new();
+            List<Attendance> records = [];
             foreach (var line in File.ReadAllLines(fileAddress))
             {
                 var values = line.Split('\t');
@@ -32,7 +17,7 @@
                     {
                         UserId = int.Parse(values[0]),
                         DateTime = PersianDateHelper.ConvertToShamsi(values[1]),
-                        LoginType = LoginType_String(values[4])
+                        LoginType = GetLoginType(values[4])
                     });
                 }
             }
@@ -40,21 +25,61 @@
             return records;
         }
 
+        public string GetLoginType(string number)
+        {
+            var num = int.Parse(number);
+            return num switch
+            {
+                15 => "Face",
+                1 => "Finger",
+                _ => "",
+            };
+        }
+        public int[] GetUsersAttendances(List<Attendance> list)
+        {
+            return list.Select(x => x.UserId).Distinct().ToArray();
+        }
+
+
+        //DataBase:
         public List<Attendance> GetRecordsFromDb(AppDbContext context)
         {
             return context.Attendances.ToList();
         }
-        public object GetRecordsFromDB_Bind(AppDbContext context)
+
+        public LocalView<Attendance> GetRecordsFromDB(AppDbContext context)
         {
             return context.Attendances.Local;
         }
 
-        public void AddAttendances(IEnumerable<Attendance> records, AppDbContext context)
+        public void AddAttendances(List<Attendance> records, AppDbContext context)
         {
-            context.Attendances.AddRange(records);
-            context.SaveChangesAsync();
-            context.Database.GetDbConnection().Close();
-            Task.Delay(1000);
+            try
+            {
+                //Add User Records From UserID in Attendance
+                var users = GetUsersAttendances(records)
+                    .Select(id => new User { UserId = id })
+                    .ToList();
+
+                context.Users.AddRange(users);
+                _ = context.SaveChanges();
+
+                //Add Attendance Records
+                context.Attendances.AddRange(records);
+                _ = context.SaveChanges();
+
+                context.Database.GetDbConnection().Close();
+
+                Task.Delay(1000);
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
     }
 }
