@@ -158,6 +158,15 @@ public partial class FrmMain : Form
 
     private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
+        if (_services is { DataType: AppServices.DataTypes.DataBase, DbContext: not null })
+        {
+            using var frm = new FrmUsers(_services);
+            frm.ShowDialog();
+        }
+        else
+        {
+            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+        }
 
     }
 }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Immutable;
-using VorodKhoroj.Context;
-
-namespace VorodKhoroj.Data
+﻿namespace VorodKhoroj.Data
 {
     public class DataRepository
     {
@@ -81,5 +78,88 @@ namespace VorodKhoroj.Data
                 CommonHelper.ShowMessage(ex);
             }
         }
+        public void AddAttendance(List<Attendance> records, AppDbContext context)
+        {
+            try
+            {
+                //Add Attendance Records
+                context.Attendances.AddRange(records);
+                _ = context.SaveChanges();
+
+                context.Database.GetDbConnection().Close();
+
+                Task.Delay(1000);
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+        public void UpdateAttendance(List<Attendance> records, AppDbContext context)
+        {
+            try
+            {
+                //Add Attendance Records
+                context.Attendances.UpdateRange(records);
+                _ = context.SaveChanges();
+
+                context.Database.GetDbConnection().Close();
+                Task.Delay(1000);
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+        public void AddAttendanceUser(List<User> records, AppDbContext context)
+        {
+            try
+            {
+                //Add Attendance Records
+                context.Users.AddRange(records);
+                _ = context.SaveChanges();
+
+                context.Database.GetDbConnection().Close();
+
+                Task.Delay(1000);
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+        public void UpdateAttendanceUser(List<User> records, AppDbContext context)
+        {
+            try
+            {
+                //Add Attendance Records
+                context.Users.UpdateRange(records);
+                _ = context.SaveChanges();
+
+                context.Database.GetDbConnection().Close();
+                Task.Delay(1000);
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+
     }
 }

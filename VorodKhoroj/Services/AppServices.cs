@@ -60,18 +60,30 @@
         }
         public void HandleDetachDatabase()
         {
-            //  if (DbContextMaster != null) dataBaseManager.DetachDatabase(DbPathName, DbName, DbContextMaster);
             if (DbContext != null) dataBaseManager.DetachDatabase(DbPathName, DbName, DbContext);
         }
-        public void AddAttendancesRecord(List<Attendance> rec)
+        public void AddAttendancesRecord(List<Attendance> rec)//One Config
         {
             if (DbContext != null) repository.AddAttendances(rec, DbContext);
         }
-        public void AddAttendancesRecord(Attendance rec)
+
+        public void AddAttendanceRecord(Attendance rec)
         {
-            if (DbContext != null) repository.AddAttendances([rec], DbContext);
+            if (DbContext != null) repository.AddAttendance([rec], DbContext);
+        }
+        public void UpdateAttendanceRecord(Attendance rec)
+        {
+            if (DbContext != null) repository.UpdateAttendance([rec], DbContext);
         }
 
+        public void AddAttendanceUserRecord(User rec)
+        {
+            if (DbContext != null) repository.AddAttendanceUser([rec], DbContext);
+        }
+        public void UpdateAttendanceUserRecord(User rec)
+        {
+            if (DbContext != null) repository.UpdateAttendanceUser([rec], DbContext);
+        }
 
 
         public bool TestServerName(string servername)
@@ -89,5 +101,7 @@
             DbContext?.Dispose();
             GC.SuppressFinalize(this);
         }
+
+
     }
 }
