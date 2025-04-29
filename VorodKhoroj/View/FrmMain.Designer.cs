@@ -114,13 +114,13 @@
             // ویرایشردیفناقصToolStripMenuItem
             // 
             ویرایشردیفناقصToolStripMenuItem.Name = "ویرایشردیفناقصToolStripMenuItem";
-            ویرایشردیفناقصToolStripMenuItem.Size = new Size(180, 24);
+            ویرایشردیفناقصToolStripMenuItem.Size = new Size(175, 24);
             ویرایشردیفناقصToolStripMenuItem.Text = "ویرایش ردیف ناقص";
             // 
             // UsersEditToolStripMenuItem
             // 
             UsersEditToolStripMenuItem.Name = "UsersEditToolStripMenuItem";
-            UsersEditToolStripMenuItem.Size = new Size(180, 24);
+            UsersEditToolStripMenuItem.Size = new Size(175, 24);
             UsersEditToolStripMenuItem.Text = "ویرایش کاربران";
             UsersEditToolStripMenuItem.Click += UsersEditToolStripMenuItem_Click;
             // 
@@ -186,7 +186,7 @@
             // 
             // btn_applyfilter
             // 
-            btn_applyfilter.Location = new Point(192, 38);
+            btn_applyfilter.Location = new Point(149, 37);
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(125, 30);
             btn_applyfilter.TabIndex = 7;
@@ -200,16 +200,16 @@
             label3.Location = new Point(412, 41);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
-            label3.Size = new Size(47, 20);
+            label3.Size = new Size(35, 20);
             label3.TabIndex = 9;
-            label3.Text = "کد کاربر:";
+            label3.Text = " کاربر:";
             // 
             // btn_clear
             // 
             btn_clear.BackColor = Color.Lavender;
             btn_clear.BackgroundImage = Properties.Resources.clear_icon_9213;
             btn_clear.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_clear.Location = new Point(147, 36);
+            btn_clear.Location = new Point(104, 35);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(39, 35);
             btn_clear.TabIndex = 12;
@@ -220,11 +220,10 @@
             // 
             Userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Userid_txtbox.DisplayMember = "userid";
             Userid_txtbox.FormattingEnabled = true;
-            Userid_txtbox.Location = new Point(323, 38);
+            Userid_txtbox.Location = new Point(288, 38);
             Userid_txtbox.Name = "Userid_txtbox";
-            Userid_txtbox.Size = new Size(82, 28);
+            Userid_txtbox.Size = new Size(117, 28);
             Userid_txtbox.TabIndex = 13;
             // 
             // dataView

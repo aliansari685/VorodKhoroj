@@ -16,7 +16,7 @@
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services.GetUsers();
+            userid_txtbox.DataSource = _services.GetUsersFromFile();
 
         }
         private void btn_clear_Click(object sender, EventArgs e)
@@ -49,7 +49,7 @@
                         var extension = Path.GetExtension(sfd.FileName);
                         var fullPath = sfd.FileName;
 
-                        var userlist = _services.GetUsers();
+                        var userlist = _services.GetUsersFromFile();
 
                         foreach (var coll in userlist)
                         {

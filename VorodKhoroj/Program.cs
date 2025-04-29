@@ -20,6 +20,8 @@ global using System.Reflection;
 global using Microsoft.EntityFrameworkCore.ChangeTracking;
 global using VorodKhoroj.Context;
 global using System.ComponentModel.DataAnnotations.Schema;
+global using System.Collections;
+
 
 
 

@@ -38,7 +38,7 @@
         private void DataGridConfig()
         {
             UserName_txtbox.Text = null;
-            Userid_txtbox.DataSource = _services.GetUsers();
+            Userid_txtbox.DataSource = _services.GetUsersFromFile();
             dataView_User.DataSource = _services.DbContext?.Users.ToList();
         }
 

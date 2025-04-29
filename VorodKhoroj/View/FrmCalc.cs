@@ -25,7 +25,7 @@ public partial class FrmCalc : Form
     private void FrmCalc_Load(object sender, EventArgs e)
     {
         lbl_FromTo.Text = @$"{_fromDateTime} -- {_toDateTime}";
-        userid_txtbox.DataSource = _service.GetUsers();
+        userid_txtbox.DataSource = _service.GetUsersFromFile();
         ReloadGrid();
         if (dataView_Calculate.DataSource == null)
         {
@@ -126,7 +126,7 @@ public partial class FrmCalc : Form
 
     private void ChangeUser(bool plusNumber)
     {
-        var users = _service.GetUsers();
+        var users = _service.GetUsersFromFile();
         var now = Array.IndexOf(users, int.Parse(_userid));
 
         if (plusNumber && (now < users.Length - 1))

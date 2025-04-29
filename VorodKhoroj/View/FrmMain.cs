@@ -2,7 +2,7 @@
 
 public partial class FrmMain : Form
 {
-    private bool _isRestarting = false;
+    private bool _isRestarting;
     private readonly AppServices _services;
     private readonly AttendanceCalculationService _calcServices;
 
@@ -20,19 +20,34 @@ public partial class FrmMain : Form
 
     public void DataGridConfig()
     {
-        if (CommonHelper.IsValid(_services.Records.Count) == false) return;
+        if (!CommonHelper.IsValid(_services.Records?.Count ?? 0)) return;
 
         dataView.DataSource = _services.TempDataTable;
-        DataGridViewConfig();
-        Userid_txtbox.DataSource = _services.GetUsers();
 
+        Userid_txtbox.DataSource = _services.DataType switch
+        {
+            AppServices.DataTypes.Text => _services.GetUsersFromFile(),
+
+            AppServices.DataTypes.DataBase => _services.GetUsersWithProperty(),
+
+            _ => null
+        };
+
+        Userid_txtbox.DisplayMember = "Display";
+        Userid_txtbox.ValueMember = "UserId";
+
+        DataGridViewConfig();
     }
 
     private void DataGridViewConfig()
     {
         dataView.Columns[2].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
-        dataView.Columns["User"].Visible = false;
+        if (dataView.Columns["User"] is not null and var dV)
+        {
+            dV.Visible = false;
+        }
+
         new Attendance().SetDisplayNameInDataGrid(dataView);
     }
 
@@ -43,8 +58,18 @@ public partial class FrmMain : Form
             if (CommonHelper.IsValid(_services.Records.Count) == false)
                 throw new NullReferenceException("داده ای وجود ندارد");
 
-            dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
-                toDateTime_txtbox.Text, int.Parse(Userid_txtbox.Text)).ToList().ToDataTable();
+            if (int.TryParse(Userid_txtbox.Text, out var res))
+            {
+                dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
+                    toDateTime_txtbox.Text, res).ToList().ToDataTable();
+            }
+            else if (int.TryParse(Userid_txtbox.ValueMember, out var res1))
+            {
+                dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
+                    toDateTime_txtbox.Text, res1).ToList().ToDataTable();
+            }
+
+       
             DataGridViewConfig();
         }
         catch (Exception ex)

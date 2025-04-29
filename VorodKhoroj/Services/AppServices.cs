@@ -23,9 +23,22 @@
             SetTempDataTable();
         }
 
-        public int[] GetUsers()
+        public int[] GetUsersFromFile()
         {
             return repository.GetUsersAttendances(Records);
+        }
+
+        public List<User> GetUsersFromDb()
+        {
+            return repository.GetUsersAttendances(DbContext!);
+        }
+        public IList GetUsersWithProperty()
+        {
+            return GetUsersFromDb().Select(x => new
+            {
+                Display = string.IsNullOrWhiteSpace(x.Name) ? x.UserId.ToString() : x.Name,
+                x.UserId
+            }).ToList();
         }
         public void LoadRecordsFromDb()
         {

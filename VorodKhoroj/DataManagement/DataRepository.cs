@@ -39,6 +39,10 @@
 
 
         //DataBase:
+        public List<User> GetUsersAttendances(AppDbContext dbContext)
+        {
+            return dbContext.Users.ToList();
+        }
         public List<Attendance> GetRecordsFromDb(AppDbContext context)
         {
             return context.Attendances.ToList();
@@ -160,6 +164,7 @@
                 CommonHelper.ShowMessage(ex);
             }
         }
+
 
     }
 }
