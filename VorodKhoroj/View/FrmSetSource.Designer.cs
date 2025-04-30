@@ -90,12 +90,12 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { AdditemToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(153, 26);
+            contextMenuStrip1.Size = new Size(181, 48);
             // 
             // AdditemToolStripMenuItem
             // 
             AdditemToolStripMenuItem.Name = "AdditemToolStripMenuItem";
-            AdditemToolStripMenuItem.Size = new Size(152, 22);
+            AdditemToolStripMenuItem.Size = new Size(180, 22);
             AdditemToolStripMenuItem.Text = "افزودن به لیست";
             AdditemToolStripMenuItem.Click += AddItemsToolStripMenuItem_Click;
             // 
@@ -153,8 +153,8 @@
         private RadioButton radiobtn_textfile;
         private Label label1;
         private GroupBox groupBox1;
-        private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem AdditemToolStripMenuItem;
         private ComboBox txt_ServerName;
+        public ContextMenuStrip contextMenuStrip1;
     }
 }

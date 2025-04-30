@@ -30,8 +30,8 @@
         {
             btn_testdb = new Button();
             btn_CreateDatabase = new Button();
-            txt_ServerName = new TextBox();
             label1 = new Label();
+            txt_ServerName = new ComboBox();
             SuspendLayout();
             // 
             // btn_testdb
@@ -56,14 +56,6 @@
             btn_CreateDatabase.UseVisualStyleBackColor = true;
             btn_CreateDatabase.Click += btn_CreateDatabase_Click;
             // 
-            // txt_ServerName
-            // 
-            txt_ServerName.Location = new Point(104, 13);
-            txt_ServerName.Margin = new Padding(3, 4, 3, 4);
-            txt_ServerName.Name = "txt_ServerName";
-            txt_ServerName.Size = new Size(131, 28);
-            txt_ServerName.TabIndex = 0;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -74,14 +66,25 @@
             label1.TabIndex = 3;
             label1.Text = "نام سرور پایگاه داده :";
             // 
+            // txt_ServerName
+            // 
+            txt_ServerName.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txt_ServerName.AutoCompleteSource = AutoCompleteSource.ListItems;
+            txt_ServerName.FormattingEnabled = true;
+            txt_ServerName.Location = new Point(104, 14);
+            txt_ServerName.Name = "txt_ServerName";
+            txt_ServerName.RightToLeft = RightToLeft.No;
+            txt_ServerName.Size = new Size(131, 28);
+            txt_ServerName.TabIndex = 0;
+            // 
             // FrmSetting
             // 
             AcceptButton = btn_testdb;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(360, 114);
-            Controls.Add(label1);
             Controls.Add(txt_ServerName);
+            Controls.Add(label1);
             Controls.Add(btn_CreateDatabase);
             Controls.Add(btn_testdb);
             Font = new Font("IRANSans", 9F);
@@ -97,7 +100,7 @@
 
         private Button btn_testdb;
         private Button btn_CreateDatabase;
-        private TextBox txt_ServerName;
         private Label label1;
+        private ComboBox txt_ServerName;
     }
 }

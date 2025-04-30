@@ -33,9 +33,10 @@ public partial class FrmMain : Form
             _ => null
         };
 
-        Userid_txtbox.DisplayMember = "Display";
-        Userid_txtbox.ValueMember = "UserId";
-
+        if (_services.DataType == AppServices.DataTypes.DataBase)
+        {
+            Userid_txtbox.DisplayMember = "Display"; Userid_txtbox.ValueMember = "UserId";
+        }
         DataGridViewConfig();
     }
 
@@ -69,7 +70,7 @@ public partial class FrmMain : Form
                     toDateTime_txtbox.Text, res1).ToList().ToDataTable();
             }
 
-       
+
             DataGridViewConfig();
         }
         catch (Exception ex)
