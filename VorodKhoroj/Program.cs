@@ -23,8 +23,6 @@ global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Collections;
 
 
-
-
 namespace VorodKhoroj
 {
     internal static class Program
@@ -37,7 +35,8 @@ namespace VorodKhoroj
         {
             try
             {
-                Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(@"D:\\ApplicationError\log.txt", rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}]: {Message:lj}{NewLine}{Exception}{NewLine}").CreateLogger();
+                var path = Application.StartupPath + @"tmpFile\log.txt";
+                Log.Logger = new LoggerConfiguration().MinimumLevel.Information().Enrich.FromLogContext().WriteTo.File(path, rollingInterval: RollingInterval.Infinite, outputTemplate: "{Timestamp: HH:mm } [{Level:u3}]: {Message:lj}{NewLine}{Exception}{NewLine}").CreateLogger();
 
                 ApplicationConfiguration.Initialize();
 
@@ -45,7 +44,7 @@ namespace VorodKhoroj
 
                 var form = host.Services.GetRequiredService<FrmMain>();
 
-                ExcelPackage.License.SetNonCommercialPersonal("AliAnsari");
+                ExcelPackage.License.SetNonCommercialPersonal($@"AliAnsari");
 
                 Application.Run(form);
 

@@ -1,5 +1,4 @@
-﻿
-namespace VorodKhoroj.Classes
+﻿namespace VorodKhoroj.Classes
 {
     public class PersianDateHelper
     {

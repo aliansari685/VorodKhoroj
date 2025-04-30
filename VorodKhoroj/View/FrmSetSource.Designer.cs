@@ -28,12 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new Container();
             btn_submit = new Button();
-            radiobtn_textfile = new RadioButton();
             radiobtn_database = new RadioButton();
-            groupBox1 = new GroupBox();
-            txt_ServerName = new TextBox();
+            radiobtn_textfile = new RadioButton();
             label1 = new Label();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            AdditemToolStripMenuItem = new ToolStripMenuItem();
+            groupBox1 = new GroupBox();
+            txt_ServerName = new ComboBox();
+            contextMenuStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -48,6 +52,18 @@
             btn_submit.UseVisualStyleBackColor = true;
             btn_submit.Click += btn_submit_Click;
             // 
+            // radiobtn_database
+            // 
+            radiobtn_database.AutoSize = true;
+            radiobtn_database.Location = new Point(41, 27);
+            radiobtn_database.Name = "radiobtn_database";
+            radiobtn_database.Size = new Size(77, 24);
+            radiobtn_database.TabIndex = 3;
+            radiobtn_database.TabStop = true;
+            radiobtn_database.Text = "پایگاه داده";
+            radiobtn_database.UseVisualStyleBackColor = true;
+            radiobtn_database.CheckedChanged += radioBtn_database_CheckedChanged;
+            // 
             // radiobtn_textfile
             // 
             radiobtn_textfile.AutoSize = true;
@@ -60,17 +76,28 @@
             radiobtn_textfile.Text = "فایل متنی";
             radiobtn_textfile.UseVisualStyleBackColor = true;
             // 
-            // radiobtn_database
+            // label1
             // 
-            radiobtn_database.AutoSize = true;
-            radiobtn_database.Location = new Point(41, 27);
-            radiobtn_database.Name = "radiobtn_database";
-            radiobtn_database.Size = new Size(77, 24);
-            radiobtn_database.TabIndex = 3;
-            radiobtn_database.TabStop = true;
-            radiobtn_database.Text = "پایگاه داده";
-            radiobtn_database.UseVisualStyleBackColor = true;
-            radiobtn_database.CheckedChanged += radiobtn_database_CheckedChanged;
+            label1.AutoSize = true;
+            label1.Location = new Point(119, 61);
+            label1.Name = "label1";
+            label1.RightToLeft = RightToLeft.Yes;
+            label1.Size = new Size(107, 20);
+            label1.TabIndex = 6;
+            label1.Text = "نام سرور پایگاه داده :";
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { AdditemToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(153, 26);
+            // 
+            // AdditemToolStripMenuItem
+            // 
+            AdditemToolStripMenuItem.Name = "AdditemToolStripMenuItem";
+            AdditemToolStripMenuItem.Size = new Size(152, 22);
+            AdditemToolStripMenuItem.Text = "افزودن به لیست";
+            AdditemToolStripMenuItem.Click += AddItemsToolStripMenuItem_Click;
             // 
             // groupBox1
             // 
@@ -88,23 +115,16 @@
             // 
             // txt_ServerName
             // 
-            txt_ServerName.Enabled = false;
+            txt_ServerName.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txt_ServerName.AutoCompleteSource = AutoCompleteSource.ListItems;
+            txt_ServerName.ContextMenuStrip = contextMenuStrip1;
+            txt_ServerName.FormattingEnabled = true;
             txt_ServerName.Location = new Point(6, 58);
-            txt_ServerName.Margin = new Padding(3, 4, 3, 4);
             txt_ServerName.Name = "txt_ServerName";
             txt_ServerName.RightToLeft = RightToLeft.No;
             txt_ServerName.Size = new Size(112, 28);
-            txt_ServerName.TabIndex = 5;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(119, 61);
-            label1.Name = "label1";
-            label1.RightToLeft = RightToLeft.Yes;
-            label1.Size = new Size(107, 20);
-            label1.TabIndex = 6;
-            label1.Text = "نام سرور پایگاه داده :";
+            txt_ServerName.TabIndex = 7;
+            txt_ServerName.MouseClick += txt_ServerName_MouseClick;
             // 
             // FrmSetSource
             // 
@@ -119,6 +139,8 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmSetSource";
             Text = "FrmSetSource";
+            Load += FrmSetSource_Load;
+            contextMenuStrip1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -127,10 +149,12 @@
         #endregion
 
         private Button btn_submit;
-        private RadioButton radiobtn_textfile;
         private RadioButton radiobtn_database;
-        private GroupBox groupBox1;
-        private TextBox txt_ServerName;
+        private RadioButton radiobtn_textfile;
         private Label label1;
+        private GroupBox groupBox1;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem AdditemToolStripMenuItem;
+        private ComboBox txt_ServerName;
     }
 }

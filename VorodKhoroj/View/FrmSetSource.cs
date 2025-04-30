@@ -2,12 +2,20 @@
 
 public partial class FrmSetSource : Form
 {
+    private readonly string _path = Application.StartupPath + @"tmpFile\serverList.txt";
+
     private readonly AppServices _services;
 
     public FrmSetSource(AppServices services)
     {
         InitializeComponent();
         _services = services;
+    }
+    private void FrmSetSource_Load(object sender, EventArgs e)
+    {
+        var serverList = File.ReadAllLines(_path);
+        txt_ServerName.DataSource = serverList;
+
     }
 
     private void btn_submit_Click(object sender, EventArgs e)
@@ -61,8 +69,23 @@ public partial class FrmSetSource : Form
         }
     }
 
-    private void radiobtn_database_CheckedChanged(object sender, EventArgs e)
+    private void radioBtn_database_CheckedChanged(object sender, EventArgs e)
     {
         txt_ServerName.Enabled = radiobtn_database.Checked;
+    }
+
+    private void txt_ServerName_MouseClick(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
+        {
+            contextMenuStrip1.Show(txt_ServerName, e.Location);
+        }
+    }
+
+    private void AddItemsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        File.AppendAllLines(_path, [txt_ServerName.Text]);
+        FrmSetSource_Load(sender, e);
+
     }
 }
