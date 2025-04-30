@@ -83,7 +83,7 @@ public partial class FrmSetSource : Form
     private void AddItemsToolStripMenuItem_Click(object sender, EventArgs e)
     {
         File.AppendAllLines(CommonItems.Path, [txt_ServerName.Text]);
-        //FrmSetSource_Load(sender, e);
+        FrmSetSource_Load(sender, e);
 
     }
 
