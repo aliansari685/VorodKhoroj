@@ -4,6 +4,8 @@ public partial class FrmSetSource : Form
 {
     private readonly AppServices _services;
 
+    private readonly CommonItems _cm = new();
+
     public FrmSetSource(AppServices services)
     {
         InitializeComponent();
@@ -12,9 +14,12 @@ public partial class FrmSetSource : Form
     private void FrmSetSource_Load(object sender, EventArgs e)
     {
         txt_ServerName.Enabled = radiobtn_database.Checked;
-        var serverList = File.ReadAllLines(CommonItems.Path);
-        txt_ServerName.DataSource = serverList;
 
+        _cm.LoadServerListFromFile(ref txt_ServerName);
+
+        _cm.ItemClicked += (_, _) => _cm.LoadServerListFromFile(ref txt_ServerName);
+
+        txt_ServerName.ContextMenuStrip = _cm.MenuStrip;
     }
 
     private void btn_submit_Click(object sender, EventArgs e)
@@ -73,18 +78,12 @@ public partial class FrmSetSource : Form
         txt_ServerName.Enabled = radiobtn_database.Checked;
     }
 
-    private void txt_ServerName_MouseClick(object sender, MouseEventArgs e)
+    private void txt_ServerName_MouseDown(object sender, MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Right)
         {
-            contextMenuStrip1.Show(txt_ServerName, e.Location);
+            _cm.Text = txt_ServerName.Text;
+            _cm.MenuStrip.Show(Cursor.Position);
         }
     }
-    private void AddItemsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        File.AppendAllLines(CommonItems.Path, [txt_ServerName.Text]);
-        FrmSetSource_Load(sender, e);
-
-    }
-
 }

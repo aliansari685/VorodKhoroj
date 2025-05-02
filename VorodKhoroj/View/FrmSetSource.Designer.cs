@@ -28,16 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new Container();
             btn_submit = new Button();
             radiobtn_database = new RadioButton();
             radiobtn_textfile = new RadioButton();
             label1 = new Label();
-            contextMenuStrip1 = new ContextMenuStrip(components);
-            AdditemToolStripMenuItem = new ToolStripMenuItem();
             groupBox1 = new GroupBox();
             txt_ServerName = new ComboBox();
-            contextMenuStrip1.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -86,19 +82,6 @@
             label1.TabIndex = 6;
             label1.Text = "نام سرور پایگاه داده :";
             // 
-            // contextMenuStrip1
-            // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { AdditemToolStripMenuItem });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 48);
-            // 
-            // AdditemToolStripMenuItem
-            // 
-            AdditemToolStripMenuItem.Name = "AdditemToolStripMenuItem";
-            AdditemToolStripMenuItem.Size = new Size(180, 22);
-            AdditemToolStripMenuItem.Text = "افزودن به لیست";
-            AdditemToolStripMenuItem.Click += AddItemsToolStripMenuItem_Click;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(txt_ServerName);
@@ -117,14 +100,13 @@
             // 
             txt_ServerName.AutoCompleteMode = AutoCompleteMode.Suggest;
             txt_ServerName.AutoCompleteSource = AutoCompleteSource.ListItems;
-            txt_ServerName.ContextMenuStrip = contextMenuStrip1;
             txt_ServerName.FormattingEnabled = true;
             txt_ServerName.Location = new Point(6, 58);
             txt_ServerName.Name = "txt_ServerName";
             txt_ServerName.RightToLeft = RightToLeft.No;
             txt_ServerName.Size = new Size(112, 28);
             txt_ServerName.TabIndex = 7;
-            txt_ServerName.MouseClick += txt_ServerName_MouseClick;
+            txt_ServerName.MouseDown += txt_ServerName_MouseDown;
             // 
             // FrmSetSource
             // 
@@ -140,7 +122,6 @@
             Name = "FrmSetSource";
             Text = "FrmSetSource";
             Load += FrmSetSource_Load;
-            contextMenuStrip1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
@@ -153,8 +134,6 @@
         private RadioButton radiobtn_textfile;
         private Label label1;
         private GroupBox groupBox1;
-        private ToolStripMenuItem AdditemToolStripMenuItem;
         private ComboBox txt_ServerName;
-        public ContextMenuStrip contextMenuStrip1;
     }
 }

@@ -1,27 +1,41 @@
-﻿
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
-    public static class CommonItems
+    public class CommonItems
     {
-      //  public static ContextMenuStrip contextMenuStrip = new(new Container() { AdditemToolStripMenuItem });
-        public static readonly string Path = Application.StartupPath + @"tmpFile\serverList.txt";
+        public static readonly string Path = Application.StartupPath + @"\tmpFile\serverList.txt";
 
-        //public static ToolStripMenuItem AddToServerNameItem()
-        //{
-        //    ToolStripMenuItem additemToolStripMenuItem = new();
-        //    additemToolStripMenuItem.Name = "AdditemToolStripMenuItem";
-        //    additemToolStripMenuItem.Size = new Size(180, 22);
-        //    additemToolStripMenuItem.Text = "افزودن به لیست";
-        //    additemToolStripMenuItem.Click += AddItemsToolStripMenuItem_Click;
-        //    return additemToolStripMenuItem;
-        //}
-        //private static void AddItemsToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    File.AppendAllLines(CommonItems.Path, [txt_ServerName.Text]);
-        //    //FrmSetSource_Load(sender, e);
+        public string Text { get; set; } = "";
 
-        //}
+        public ContextMenuStrip MenuStrip { get; } = new();
 
+        // رویداد کلیک شدن آیتم
+        public event EventHandler? ItemClicked;
+
+        public CommonItems()
+        {
+            var addItem = new ToolStripMenuItem
+            {
+                Name = "AddItemMenuItem",
+                Size = new Size(180, 22),
+                Text = "افزودن به لیست"
+            };
+
+            addItem.Click += (_, _) =>
+            {
+                File.AppendAllLines(Path, [Text]);
+                ItemClicked?.Invoke(this, EventArgs.Empty); // رویداد را فراخوانی می‌کنیم
+            };
+
+            MenuStrip.Items.Add(addItem);
+        }
+        public void LoadServerListFromFile(ref ComboBox txt)
+        {
+            if (File.Exists(Path))
+            {
+                var serverList = File.ReadAllLines(Path);
+                txt.DataSource = serverList;
+            }
+        }
     }
+
 }

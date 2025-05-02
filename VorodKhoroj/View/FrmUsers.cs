@@ -18,7 +18,7 @@
             {
                 if (MessageBox.Show($@"آیا کاربر {Userid_txtbox.Text} با نام {UserName_txtbox.Text} ویرایش شود؟", @"تایید", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    var user = _services.DbContext!.Users.FirstOrDefault(x => x.UserId == int.Parse(Userid_txtbox.Text)) ?? new User();
+                    var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
 
                     user.Name = UserName_txtbox.Text;
 
@@ -42,13 +42,15 @@
             dataView_User.DataSource = _services.DbContext?.Users.ToList();
         }
 
-        private void btn_applyFilter_Click(object sender, EventArgs e)
+        private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)
         {
+            MessageBox.Show("test");
+            if (CommonHelper.IsValid(Userid_txtbox.Text) == false) return;
+
             try
             {
-                var user = _services.DbContext!.Users.FirstOrDefault(x => x.UserId == int.Parse(Userid_txtbox.Text));
-                UserName_txtbox.Text = user?.Name;
-                CommonHelper.ShowMessage("پیدا شد");
+                var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
+                UserName_txtbox.Text = user.Name;
             }
             catch (Exception ex)
             {

@@ -43,7 +43,7 @@
             btn_testdb.TabIndex = 1;
             btn_testdb.Text = "تست اتصال";
             btn_testdb.UseVisualStyleBackColor = true;
-            btn_testdb.Click += Btn_testdb_Click;
+            btn_testdb.Click += Btn_testDb_Click;
             // 
             // btn_CreateDatabase
             // 
@@ -76,6 +76,7 @@
             txt_ServerName.RightToLeft = RightToLeft.No;
             txt_ServerName.Size = new Size(131, 28);
             txt_ServerName.TabIndex = 0;
+            txt_ServerName.MouseDown += txt_ServerName_MouseDown;
             // 
             // FrmSetting
             // 
@@ -92,6 +93,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FrmSetting";
             Text = "FrmSetting";
+            Load += FrmSetting_Load;
             ResumeLayout(false);
             PerformLayout();
         }
