@@ -35,8 +35,6 @@ public partial class FrmSetSource : Form
 
                     _services.LoadRecordsFromFile(openFile.FileName);
 
-                    _services.DataType = AppServices.DataTypes.Text;
-
                     Close();
                 }
             }
@@ -61,7 +59,7 @@ public partial class FrmSetSource : Form
 
                     _services.LoadRecordsFromDb();
 
-                    _services.DataType = AppServices.DataTypes.DataBase;
+                    
 
                     Close();
                 }

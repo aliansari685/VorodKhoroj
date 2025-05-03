@@ -9,6 +9,7 @@
         public AppDbContext? DbContext { get; set; }
         public required AppDbContext? DbContextMaster { get; set; }
         public required List<Attendance> Records { get; set; } = [];
+        public IList? UsersList { get; set; }
         public required DataTable TempDataTable { get; set; }
 
         public enum DataTypes
@@ -20,7 +21,28 @@
         public void LoadRecordsFromFile(string fileName)
         {
             Records = repository.GetRecordsFromFile(fileName);
+            DataType = DataTypes.Text;
             SetTempDataTable();
+        }
+
+        public void LoadRecordsFromDb()
+        {
+            if (DbContext is not null) Records = DbContext.Attendances.ToList();
+            DataType = DataTypes.DataBase;
+            SetTempDataTable();
+        }
+
+        void GetUsersList()
+        {
+            UsersList = DataType switch
+            {
+                DataTypes.Text => GetUsersFromFile(),
+
+                DataTypes.DataBase => GetUsersWithProperty(),
+
+                _ => null
+            };
+
         }
 
         public int[] GetUsersFromFile()
@@ -30,9 +52,10 @@
 
         public List<User> GetUsersFromDb()
         {
-            return repository.GetUsersAttendances(DbContext!);
+            return DbContext?.Users.ToList()!;
         }
-        public IList GetUsersWithProperty()
+
+        public IList? GetUsersWithProperty()
         {
             return GetUsersFromDb().Select(x => new
             {
@@ -40,15 +63,11 @@
                 x.UserId
             }).ToList();
         }
-        public void LoadRecordsFromDb()
-        {
-            if (DbContext is not null) Records = repository.GetRecordsFromDb(DbContext);
-            SetTempDataTable();
-        }
 
         void SetTempDataTable()
         {
             TempDataTable = Records.ToDataTable();
+            GetUsersList();
         }
 
         public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation databaseLocation)

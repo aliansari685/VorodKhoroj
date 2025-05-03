@@ -86,10 +86,8 @@
             Userid_txtbox.Name = "Userid_txtbox";
             Userid_txtbox.Size = new Size(109, 28);
             Userid_txtbox.TabIndex = 0;
-            Userid_txtbox.SelectedIndexChanged += Userid_txtbox_SelectedValueChanged;
             Userid_txtbox.SelectedValueChanged += Userid_txtbox_SelectedValueChanged;
-            Userid_txtbox.TabIndexChanged += Userid_txtbox_SelectedValueChanged;
-            Userid_txtbox.TabStopChanged += Userid_txtbox_SelectedValueChanged;
+            Userid_txtbox.Leave += Userid_txtbox_SelectedValueChanged;
             // 
             // label3
             // 

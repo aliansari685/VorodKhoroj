@@ -61,10 +61,8 @@
                         CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
 
                     }
-
                     else
                     {
-
                         DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
                             checkBox_withlabels.Checked, sfd.FileName, _calcServices);
 

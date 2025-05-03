@@ -44,7 +44,6 @@
 
         private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("test");
             if (CommonHelper.IsValid(Userid_txtbox.Text) == false) return;
 
             try
@@ -57,5 +56,6 @@
                 CommonHelper.ShowMessage("پیدا نشد \n" + ex);
             }
         }
+
     }
 }

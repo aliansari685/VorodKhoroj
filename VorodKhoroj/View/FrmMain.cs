@@ -24,14 +24,7 @@ public partial class FrmMain : Form
 
         dataView.DataSource = _services.TempDataTable;
 
-        Userid_txtbox.DataSource = _services.DataType switch
-        {
-            AppServices.DataTypes.Text => _services.GetUsersFromFile(),
-
-            AppServices.DataTypes.DataBase => _services.GetUsersWithProperty(),
-
-            _ => null
-        };
+        Userid_txtbox.DataSource = _services.UsersList;
 
         if (_services.DataType == AppServices.DataTypes.DataBase)
         {
