@@ -22,13 +22,14 @@ public partial class FrmMain : Form
     {
         if (!CommonHelper.IsValid(_services.Records?.Count ?? 0)) return;
 
-        dataView.DataSource = _services.TempDataTable;
+        dataView.DataSource = _services.Records?.ToDataTable();
 
         Userid_txtbox.DataSource = _services.UsersList;
 
         if (_services.DataType == AppServices.DataTypes.DataBase)
         {
-            Userid_txtbox.DisplayMember = "Display"; Userid_txtbox.ValueMember = "UserId";
+            Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
+            Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
         }
         DataGridViewConfig();
     }

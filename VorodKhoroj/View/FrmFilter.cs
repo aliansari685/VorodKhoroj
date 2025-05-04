@@ -23,6 +23,8 @@ public partial class FrmFilter : Form
     {
         try
         {
+            if (Userid_txtbox.Text == "0") throw new NullReferenceException("نام کاربری معتبر نمیباشد");
+
             using FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, _justExcell);
             frm.ShowDialog();
         }
@@ -40,6 +42,11 @@ public partial class FrmFilter : Form
 
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _services.GetUsersFromFile();
+        Userid_txtbox.DataSource = _services.UsersList;
+        if (_services.DataType == AppServices.DataTypes.DataBase)
+        {
+            Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
+            Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
+        }
     }
 }

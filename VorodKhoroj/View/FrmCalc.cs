@@ -25,7 +25,12 @@ public partial class FrmCalc : Form
     private void FrmCalc_Load(object sender, EventArgs e)
     {
         lbl_FromTo.Text = @$"{_fromDateTime} -- {_toDateTime}";
-        userid_txtbox.DataSource = _service.GetUsersFromFile();
+        userid_txtbox.DataSource = _service.UsersList;
+        if (_service.DataType == AppServices.DataTypes.DataBase)
+        {
+            userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
+            userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
+        }
         ReloadGrid();
         if (dataView_Calculate.DataSource == null)
         {
@@ -126,20 +131,32 @@ public partial class FrmCalc : Form
 
     private void ChangeUser(bool plusNumber)
     {
-        var users = _service.GetUsersFromFile();
-        var now = Array.IndexOf(users, int.Parse(_userid));
-
-        if (plusNumber && (now < users.Length - 1))
-            now++;
-        else if (!plusNumber && now > 0)
-            now--;
-        else
+        if (_service is not { UsersList: not null, DataType: AppServices.DataTypes.Text })
             return;
 
-        _userid = users[now].ToString();
+        //Convert IList(object) to List<int>:
+        var users = _service.UsersList is IEnumerable list
+            ? list.Cast<object>()
+                .Select(x => int.TryParse(x?.ToString(), out var n) ? n : 0)
+                .ToList()
+            : [];
+
+        if (!int.TryParse(_userid, out var currentId)) return;
+
+        var currentIndex = users.IndexOf(currentId);
+
+        if (currentIndex == -1) return;
+
+        var nextIndex = plusNumber ? currentIndex + 1 : currentIndex - 1;
+        if (nextIndex < 0 || nextIndex >= users.Count)
+            return;
+
+        _userid = users[nextIndex].ToString();
+
         ReloadGrid();
         CommonHelper.ShowMessage("انجام شد");
     }
+
 
     private void DataGridConfig()
     {

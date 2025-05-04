@@ -49,12 +49,15 @@
             userid_txtbox = new ComboBox();
             label3 = new Label();
             checkBox_withlabels = new CheckBox();
+            checkBox_allusers = new CheckBox();
+            groupBox2 = new GroupBox();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // txtbox_year
             // 
-            txtbox_year.Location = new Point(132, 13);
+            txtbox_year.Location = new Point(180, 49);
             txtbox_year.Margin = new Padding(3, 4, 3, 4);
             txtbox_year.Mask = "0000";
             txtbox_year.Name = "txtbox_year";
@@ -89,11 +92,11 @@
             groupBox1.Controls.Add(checkBox_khordad);
             groupBox1.Controls.Add(checkBox_ordibehesht);
             groupBox1.Controls.Add(checkBox_farvardin);
-            groupBox1.Location = new Point(17, 47);
+            groupBox1.Location = new Point(17, 91);
             groupBox1.Margin = new Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(159, 416);
+            groupBox1.Size = new Size(159, 408);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "انتخاب ماه ها";
@@ -245,7 +248,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(192, 16);
+            label1.Location = new Point(192, 23);
             label1.Name = "label1";
             label1.Size = new Size(32, 20);
             label1.TabIndex = 14;
@@ -253,7 +256,7 @@
             // 
             // Btn_submit
             // 
-            Btn_submit.Location = new Point(49, 496);
+            Btn_submit.Location = new Point(49, 528);
             Btn_submit.Margin = new Padding(3, 4, 3, 4);
             Btn_submit.Name = "Btn_submit";
             Btn_submit.Size = new Size(94, 31);
@@ -268,7 +271,7 @@
             userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
             userid_txtbox.DisplayMember = "userid";
             userid_txtbox.FormattingEnabled = true;
-            userid_txtbox.Location = new Point(17, 13);
+            userid_txtbox.Location = new Point(22, 18);
             userid_txtbox.Name = "userid_txtbox";
             userid_txtbox.Size = new Size(57, 28);
             userid_txtbox.TabIndex = 1;
@@ -276,7 +279,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(79, 16);
+            label3.Location = new Point(84, 21);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
             label3.Size = new Size(47, 20);
@@ -288,7 +291,7 @@
             checkBox_withlabels.AutoSize = true;
             checkBox_withlabels.Checked = true;
             checkBox_withlabels.CheckState = CheckState.Checked;
-            checkBox_withlabels.Location = new Point(37, 469);
+            checkBox_withlabels.Location = new Point(37, 502);
             checkBox_withlabels.Margin = new Padding(3, 4, 3, 4);
             checkBox_withlabels.Name = "checkBox_withlabels";
             checkBox_withlabels.Size = new Size(137, 24);
@@ -296,16 +299,39 @@
             checkBox_withlabels.Text = "خلاصه محاسبات باشد؟";
             checkBox_withlabels.UseVisualStyleBackColor = true;
             // 
+            // checkBox_allusers
+            // 
+            checkBox_allusers.AutoSize = true;
+            checkBox_allusers.Location = new Point(37, 55);
+            checkBox_allusers.Margin = new Padding(3, 4, 3, 4);
+            checkBox_allusers.Name = "checkBox_allusers";
+            checkBox_allusers.Size = new Size(82, 24);
+            checkBox_allusers.TabIndex = 22;
+            checkBox_allusers.Text = "همه کاربران";
+            checkBox_allusers.UseVisualStyleBackColor = true;
+            checkBox_allusers.CheckedChanged += checkBox_allUsers_CheckedChanged;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(checkBox_allusers);
+            groupBox2.Controls.Add(label3);
+            groupBox2.Controls.Add(userid_txtbox);
+            groupBox2.Location = new Point(17, 2);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(157, 82);
+            groupBox2.TabIndex = 23;
+            groupBox2.TabStop = false;
+            groupBox2.Tag = "";
+            // 
             // FrmFilter_Monthly
             // 
             AcceptButton = Btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(245, 534);
+            ClientSize = new Size(241, 565);
+            Controls.Add(groupBox2);
             Controls.Add(checkBox_withlabels);
-            Controls.Add(userid_txtbox);
             Controls.Add(Btn_submit);
-            Controls.Add(label3);
             Controls.Add(label1);
             Controls.Add(btn_clear);
             Controls.Add(Btn_CheckAll);
@@ -320,6 +346,8 @@
             Load += FrmFilter_Monthly_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -347,5 +375,7 @@
         public ComboBox userid_txtbox;
         private Label label3;
         private CheckBox checkBox_withlabels;
+        private CheckBox checkBox_allusers;
+        private GroupBox groupBox2;
     }
 }

@@ -16,8 +16,12 @@
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services.GetUsersFromFile();
-
+            userid_txtbox.DataSource = _services.UsersList;
+            if (_services.DataType == AppServices.DataTypes.DataBase)
+            {
+                userid_txtbox.DisplayMember = nameof(User.Name);
+                userid_txtbox.ValueMember = nameof(User.UserId);
+            }
         }
         private void btn_clear_Click(object sender, EventArgs e)
         {
@@ -42,21 +46,21 @@
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
 
-                    if (CommonHelper.IsValid(_userId) == false || _userId == "0")
+                    if (CommonHelper.IsValid(_userId) == false || _userId == "0" || checkBox_allusers.Checked)
                     {
                         var directory = Path.GetDirectoryName(sfd.FileName);
                         var fileNameWithoutExt = Path.GetFileNameWithoutExtension(sfd.FileName);
                         var extension = Path.GetExtension(sfd.FileName);
                         var fullPath = sfd.FileName;
 
-                        var userlist = _services.GetUsersFromFile();
+                        var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
 
-                        foreach (var coll in userlist)
+                        foreach (var coll in userid)
                         {
                             if (directory != null)
                                 fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
 
-                            DataExporter.ExportAttendanceData(coll.ToString(), int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
+                            DataExporter.ExportAttendanceData(coll.ToString() ?? string.Empty, int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
                         }
                         CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
 
@@ -93,6 +97,11 @@
                 { 11, checkBox_bahman.Checked },
                 { 12, checkBox_esfand.Checked }
             };
+        }
+
+        private void checkBox_allUsers_CheckedChanged(object sender, EventArgs e)
+        {
+            userid_txtbox.Enabled = !checkBox_allusers.Checked;
         }
     }
 }

@@ -22,7 +22,7 @@
 
                     user.Name = UserName_txtbox.Text;
 
-                    _services.UpdateAttendanceUserRecord(user);
+                    _services.UpdateUserRecord(user);
 
                     DataGridConfig();
 
@@ -38,8 +38,7 @@
         private void DataGridConfig()
         {
             UserName_txtbox.Text = null;
-            Userid_txtbox.DataSource = _services.GetUsersFromFile();
-            dataView_User.DataSource = _services.DbContext?.Users.ToList();
+            dataView_User.DataSource = Userid_txtbox.DataSource = _services.UsersList;
         }
 
         private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)

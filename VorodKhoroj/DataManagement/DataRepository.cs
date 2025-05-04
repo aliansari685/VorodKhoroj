@@ -39,7 +39,7 @@
 
 
         //DataBase:
-        public void AddAttendances(List<Attendance> records, AppDbContext context)
+        public void AddAttendancesAndUsers(List<Attendance> records, AppDbContext context)
         {
             try
             {

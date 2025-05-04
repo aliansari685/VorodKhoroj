@@ -2,15 +2,20 @@
 {
     public class AppServices(DataRepository repository, DataBaseManager dataBaseManager) : IDisposable
     {
+        private IDataProvider? _listProvider;
+
+        public IList? UsersList1 => _listProvider?.GetDataProvider();
+
         public string DbName { get; set; } = "";
         public string DbPathName { get; set; } = "";
 
         public DataTypes DataType { get; set; }
         public AppDbContext? DbContext { get; set; }
-        public required AppDbContext? DbContextMaster { get; set; }
+        public AppDbContext? DbContextMaster { get; set; }
+
+        //Data:
         public required List<Attendance> Records { get; set; } = [];
         public IList? UsersList { get; set; }
-        public required DataTable TempDataTable { get; set; }
 
         public enum DataTypes
         {
@@ -22,17 +27,23 @@
         {
             Records = repository.GetRecordsFromFile(fileName);
             DataType = DataTypes.Text;
-            SetTempDataTable();
+            SetUsersList();
         }
 
         public void LoadRecordsFromDb()
         {
-            if (DbContext is not null) Records = DbContext.Attendances.ToList();
+            SetAttendancesRecord();
             DataType = DataTypes.DataBase;
-            SetTempDataTable();
+            SetUsersList();
         }
 
-        void GetUsersList()
+        private void SetAttendancesRecord()
+        {
+            Records = [];
+            if (DbContext is not null) Records = DbContext.Attendances.ToList();
+        }
+
+        private void SetUsersList()
         {
             UsersList = DataType switch
             {
@@ -45,29 +56,18 @@
 
         }
 
-        public int[] GetUsersFromFile()
+        private int[] GetUsersFromFile()
         {
             return repository.GetUsersAttendances(Records);
         }
 
-        public List<User> GetUsersFromDb()
+        private List<User>? GetUsersWithProperty()
         {
-            return DbContext?.Users.ToList()!;
-        }
-
-        public IList? GetUsersWithProperty()
-        {
-            return GetUsersFromDb().Select(x => new
+            return DbContext?.Users.Select(x => new User
             {
-                Display = string.IsNullOrWhiteSpace(x.Name) ? x.UserId.ToString() : x.Name,
-                x.UserId
+                Name = string.IsNullOrWhiteSpace(x.Name) ? x.UserId.ToString() : x.Name,
+                UserId = x.UserId
             }).ToList();
-        }
-
-        void SetTempDataTable()
-        {
-            TempDataTable = Records.ToDataTable();
-            GetUsersList();
         }
 
         public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation databaseLocation)
@@ -94,35 +94,46 @@
         {
             if (DbContext != null) dataBaseManager.DetachDatabase(DbPathName, DbName, DbContext);
         }
-        public void AddAttendancesRecord(List<Attendance> rec)//One Config
+        public void CopyAttendancesRecord(List<Attendance> rec)// تنظیمات اولیه انتقال ورود خروج و کاربر به دیتابیس 
         {
-            if (DbContext != null) repository.AddAttendances(rec, DbContext);
+            if (DbContext != null) repository.AddAttendancesAndUsers(rec, DbContext);
         }
 
         public void AddAttendanceRecord(Attendance rec)
         {
             if (DbContext != null) repository.AddAttendance([rec], DbContext);
+            SetAttendancesRecord();
         }
         public void UpdateAttendanceRecord(Attendance rec)
         {
             if (DbContext != null) repository.UpdateAttendance([rec], DbContext);
+            SetAttendancesRecord();
         }
 
-        public void AddAttendanceUserRecord(User rec)
+        public void AddUserRecord(User rec)
         {
             if (DbContext != null) repository.AddAttendanceUser([rec], DbContext);
+            SetUsersList();
         }
-        public void UpdateAttendanceUserRecord(User rec)
+        public void UpdateUserRecord(User rec)
         {
             if (DbContext != null) repository.UpdateAttendanceUser([rec], DbContext);
+            SetUsersList();
         }
 
 
-        public bool TestServerName(string servername)
+        public bool TestServerName(string serverName)
         {
-            InitializeDbContext_Master(servername);
-            DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
-            return true;
+            try
+            {
+                InitializeDbContext_Master(serverName);
+                DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 
@@ -133,7 +144,6 @@
             DbContext?.Dispose();
             GC.SuppressFinalize(this);
         }
-
 
     }
 }

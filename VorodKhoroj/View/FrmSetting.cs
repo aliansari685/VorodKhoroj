@@ -62,7 +62,7 @@ public partial class FrmSetting : Form
 
                 _service.HandleCreateTables();
 
-                _service.AddAttendancesRecord(_service.Records);
+                _service.CopyAttendancesRecord(_service.Records);
 
                 _service.HandleDetachDatabase();
 
