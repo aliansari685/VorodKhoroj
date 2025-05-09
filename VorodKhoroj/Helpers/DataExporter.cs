@@ -60,7 +60,7 @@ public static class DataExporter
         List<int> selectedMonths,
         bool includeLabels,
         string filePath,
-        AttendanceCalculationService calcService)
+        AttendanceFullCalculationService calcService)
     {
         using var package = new ExcelPackage();
 

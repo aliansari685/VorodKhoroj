@@ -1,4 +1,4 @@
-﻿namespace VorodKhoroj.Data
+﻿namespace VorodKhoroj.Services
 {
     public class DataFilterService
     {

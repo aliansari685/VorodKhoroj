@@ -2,11 +2,11 @@
 
 public partial class FrmFilter : Form
 {
-    private readonly AppServices _services;
-    private readonly AttendanceCalculationService _calcServices;
+    private readonly AppCoordinator _services;
+    private readonly AttendanceFullCalculationService _calcServices;
     private readonly bool _justExcell;
 
-    public FrmFilter(AppServices service, AttendanceCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcell = false)
+    public FrmFilter(AppCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcell = false)
     {
         InitializeComponent();
 
@@ -43,7 +43,8 @@ public partial class FrmFilter : Form
     private void FrmFilter_Load(object sender, EventArgs e)
     {
         Userid_txtbox.DataSource = _services.UsersList;
-        if (_services.DataType == AppServices.DataTypes.DataBase)
+
+        if (_services is { UserListProvider: DbProvider })
         {
             Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
             Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);

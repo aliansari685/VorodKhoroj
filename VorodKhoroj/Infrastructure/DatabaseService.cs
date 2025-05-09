@@ -1,6 +1,6 @@
-﻿namespace VorodKhoroj.Data
+﻿namespace VorodKhoroj.Infrastructure
 {
-    public class DataBaseManager
+    public class DatabaseService
     {
 
         public void CreateDatabase(string filePath, string dbname, AppDbContext dbContext)

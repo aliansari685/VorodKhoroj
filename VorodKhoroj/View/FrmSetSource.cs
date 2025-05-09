@@ -1,12 +1,14 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Coordinators;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmSetSource : Form
 {
-    private readonly AppServices _services;
+    private readonly AppCoordinator _services;
 
     private readonly CommonItems _cm = new();
 
-    public FrmSetSource(AppServices services)
+    public FrmSetSource(AppCoordinator services)
     {
         InitializeComponent();
         _services = services;
@@ -39,7 +41,7 @@ public partial class FrmSetSource : Form
 
             if (radiobtn_database.Checked)
             {
-                if (_services.DataType == AppServices.DataTypes.DataBase)
+                if (_services is { UserListProvider: DbProvider })
                     throw new InvalidOperationException("لطفا ارتباط قبلی خود را قطع کنید ، برای اینکار میتوانید در تنظیمات از دکمه راه اندازی مجدد استفاده کنید");
 
                 if (!CommonHelper.IsValid(txt_ServerName.Text) || !_services.TestServerName(txt_ServerName.Text))

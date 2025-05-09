@@ -3,10 +3,10 @@
 public partial class FrmMain : Form
 {
     private bool _isRestarting;
-    private readonly AppServices _services;
-    private readonly AttendanceCalculationService _calcServices;
+    private readonly AppCoordinator _services;
+    private readonly AttendanceFullCalculationService _calcServices;
 
-    public FrmMain(AppServices services, AttendanceCalculationService calculationService)
+    public FrmMain(AppCoordinator services, AttendanceFullCalculationService calculationService)
     {
         InitializeComponent();
         _services = services;
@@ -20,13 +20,13 @@ public partial class FrmMain : Form
 
     public void DataGridConfig()
     {
-        if (!CommonHelper.IsValid(_services.Records?.Count ?? 0)) return;
+        if (!CommonHelper.IsValid(_services.Records.Count)) return;
 
-        dataView.DataSource = _services.Records?.ToDataTable();
+        dataView.DataSource = _services.Records.ToDataTable();
 
         Userid_txtbox.DataSource = _services.UsersList;
 
-        if (_services.DataType == AppServices.DataTypes.DataBase)
+        if (_services is { UserListProvider: DbProvider })
         {
             Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
             Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
@@ -172,7 +172,7 @@ public partial class FrmMain : Form
 
     private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_services is { DataType: AppServices.DataTypes.DataBase, DbContext: not null })
+        if (_services is { UserListProvider: DbProvider, DbContext: not null })
         {
             using var frm = new FrmUsers(_services);
             frm.ShowDialog();

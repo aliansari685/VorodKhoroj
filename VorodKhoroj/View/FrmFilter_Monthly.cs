@@ -1,12 +1,14 @@
-﻿namespace VorodKhoroj.View
+﻿using VorodKhoroj.Coordinators;
+
+namespace VorodKhoroj.View
 {
     public partial class FrmFilter_Monthly : Form
     {
-        private readonly AppServices _services;
-        private readonly AttendanceCalculationService _calcServices;
+        private readonly AppCoordinator _services;
+        private readonly AttendanceFullCalculationService _calcServices;
         private string _userId;
 
-        public FrmFilter_Monthly(AppServices services, AttendanceCalculationService calcServices, string userId)
+        public FrmFilter_Monthly(AppCoordinator services, AttendanceFullCalculationService calcServices, string userId)
         {
             InitializeComponent();
             _services = services;
@@ -17,7 +19,7 @@
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
             userid_txtbox.DataSource = _services.UsersList;
-            if (_services.DataType == AppServices.DataTypes.DataBase)
+            if (_services is { UserListProvider: DbProvider })
             {
                 userid_txtbox.DisplayMember = nameof(User.Name);
                 userid_txtbox.ValueMember = nameof(User.UserId);

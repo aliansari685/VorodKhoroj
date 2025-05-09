@@ -1,12 +1,14 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Coordinators;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmSetting : Form
 {
     private bool _flag;
-    private readonly AppServices _service;
+    private readonly AppCoordinator _service;
     private readonly CommonItems _cm = new();
 
-    public FrmSetting(AppServices services)
+    public FrmSetting(AppCoordinator services)
     {
         InitializeComponent();
         _service = services;

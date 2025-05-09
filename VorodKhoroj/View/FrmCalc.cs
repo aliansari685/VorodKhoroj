@@ -2,15 +2,15 @@
 
 public partial class FrmCalc : Form
 {
-    private readonly AppServices _service;
-    private readonly AttendanceCalculationService _calcServices;
+    private readonly AppCoordinator _service;
+    private readonly AttendanceFullCalculationService _calcServices;
 
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
     private string _userid;
     private readonly bool _justExcel;
 
-    public FrmCalc(AppServices services, AttendanceCalculationService calcServices, string fromDateTime,
+    public FrmCalc(AppCoordinator services, AttendanceFullCalculationService calcServices, string fromDateTime,
         string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
@@ -26,7 +26,7 @@ public partial class FrmCalc : Form
     {
         lbl_FromTo.Text = @$"{_fromDateTime} -- {_toDateTime}";
         userid_txtbox.DataSource = _service.UsersList;
-        if (_service.DataType == AppServices.DataTypes.DataBase)
+        if (_service.UserListProvider is DbProvider)
         {
             userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
             userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
@@ -131,8 +131,7 @@ public partial class FrmCalc : Form
 
     private void ChangeUser(bool plusNumber)
     {
-        if (_service is not { UsersList: not null, DataType: AppServices.DataTypes.Text })
-            return;
+        if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
 
         //Convert IList(object) to List<int>:
         var users = _service.UsersList is IEnumerable list

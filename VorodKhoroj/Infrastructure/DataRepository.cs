@@ -1,4 +1,4 @@
-﻿namespace VorodKhoroj.Data
+﻿namespace VorodKhoroj.Infrastructure
 {
     public class DataRepository
     {

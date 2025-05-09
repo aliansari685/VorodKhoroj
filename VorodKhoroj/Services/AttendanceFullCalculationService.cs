@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Services;
 
-public class AttendanceCalculationService(AppServices recordService)
+public class AttendanceFullCalculationService(AppCoordinator recordService)
 {
     public AttendanceReport? Report { get; private set; }
 
@@ -22,55 +22,55 @@ public class AttendanceCalculationService(AppServices recordService)
     public List<TemplateDays> RamadanDaysList { get; private set; } = [];
     public List<DateTime> OvertimeinHoliday { get; private set; } = [];
 
-    public AttendanceCalculationService WithLateTime(TimeSpan lateTime)
+    public AttendanceFullCalculationService WithLateTime(TimeSpan lateTime)
     {
         _lateTm = lateTime;
         return this;
     }
 
-    public AttendanceCalculationService WithFullWorkTime(TimeSpan fullWorkTime)
+    public AttendanceFullCalculationService WithFullWorkTime(TimeSpan fullWorkTime)
     {
         _fullWorkTm = fullWorkTime;
         return this;
     }
 
-    public AttendanceCalculationService WithFullWorkThursdayTime(TimeSpan thursdayTime)
+    public AttendanceFullCalculationService WithFullWorkThursdayTime(TimeSpan thursdayTime)
     {
         _fullWorkThursdayTm = thursdayTime;
         return this;
     }
 
-    public AttendanceCalculationService WithFullWorkFarvardinTime(TimeSpan farvardinTime)
+    public AttendanceFullCalculationService WithFullWorkFarvardinTime(TimeSpan farvardinTime)
     {
         _fullWorkFarvardinTm = farvardinTime;
         return this;
     }
 
-    public AttendanceCalculationService WithFullWorkRamadanTime(TimeSpan ramadanTime)
+    public AttendanceFullCalculationService WithFullWorkRamadanTime(TimeSpan ramadanTime)
     {
         _fullWorkRamadanTm = ramadanTime;
         return this;
     }
 
-    public AttendanceCalculationService WithNaqesWorkTime(TimeSpan fullWorkTime)
+    public AttendanceFullCalculationService WithNaqesWorkTime(TimeSpan fullWorkTime)
     {
         _naqesWorkTm = fullWorkTime;
         return this;
     }
 
-    public AttendanceCalculationService WithNaqesWorkThursdayTime(TimeSpan thursdayTime)
+    public AttendanceFullCalculationService WithNaqesWorkThursdayTime(TimeSpan thursdayTime)
     {
         _naqesWorkThursdayTm = thursdayTime;
         return this;
     }
 
-    public AttendanceCalculationService WithNaqesWorkFarvardinTime(TimeSpan farvardinTime)
+    public AttendanceFullCalculationService WithNaqesWorkFarvardinTime(TimeSpan farvardinTime)
     {
         _naqesWorkFarvardinTm = farvardinTime;
         return this;
     }
 
-    public AttendanceCalculationService WithNaqesWorkRamadanTime(TimeSpan ramadanTime)
+    public AttendanceFullCalculationService WithNaqesWorkRamadanTime(TimeSpan ramadanTime)
     {
         _naqesWorkRamadanTm = ramadanTime;
         return this;

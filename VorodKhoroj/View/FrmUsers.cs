@@ -1,9 +1,11 @@
-﻿namespace VorodKhoroj.View
+﻿using VorodKhoroj.Coordinators;
+
+namespace VorodKhoroj.View
 {
     public partial class FrmUsers : Form
     {
-        private readonly AppServices _services;
-        public FrmUsers(AppServices services)
+        private readonly AppCoordinator _services;
+        public FrmUsers(AppCoordinator services)
         {
             InitializeComponent();
             _services = services;
