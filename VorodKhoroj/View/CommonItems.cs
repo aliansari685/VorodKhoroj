@@ -28,6 +28,7 @@
 
             MenuStrip.Items.Add(addItem);
         }
+
         public void LoadServerListFromFile(ref ComboBox txt)
         {
             if (File.Exists(Path))
@@ -36,6 +37,17 @@
                 txt.DataSource = serverList;
             }
         }
+
+        public static void SetDisplayAndValueMemberComboBox(ref ComboBox txtComboBox)
+        {
+            txtComboBox.DisplayMember = nameof(User.Name);
+            txtComboBox.ValueMember = nameof(User.UserId);
+        }
+        public static string GetUserIdValueToString(ComboBox txtBox)
+        {
+            return txtBox.SelectedValue?.ToString() ?? string.Empty;
+        }
+  
     }
 
 }

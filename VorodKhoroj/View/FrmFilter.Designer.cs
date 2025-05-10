@@ -70,7 +70,7 @@
             btn_applyfilter.TabIndex = 3;
             btn_applyfilter.Text = "ثبت";
             btn_applyfilter.UseVisualStyleBackColor = true;
-            btn_applyfilter.Click += btn_applyfilter_Click;
+            btn_applyfilter.Click += btn_applyFilter_Click;
             // 
             // label2
             // 

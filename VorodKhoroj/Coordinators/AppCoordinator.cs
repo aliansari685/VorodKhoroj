@@ -150,7 +150,8 @@
 
         public void HandleDetachDatabase()
         {
-            if (DbContext != null) databaseService.DetachDatabase(DbPathName, DbName, DbContext);
+            //if (DbContext != null) databaseService.DetachDatabase(DbPathName, DbName, DbContext);
+            if (DbContextMaster != null) databaseService.DetachDatabase(DbPathName, DbName, DbContextMaster);
         }
 
         public void CopyAttendancesRecord(List<Attendance> records)

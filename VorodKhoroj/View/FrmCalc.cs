@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using System;
+
+namespace VorodKhoroj.View;
 
 public partial class FrmCalc : Form
 {
@@ -28,8 +30,7 @@ public partial class FrmCalc : Form
         userid_txtbox.DataSource = _service.UsersList;
         if (_service.UserListProvider is DbProvider)
         {
-            userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
-            userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
+            CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
         ReloadGrid();
         if (dataView_Calculate.DataSource == null)
@@ -101,6 +102,8 @@ public partial class FrmCalc : Form
     {
         try
         {
+            _calcServices.TitleReport = $"{_fromDateTime} -- {_toDateTime} {'\t'}{'\t'} User:{userid_txtbox.Text}";
+
             DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle(), _calcServices.TitleReport);
         }
         catch (Exception ex)
@@ -113,7 +116,7 @@ public partial class FrmCalc : Form
     {
         if (e.KeyData == Keys.Enter && MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
-            _userid = userid_txtbox.Text;
+            _userid = CommonItems.GetUserIdValueToString(userid_txtbox);
             ReloadGrid();
             CommonHelper.ShowMessage("انجام شد");
         }
@@ -289,4 +292,6 @@ public partial class FrmCalc : Form
                 }).ToList().ToDataTable();
     }
     #endregion
+
+
 }

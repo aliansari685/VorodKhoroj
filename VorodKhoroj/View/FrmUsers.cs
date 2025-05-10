@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Coordinators;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmUsers : Form
     {

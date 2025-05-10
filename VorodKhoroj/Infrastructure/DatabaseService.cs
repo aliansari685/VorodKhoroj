@@ -24,6 +24,17 @@
         {
             try
             {
+                // 1. بستن اتصال‌ها به دیتابیس هدف
+                var killQuery = $@"
+            DECLARE @kill VARCHAR(MAX) = '';
+            SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR) + ';'
+            FROM sys.dm_exec_sessions
+            WHERE database_id = DB_ID('{dbName}');
+            EXEC(@kill);";
+
+                dbContext.Database.ExecuteSqlRaw(killQuery);
+
+
                 var qur = $@" DECLARE @kill VARCHAR(MAX) = '';
                           SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR(5)) + ';'
                           FROM sys.dm_exec_sessions
@@ -31,18 +42,9 @@
                           EXEC(@kill);";
                 dbContext.Database.ExecuteSqlRaw(qur);
 
-                qur = $@" DECLARE @kill VARCHAR(MAX) = '';
-                          SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR(5)) + ';'
-                          FROM sys.dm_exec_sessions
-                          WHERE database_id = DB_ID('{dbName}');
-                          EXEC(@kill);";
-                dbContext.Database.ExecuteSqlRaw(qur);
-
                 var detachDbQuery = $"EXEC sp_detach_db '{dbName}', 'true';"; //'D:\data\fd.mdf'
                 dbContext.Database.ExecuteSqlRaw(detachDbQuery);
 
-                detachDbQuery = $"EXEC sp_detach_db '{dbPathName}', 'true';";
-                dbContext.Database.ExecuteSqlRaw(detachDbQuery);
             }
             catch (Exception ex)
             {

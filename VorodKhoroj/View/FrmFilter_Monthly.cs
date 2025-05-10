@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Coordinators;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmFilter_Monthly : Form
     {
@@ -21,8 +19,7 @@ namespace VorodKhoroj.View
             userid_txtbox.DataSource = _services.UsersList;
             if (_services is { UserListProvider: DbProvider })
             {
-                userid_txtbox.DisplayMember = nameof(User.Name);
-                userid_txtbox.ValueMember = nameof(User.UserId);
+                CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
             }
         }
         private void btn_clear_Click(object sender, EventArgs e)
@@ -41,7 +38,7 @@ namespace VorodKhoroj.View
             {
                 var monthList = GetMonthlyCheckedList().Where(m => m.Value).Select(m => m.Key).ToList();
 
-                _userId = userid_txtbox.Text;
+                _userId = CommonItems.GetUserIdValueToString(userid_txtbox);
 
                 using SaveFileDialog sfd = new() { Filter = "Excel Files|*.xlsx", Title = "ذخیره فایل اکسل" };
 

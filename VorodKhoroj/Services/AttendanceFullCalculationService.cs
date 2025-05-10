@@ -16,7 +16,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
     private TimeSpan _naqesWorkFarvardinTm = TimeSpan.Parse("15:45:00");
     private TimeSpan _naqesWorkRamadanTm = TimeSpan.Parse("14:45:00");
 
-    public string TitleReport { get; private set; } = "";
+    public string TitleReport { get; set; } = "";
     public List<DateTime> QeybathaDaysList { get; private set; } = [];
     public List<DateTime> HolidaysDaysList { get; private set; } = [];
     public List<TemplateDays> RamadanDaysList { get; private set; } = [];
@@ -86,7 +86,6 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             //    throw new ArgumentNullException($"داده ای وجود ندارد");
             return [];
 
-        TitleReport = $"{fromDateTime} -- {toDateTime} {'\t'}{'\t'} User:{userId}";
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)
         var farvardinDays = PersianDateHelper.GetWorkDays_Farvardin().Select(d => d.Date).ToHashSet();

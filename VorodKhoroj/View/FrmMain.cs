@@ -28,8 +28,7 @@ public partial class FrmMain : Form
 
         if (_services is { UserListProvider: DbProvider })
         {
-            Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
-            Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
+            CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
         DataGridViewConfig();
     }

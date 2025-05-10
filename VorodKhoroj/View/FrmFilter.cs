@@ -4,9 +4,9 @@ public partial class FrmFilter : Form
 {
     private readonly AppCoordinator _services;
     private readonly AttendanceFullCalculationService _calcServices;
-    private readonly bool _justExcell;
+    private readonly bool _justExcel;
 
-    public FrmFilter(AppCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcell = false)
+    public FrmFilter(AppCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
 
@@ -16,16 +16,16 @@ public partial class FrmFilter : Form
         FromDateTime_txtbox.Text = fromDateTime;
         toDateTime_txtbox.Text = toDateTime;
         Userid_txtbox.Text = userid;
-        _justExcell = justExcell;
+        _justExcel = justExcel;
     }
 
-    private void btn_applyfilter_Click(object sender, EventArgs e)
+    private void btn_applyFilter_Click(object sender, EventArgs e)
     {
         try
         {
             if (Userid_txtbox.Text == "0") throw new NullReferenceException("نام کاربری معتبر نمیباشد");
 
-            using FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, _justExcell);
+            using FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, CommonItems.GetUserIdValueToString(Userid_txtbox), _justExcel);
             frm.ShowDialog();
         }
         catch (Exception ex)
@@ -33,6 +33,7 @@ public partial class FrmFilter : Form
             CommonHelper.ShowMessage(ex);
         }
     }
+
 
     private void btn_clear_Click(object sender, EventArgs e)
     {
@@ -46,8 +47,7 @@ public partial class FrmFilter : Form
 
         if (_services is { UserListProvider: DbProvider })
         {
-            Userid_txtbox.DisplayMember = new User().GetDisplayName(x => x.Name);
-            Userid_txtbox.ValueMember = new User().GetDisplayName(x => x.UserId);
+            CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
     }
 }
