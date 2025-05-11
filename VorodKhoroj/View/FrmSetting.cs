@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Coordinators;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmSetting : Form
 {
@@ -22,7 +20,7 @@ public partial class FrmSetting : Form
         txt_ServerName.ContextMenuStrip = _cm.MenuStrip;
     }
 
-    private void Btn_testDb_Click(object sender, EventArgs e)
+    private async void Btn_testDb_Click(object sender, EventArgs e)
     {
         try
         {
@@ -46,7 +44,7 @@ public partial class FrmSetting : Form
             _cm.MenuStrip.Show(Cursor.Position);
         }
     }
-    private void btn_CreateDatabase_Click(object sender, EventArgs e)
+    private async void btn_CreateDatabase_Click(object sender, EventArgs e)
     {
         try
         {
@@ -55,18 +53,27 @@ public partial class FrmSetting : Form
             using SaveFileDialog saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" };
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                _service.DbName = Path.GetFileNameWithoutExtension(saveFile.FileName);//exam:db
-                _service.DbPathName = saveFile.FileName;//exam: d://db.mdf
+                using var frmProgress = new FrmProgressDialog();
+                frmProgress.Show();
+                this.Enabled = false;//قفل شدن تمام عملیات این فرم
+                var serverName = txt_ServerName.Text;
+                await Task.Run(() =>
+                {
+                    _service.DbName = Path.GetFileNameWithoutExtension(saveFile.FileName); //exam:db
+                    _service.DbPathName = saveFile.FileName; //exam: d://db.mdf
 
-                _service.HandleCreateDatabase();
+                    _service.HandleCreateDatabase();
 
-                _service.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.InternalDataBase);
+                    _service.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
 
-                _service.HandleCreateTables();
+                    _service.HandleCreateTables();
 
-                _service.CopyAttendancesRecord(_service.Records);
+                    _service.CopyAttendancesRecord(_service.Records);
 
-                _service.HandleDetachDatabase();
+                    _service.HandleDetachDatabase();
+                });
+                this.Enabled = true;
+                frmProgress.Close();
 
                 CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
             }
@@ -74,6 +81,7 @@ public partial class FrmSetting : Form
         catch (Exception ex)
         {
             CommonHelper.ShowMessage(ex);
+            this.Enabled = true;
         }
     }
 }

@@ -32,7 +32,7 @@
             checkBox_esfand.Checked = checkBox_bahman.Checked = checkBox_dey.Checked = checkBox_azar.Checked = checkBox_aban.Checked = checkBox_mehr.Checked = checkBox_shahrivar.Checked = checkBox_mordad.Checked = checkBox_tir.Checked = checkBox_khordad.Checked = checkBox_ordibehesht.Checked = checkBox_farvardin.Checked = true;
         }
 
-        private void Btn_submit_Click(object sender, EventArgs e)
+        private async void Btn_submit_Click(object sender, EventArgs e)
         {
             try
             {
@@ -47,7 +47,7 @@
 
                     if (_userId == "0" || checkBox_allusers.Checked)
                     {
-                        AllUsers(sfd, monthList);
+                        await AllUsers(sfd, monthList);
                     }
                     else
                     {
@@ -63,7 +63,7 @@
             }
         }
 
-        private async void AllUsers(SaveFileDialog sfd, List<int> monthList)
+        private async Task AllUsers(SaveFileDialog sfd, List<int> monthList)
         {
             var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
 

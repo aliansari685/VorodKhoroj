@@ -54,7 +54,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(300, 80);
+            ClientSize = new Size(300, 74);
             Controls.Add(progressBar1);
             Controls.Add(lbl_percent);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
