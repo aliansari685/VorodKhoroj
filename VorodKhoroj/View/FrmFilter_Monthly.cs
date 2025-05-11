@@ -53,14 +53,24 @@
                         var fullPath = sfd.FileName;
 
                         var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
+                        Task.Run(() =>
+                      {
+                          for (var index = 0; index < userid.Count; index++)
+                          {
+                              var coll = userid[index];
+                              if (directory != null)
+                                  fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
 
-                        foreach (var coll in userid)
-                        {
-                            if (directory != null)
-                                fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
+                              DataExporter.ExportAttendanceData(coll.ToString() ?? string.Empty,
+                                  int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath,
+                                  _calcServices);
+                              // به‌روزرسانی UI باید روی ترد اصلی انجام بشه
+                              //var index1 = index;
+                              //Invoke(new Action(() => { lbl_proccess.Text = (progressBar1.Value = index1).ToString(); }));
+                          }
+                      });
 
-                            DataExporter.ExportAttendanceData(coll.ToString() ?? string.Empty, int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
-                        }
+
                         CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
 
                     }
