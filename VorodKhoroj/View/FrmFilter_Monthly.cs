@@ -45,48 +45,56 @@
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
 
-                    if (CommonHelper.IsValid(_userId) == false || _userId == "0" || checkBox_allusers.Checked)
+                    if (_userId == "0" || checkBox_allusers.Checked)
                     {
-                        var directory = Path.GetDirectoryName(sfd.FileName);
-                        var fileNameWithoutExt = Path.GetFileNameWithoutExtension(sfd.FileName);
-                        var extension = Path.GetExtension(sfd.FileName);
-                        var fullPath = sfd.FileName;
-
-                        var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
-                        Task.Run(() =>
-                      {
-                          for (var index = 0; index < userid.Count; index++)
-                          {
-                              var coll = userid[index];
-                              if (directory != null)
-                                  fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
-
-                              DataExporter.ExportAttendanceData(coll.ToString() ?? string.Empty,
-                                  int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath,
-                                  _calcServices);
-                              // به‌روزرسانی UI باید روی ترد اصلی انجام بشه
-                              //var index1 = index;
-                              //Invoke(new Action(() => { lbl_proccess.Text = (progressBar1.Value = index1).ToString(); }));
-                          }
-                      });
-
-
-                        CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
-
+                        AllUsers(sfd, monthList);
                     }
                     else
                     {
-                        DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList,
-                            checkBox_withlabels.Checked, sfd.FileName, _calcServices);
-
-                        CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
+                        DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, sfd.FileName, _calcServices);
                     }
+
+                    CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
                 }
             }
             catch (Exception ex)
             {
                 CommonHelper.ShowMessage(ex);
             }
+        }
+
+        private async void AllUsers(SaveFileDialog sfd, List<int> monthList)
+        {
+            var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
+
+            //For Save Path Files
+            var directory = Path.GetDirectoryName(sfd.FileName);
+            var fileNameWithoutExt = Path.GetFileNameWithoutExtension(sfd.FileName);
+            var extension = Path.GetExtension(sfd.FileName);
+            var fullPath = sfd.FileName;
+
+            // ===== Main Process =====
+            using var frmProgress = new FrmProgressDialog(userid.Count);
+            frmProgress.Show();
+
+            this.Enabled = false;//قفل شدن تمام عملیات این فرم
+
+            await Task.Run(() =>
+            {
+                for (var index = 0; index < userid.Count; index++)
+                {
+                    var coll = userid[index];
+                    if (directory != null)
+                        fullPath = Path.Combine(directory, $"{fileNameWithoutExt}_{coll}{extension}");
+
+                    DataExporter.ExportAttendanceData(coll?.ToString() ?? string.Empty, int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, fullPath, _calcServices);
+
+                    frmProgress.SetValue(index + 1);
+                }
+            });
+
+            this.Enabled = true;
+            frmProgress.Close();
         }
 
         private Dictionary<int, bool> GetMonthlyCheckedList()
