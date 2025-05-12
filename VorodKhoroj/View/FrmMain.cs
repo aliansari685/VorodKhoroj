@@ -182,4 +182,9 @@ public partial class FrmMain : Form
         }
 
     }
+
+    private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
 }

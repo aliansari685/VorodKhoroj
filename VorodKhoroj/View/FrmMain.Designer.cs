@@ -36,7 +36,7 @@
             MonthlyReportToolStripMenuItem = new ToolStripMenuItem();
             FasrExportToolStripMenuItem = new ToolStripMenuItem();
             ویرایشردیفهایناقصToolStripMenuItem = new ToolStripMenuItem();
-            ویرایشردیفناقصToolStripMenuItem = new ToolStripMenuItem();
+            AttendanceEditToolStripMenuItem = new ToolStripMenuItem();
             UsersEditToolStripMenuItem = new ToolStripMenuItem();
             SettingToolStripMenuItem = new ToolStripMenuItem();
             DBConfigToolStripMenuItem = new ToolStripMenuItem();
@@ -105,22 +105,23 @@
             // 
             // ویرایشردیفهایناقصToolStripMenuItem
             // 
-            ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ویرایشردیفناقصToolStripMenuItem, UsersEditToolStripMenuItem });
+            ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { AttendanceEditToolStripMenuItem, UsersEditToolStripMenuItem });
             ویرایشردیفهایناقصToolStripMenuItem.Font = new Font("IRANSans", 9F);
             ویرایشردیفهایناقصToolStripMenuItem.Name = "ویرایشردیفهایناقصToolStripMenuItem";
-            ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(92, 24);
-            ویرایشردیفهایناقصToolStripMenuItem.Text = "ویرایش دیتاها";
+            ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(102, 24);
+            ویرایشردیفهایناقصToolStripMenuItem.Text = "ویرایش ردیف ها";
             // 
-            // ویرایشردیفناقصToolStripMenuItem
+            // AttendanceEditToolStripMenuItem
             // 
-            ویرایشردیفناقصToolStripMenuItem.Name = "ویرایشردیفناقصToolStripMenuItem";
-            ویرایشردیفناقصToolStripMenuItem.Size = new Size(175, 24);
-            ویرایشردیفناقصToolStripMenuItem.Text = "ویرایش ردیف ناقص";
+            AttendanceEditToolStripMenuItem.Name = "AttendanceEditToolStripMenuItem";
+            AttendanceEditToolStripMenuItem.Size = new Size(180, 24);
+            AttendanceEditToolStripMenuItem.Text = "ویرایش ردیف ناقص";
+            AttendanceEditToolStripMenuItem.Click += AttendanceEditToolStripMenuItem_Click;
             // 
             // UsersEditToolStripMenuItem
             // 
             UsersEditToolStripMenuItem.Name = "UsersEditToolStripMenuItem";
-            UsersEditToolStripMenuItem.Size = new Size(175, 24);
+            UsersEditToolStripMenuItem.Size = new Size(180, 24);
             UsersEditToolStripMenuItem.Text = "ویرایش کاربران";
             UsersEditToolStripMenuItem.Click += UsersEditToolStripMenuItem_Click;
             // 
@@ -293,7 +294,7 @@
         private ToolStripMenuItem راهاندازیمجددToolStripMenuItem;
         private ToolStripMenuItem MonthlyReportToolStripMenuItem;
         private ToolStripMenuItem ویرایشردیفهایناقصToolStripMenuItem;
-        private ToolStripMenuItem ویرایشردیفناقصToolStripMenuItem;
+        private ToolStripMenuItem AttendanceEditToolStripMenuItem;
         private ToolStripMenuItem UsersEditToolStripMenuItem;
         private ToolStripMenuItem FasrExportToolStripMenuItem;
     }

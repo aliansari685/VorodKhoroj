@@ -55,7 +55,7 @@
             dataView_User.Location = new Point(-2, 178);
             dataView_User.Name = "dataView_User";
             dataView_User.ReadOnly = true;
-            dataView_User.Size = new Size(334, 251);
+            dataView_User.Size = new Size(334, 243);
             dataView_User.TabIndex = 3;
             // 
             // userIdDataGridViewTextBoxColumn
@@ -82,7 +82,7 @@
             Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
             Userid_txtbox.DisplayMember = "userid";
             Userid_txtbox.FormattingEnabled = true;
-            Userid_txtbox.Location = new Point(108, 26);
+            Userid_txtbox.Location = new Point(108, 17);
             Userid_txtbox.Name = "Userid_txtbox";
             Userid_txtbox.Size = new Size(109, 28);
             Userid_txtbox.TabIndex = 0;
@@ -92,7 +92,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(224, 30);
+            label3.Location = new Point(224, 21);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
             label3.Size = new Size(47, 20);
@@ -101,7 +101,7 @@
             // 
             // btn_submit
             // 
-            btn_submit.Location = new Point(101, 117);
+            btn_submit.Location = new Point(101, 108);
             btn_submit.Name = "btn_submit";
             btn_submit.Size = new Size(111, 46);
             btn_submit.TabIndex = 2;
@@ -111,7 +111,7 @@
             // 
             // UserName_txtbox
             // 
-            UserName_txtbox.Location = new Point(52, 73);
+            UserName_txtbox.Location = new Point(52, 64);
             UserName_txtbox.Name = "UserName_txtbox";
             UserName_txtbox.Size = new Size(165, 28);
             UserName_txtbox.TabIndex = 1;
@@ -119,7 +119,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(223, 77);
+            label1.Location = new Point(223, 68);
             label1.Name = "label1";
             label1.RightToLeft = RightToLeft.Yes;
             label1.Size = new Size(88, 20);
