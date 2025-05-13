@@ -6,7 +6,7 @@
         {
             try
             {
-                var from = DateTime.Parse(fromDate);
+                DateTime.TryParse(fromDate, out var from);
                 var to = DateTime.Parse(toDate).Date.AddDays(1).AddSeconds(-1);
 
                 var result = records.Where(x => x.DateTime >= from && x.DateTime < to);

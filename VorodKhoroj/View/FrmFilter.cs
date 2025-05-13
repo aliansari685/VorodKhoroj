@@ -34,7 +34,6 @@ public partial class FrmFilter : Form
         }
     }
 
-
     private void btn_clear_Click(object sender, EventArgs e)
     {
         FromDateTime_txtbox.Text = Userid_txtbox.Text = "";

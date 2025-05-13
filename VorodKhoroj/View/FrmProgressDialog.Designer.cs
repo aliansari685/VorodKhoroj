@@ -35,29 +35,32 @@
             // lbl_percent
             // 
             lbl_percent.AutoSize = true;
-            lbl_percent.Location = new Point(141, 54);
+            lbl_percent.Location = new Point(141, 72);
             lbl_percent.Name = "lbl_percent";
-            lbl_percent.Size = new Size(13, 15);
+            lbl_percent.Size = new Size(16, 20);
             lbl_percent.TabIndex = 0;
             lbl_percent.Text = "0";
             lbl_percent.UseWaitCursor = true;
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(16, 14);
+            progressBar1.Location = new Point(16, 19);
+            progressBar1.Margin = new Padding(3, 4, 3, 4);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(263, 28);
+            progressBar1.Size = new Size(263, 37);
             progressBar1.TabIndex = 1;
             progressBar1.UseWaitCursor = true;
             // 
             // FrmProgressDialog
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(300, 74);
+            ClientSize = new Size(300, 99);
             Controls.Add(progressBar1);
             Controls.Add(lbl_percent);
+            Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FrmProgressDialog";

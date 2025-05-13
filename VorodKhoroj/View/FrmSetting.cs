@@ -20,7 +20,7 @@ public partial class FrmSetting : Form
         txt_ServerName.ContextMenuStrip = _cm.MenuStrip;
     }
 
-    private async void Btn_testDb_Click(object sender, EventArgs e)
+    private void Btn_testDb_Click(object sender, EventArgs e)
     {
         try
         {

@@ -98,7 +98,6 @@ public partial class FrmMain : Form
         dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
     }
 
-
     private void DBConfigToolStripMenuItem_Click(object sender, EventArgs e)
     {
         try
@@ -185,6 +184,14 @@ public partial class FrmMain : Form
 
     private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
-
+        if (_services is { DbContext: not null, Records.Count: not 0 })
+        {
+            using var frm = new FrmAttendance(_services);
+            frm.ShowDialog();
+        }
+        else
+        {
+            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+        }
     }
 }
