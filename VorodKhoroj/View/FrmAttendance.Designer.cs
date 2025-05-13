@@ -28,37 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dataView_User = new DataGridView();
-            ((ISupportInitialize)dataView_User).BeginInit();
+            dataGridView1 = new DataGridView();
+            ((ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // dataView_User
+            // dataGridView1
             // 
-            dataView_User.AllowUserToAddRows = false;
-            dataView_User.AllowUserToDeleteRows = false;
-            dataView_User.AllowUserToOrderColumns = true;
-            dataView_User.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_User.Dock = DockStyle.Bottom;
-            dataView_User.Location = new Point(0, 207);
-            dataView_User.Name = "dataView_User";
-            dataView_User.ReadOnly = true;
-            dataView_User.Size = new Size(800, 243);
-            dataView_User.TabIndex = 4;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Dock = DockStyle.Bottom;
+            dataGridView1.Location = new Point(0, 300);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
+            dataGridView1.Size = new Size(800, 150);
+            dataGridView1.TabIndex = 0;
             // 
             // FrmAttendance
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(dataView_User);
+            Controls.Add(dataGridView1);
             Name = "FrmAttendance";
             Text = "FrmAttendance";
-            ((ISupportInitialize)dataView_User).EndInit();
+            ((ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dataView_User;
+        private DataGridView dataGridView1;
     }
 }
