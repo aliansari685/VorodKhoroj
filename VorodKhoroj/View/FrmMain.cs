@@ -186,7 +186,7 @@ public partial class FrmMain : Form
     {
         if (_services is { DbContext: not null, Records.Count: not 0 })
         {
-            using var frm = new FrmAttendance(_services);
+            using var frm = new FrmAttendance(_services, _calcServices);
             frm.ShowDialog();
         }
         else

@@ -42,14 +42,14 @@
             btn_submit = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
-            Userid_txtbox = new ComboBox();
             btn_clear = new Button();
-            label6 = new Label();
-            btn_applyfilter = new Button();
-            label7 = new Label();
-            toDateTime_txtbox = new MaskedTextBox();
-            label8 = new Label();
+            Userid_txtbox = new ComboBox();
             maskedTextBox5 = new MaskedTextBox();
+            label8 = new Label();
+            btn_applyfilter = new Button();
+            label6 = new Label();
+            toDateTime_txtbox = new MaskedTextBox();
+            label7 = new Label();
             ((ISupportInitialize)dataView_Attendance).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -61,6 +61,7 @@
             dataView_Attendance.AllowUserToDeleteRows = false;
             dataView_Attendance.AllowUserToOrderColumns = true;
             dataView_Attendance.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataView_Attendance.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             dataView_Attendance.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataView_Attendance.Location = new Point(0, 331);
             dataView_Attendance.Margin = new Padding(3, 4, 3, 4);
@@ -68,6 +69,7 @@
             dataView_Attendance.ReadOnly = true;
             dataView_Attendance.Size = new Size(483, 315);
             dataView_Attendance.TabIndex = 6;
+            dataView_Attendance.CellClick += dataView_Attendance_CellClick;
             // 
             // label1
             // 
@@ -75,9 +77,9 @@
             label1.Location = new Point(136, 21);
             label1.Name = "label1";
             label1.RightToLeft = RightToLeft.Yes;
-            label1.Size = new Size(47, 20);
+            label1.Size = new Size(37, 20);
             label1.TabIndex = 6;
-            label1.Text = "تاریخ از:";
+            label1.Text = "تاریخ:";
             // 
             // FromDateTime_txtbox
             // 
@@ -222,6 +224,18 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "جستجو";
             // 
+            // btn_clear
+            // 
+            btn_clear.BackColor = Color.Lavender;
+            btn_clear.BackgroundImage = Properties.Resources.clear_icon_9213;
+            btn_clear.BackgroundImageLayout = ImageLayout.Stretch;
+            btn_clear.Location = new Point(10, 156);
+            btn_clear.Name = "btn_clear";
+            btn_clear.Size = new Size(39, 38);
+            btn_clear.TabIndex = 20;
+            btn_clear.UseVisualStyleBackColor = false;
+            btn_clear.Click += btn_clear_Click;
+            // 
             // Userid_txtbox
             // 
             Userid_txtbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -233,56 +247,15 @@
             Userid_txtbox.Size = new Size(117, 28);
             Userid_txtbox.TabIndex = 21;
             // 
-            // btn_clear
+            // maskedTextBox5
             // 
-            btn_clear.BackColor = Color.Lavender;
-            btn_clear.BackgroundImage = Properties.Resources.clear_icon_9213;
-            btn_clear.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_clear.Location = new Point(10, 156);
-            btn_clear.Name = "btn_clear";
-            btn_clear.Size = new Size(39, 38);
-            btn_clear.TabIndex = 20;
-            btn_clear.UseVisualStyleBackColor = false;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(134, 114);
-            label6.Name = "label6";
-            label6.RightToLeft = RightToLeft.Yes;
-            label6.Size = new Size(35, 20);
-            label6.TabIndex = 19;
-            label6.Text = " کاربر:";
-            // 
-            // btn_applyfilter
-            // 
-            btn_applyfilter.Location = new Point(55, 156);
-            btn_applyfilter.Name = "btn_applyfilter";
-            btn_applyfilter.Size = new Size(125, 38);
-            btn_applyfilter.TabIndex = 18;
-            btn_applyfilter.Text = "جستجو";
-            btn_applyfilter.UseVisualStyleBackColor = true;
-            btn_applyfilter.Click += btn_applyFilter_Click;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(133, 68);
-            label7.Name = "label7";
-            label7.RightToLeft = RightToLeft.Yes;
-            label7.Size = new Size(19, 20);
-            label7.TabIndex = 17;
-            label7.Text = "تا:";
-            // 
-            // toDateTime_txtbox
-            // 
-            toDateTime_txtbox.Location = new Point(10, 65);
-            toDateTime_txtbox.Mask = "1000/00/00";
-            toDateTime_txtbox.Name = "toDateTime_txtbox";
-            toDateTime_txtbox.RightToLeft = RightToLeft.No;
-            toDateTime_txtbox.Size = new Size(117, 28);
-            toDateTime_txtbox.TabIndex = 16;
-            toDateTime_txtbox.ValidatingType = typeof(DateTime);
+            maskedTextBox5.Location = new Point(10, 18);
+            maskedTextBox5.Mask = "1000/00/00";
+            maskedTextBox5.Name = "maskedTextBox5";
+            maskedTextBox5.RightToLeft = RightToLeft.No;
+            maskedTextBox5.Size = new Size(117, 28);
+            maskedTextBox5.TabIndex = 14;
+            maskedTextBox5.ValidatingType = typeof(DateTime);
             // 
             // label8
             // 
@@ -294,15 +267,45 @@
             label8.TabIndex = 15;
             label8.Text = "تاریخ از:";
             // 
-            // maskedTextBox5
+            // btn_applyfilter
             // 
-            maskedTextBox5.Location = new Point(10, 18);
-            maskedTextBox5.Mask = "1000/00/00";
-            maskedTextBox5.Name = "maskedTextBox5";
-            maskedTextBox5.RightToLeft = RightToLeft.No;
-            maskedTextBox5.Size = new Size(117, 28);
-            maskedTextBox5.TabIndex = 14;
-            maskedTextBox5.ValidatingType = typeof(DateTime);
+            btn_applyfilter.Location = new Point(55, 156);
+            btn_applyfilter.Name = "btn_applyfilter";
+            btn_applyfilter.Size = new Size(125, 38);
+            btn_applyfilter.TabIndex = 18;
+            btn_applyfilter.Text = "جستجو";
+            btn_applyfilter.UseVisualStyleBackColor = true;
+            btn_applyfilter.Click += btn_applyFilter_Click;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(134, 114);
+            label6.Name = "label6";
+            label6.RightToLeft = RightToLeft.Yes;
+            label6.Size = new Size(35, 20);
+            label6.TabIndex = 19;
+            label6.Text = " کاربر:";
+            // 
+            // toDateTime_txtbox
+            // 
+            toDateTime_txtbox.Location = new Point(10, 65);
+            toDateTime_txtbox.Mask = "1000/00/00";
+            toDateTime_txtbox.Name = "toDateTime_txtbox";
+            toDateTime_txtbox.RightToLeft = RightToLeft.No;
+            toDateTime_txtbox.Size = new Size(117, 28);
+            toDateTime_txtbox.TabIndex = 16;
+            toDateTime_txtbox.ValidatingType = typeof(DateTime);
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(133, 68);
+            label7.Name = "label7";
+            label7.RightToLeft = RightToLeft.Yes;
+            label7.Size = new Size(19, 20);
+            label7.TabIndex = 17;
+            label7.Text = "تا:";
             // 
             // FrmAttendance
             // 
