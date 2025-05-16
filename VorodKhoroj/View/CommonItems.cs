@@ -43,11 +43,14 @@
             txtComboBox.DisplayMember = nameof(User.Name);
             txtComboBox.ValueMember = nameof(User.UserId);
         }
+
         public static string GetUserIdValueToString(ComboBox txtBox)
         {
-            return txtBox.SelectedValue?.ToString() ?? string.Empty;
-        }
-  
-    }
+            if (int.TryParse(txtBox.Text, out var res) || int.TryParse(txtBox.SelectedValue?.ToString(), out res))
+                return res.ToString();
 
+            throw new FormatException("خطای تبدیل داده");
+        }
+
+    }
 }

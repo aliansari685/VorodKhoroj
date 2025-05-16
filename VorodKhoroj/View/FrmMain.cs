@@ -52,11 +52,8 @@ public partial class FrmMain : Form
             if (CommonHelper.IsValid(_services.Records.Count) == false)
                 throw new NullReferenceException("داده ای وجود ندارد");
 
-            if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res))
-            {
-                dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
-                    toDateTime_txtbox.Text, res).ToList().ToDataTable();
-            }
+            dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
+                toDateTime_txtbox.Text, int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))).ToList().ToDataTable();
 
             DataGridViewConfig();
         }

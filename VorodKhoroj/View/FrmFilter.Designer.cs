@@ -54,12 +54,12 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(169, 104);
+            label3.Location = new Point(169, 110);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
-            label3.Size = new Size(45, 19);
+            label3.Size = new Size(34, 19);
             label3.TabIndex = 18;
-            label3.Text = "کد کاربر:";
+            label3.Text = " کاربر:";
             // 
             // btn_applyfilter
             // 
@@ -118,9 +118,9 @@
             Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
             Userid_txtbox.DisplayMember = "userid";
             Userid_txtbox.FormattingEnabled = true;
-            Userid_txtbox.Location = new Point(106, 101);
+            Userid_txtbox.Location = new Point(36, 107);
             Userid_txtbox.Name = "Userid_txtbox";
-            Userid_txtbox.Size = new Size(57, 27);
+            Userid_txtbox.Size = new Size(127, 27);
             Userid_txtbox.TabIndex = 2;
             // 
             // FrmFilter

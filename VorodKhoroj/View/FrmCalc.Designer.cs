@@ -73,7 +73,7 @@
             label9 = new Label();
             label11 = new Label();
             lbl_avgentry = new Label();
-            lbl_FromTo = new Label();
+            lbl_Information = new Label();
             dataView_Calculate = new DataGridView();
             menuStrip2 = new MenuStrip();
             OutputExcelToolStripMenuItem = new ToolStripMenuItem();
@@ -128,7 +128,7 @@
             tabpage_detailvorodkhoroj.Controls.Add(userid_txtbox);
             tabpage_detailvorodkhoroj.Controls.Add(label19);
             tabpage_detailvorodkhoroj.Controls.Add(panel1);
-            tabpage_detailvorodkhoroj.Controls.Add(lbl_FromTo);
+            tabpage_detailvorodkhoroj.Controls.Add(lbl_Information);
             tabpage_detailvorodkhoroj.Controls.Add(dataView_Calculate);
             tabpage_detailvorodkhoroj.Controls.Add(menuStrip2);
             tabpage_detailvorodkhoroj.Location = new Point(4, 29);
@@ -636,14 +636,14 @@
             lbl_avgentry.TabIndex = 11;
             lbl_avgentry.Text = "16:59:59";
             // 
-            // lbl_FromTo
+            // lbl_Information
             // 
-            lbl_FromTo.AutoSize = true;
-            lbl_FromTo.Location = new Point(100, 38);
-            lbl_FromTo.Name = "lbl_FromTo";
-            lbl_FromTo.Size = new Size(16, 20);
-            lbl_FromTo.TabIndex = 20;
-            lbl_FromTo.Text = "0";
+            lbl_Information.AutoSize = true;
+            lbl_Information.Location = new Point(49, 38);
+            lbl_Information.Name = "lbl_Information";
+            lbl_Information.Size = new Size(16, 20);
+            lbl_Information.TabIndex = 20;
+            lbl_Information.Text = "0";
             // 
             // dataView_Calculate
             // 
@@ -1077,7 +1077,7 @@
         public Label label9;
         public Label label11;
         public Label lbl_avgentry;
-        public Label lbl_FromTo;
+        public Label lbl_Information;
         private DataGridView dataView_Calculate;
         private TabControl tabControl1;
         public Label label10;

@@ -7,6 +7,7 @@ public partial class FrmCalc : Form
 
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
+    private string _username;
     private string _userid;
     private readonly bool _justExcel;
 
@@ -24,13 +25,13 @@ public partial class FrmCalc : Form
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        lbl_FromTo.Text = @$"{_fromDateTime} -- {_toDateTime}";
         userid_txtbox.DataSource = _service.UsersList;
         if (_service.UserListProvider is DbProvider)
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
         ReloadGrid();
+
         if (dataView_Calculate.DataSource == null)
         {
             Close();
@@ -100,7 +101,7 @@ public partial class FrmCalc : Form
     {
         try
         {
-            _calcServices.TitleReport = $"{_fromDateTime} -- {_toDateTime} {'\t'}{'\t'} User:{userid_txtbox.Text}";
+            _calcServices.TitleReport = $"{_fromDateTime} -- {_toDateTime} {'\t'}{'\t'} User:{userid_txtbox.DisplayMember}";
 
             DataExporter.ExportDataGrid(dataView_Calculate, _calcServices.GetDataWithTitle(), _calcServices.TitleReport);
         }
@@ -114,6 +115,7 @@ public partial class FrmCalc : Form
     {
         if (e.KeyData == Keys.Enter && MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
+            _username = userid_txtbox.Text;
             _userid = CommonItems.GetUserIdValueToString(userid_txtbox);
             ReloadGrid();
             CommonHelper.ShowMessage("انجام شد");
@@ -132,29 +134,44 @@ public partial class FrmCalc : Form
 
     private void ChangeUser(bool plusNumber)
     {
-        if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
+        try
+        {
+            if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
 
-        //Convert IList(object) to List<int>:
-        var users = _service.UsersList is IEnumerable list
-            ? list.Cast<object>()
-                .Select(x => int.TryParse(x?.ToString(), out var n) ? n : 0)
-                .ToList()
-            : [];
+            ////Convert IList(object) to List<int>:
+            //var users = _service.UsersList is IEnumerable list
+            //    ? list.Cast<object>()
+            //        .Select(x => int.TryParse(x?.ToString(), out var n) ? n : 0)
+            //        .ToList()
+            //    : [];
+            //ToDo: tommorow doing convert ilist to list<int> as database and file:
+            var usersList = _service.UsersList as List<User>;
 
-        if (!int.TryParse(_userid, out var currentId)) return;
+            List<int> users = [];
 
-        var currentIndex = users.IndexOf(currentId);
+            users.AddRange(usersList!.Select(variable => variable.UserId));
 
-        if (currentIndex == -1) return;
+            if (!int.TryParse(_userid, out var currentId)) return;
 
-        var nextIndex = plusNumber ? currentIndex + 1 : currentIndex - 1;
-        if (nextIndex < 0 || nextIndex >= users.Count)
-            return;
+            var currentIndex = users.IndexOf(currentId);
 
-        _userid = users[nextIndex].ToString();
+            if (currentIndex == -1) return;
 
-        ReloadGrid();
-        CommonHelper.ShowMessage("انجام شد");
+            var nextIndex = plusNumber ? currentIndex + 1 : currentIndex - 1;
+            if (nextIndex < 0 || nextIndex >= users.Count)
+                return;
+
+            _userid = users[nextIndex].ToString();
+
+            ReloadGrid();
+
+            CommonHelper.ShowMessage("انجام شد");
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+
     }
 
 
@@ -209,6 +226,8 @@ public partial class FrmCalc : Form
             lbl_avgtimework.Text = temp.AverageWorkdayHours;
             lbl_sumkasri.Text = temp.TotalKasriTime;
             lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
+            lbl_Information.Text = @$"{_fromDateTime} -- {_toDateTime} -- {_username}";
+
         }
     }
 

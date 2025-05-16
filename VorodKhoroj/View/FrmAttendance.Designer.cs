@@ -30,21 +30,21 @@
         {
             dataView_Attendance = new DataGridView();
             label1 = new Label();
-            FromDateTime_txtbox = new MaskedTextBox();
-            maskedTextBox1 = new MaskedTextBox();
+            DateTime_txtbox = new MaskedTextBox();
+            Entry1_txtbox = new MaskedTextBox();
             label2 = new Label();
             label3 = new Label();
-            maskedTextBox2 = new MaskedTextBox();
+            Exit1_txtbox = new MaskedTextBox();
             label4 = new Label();
-            maskedTextBox3 = new MaskedTextBox();
+            Entry2_txtbox = new MaskedTextBox();
             label5 = new Label();
-            maskedTextBox4 = new MaskedTextBox();
+            Exit2_txtbox = new MaskedTextBox();
             btn_submit = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             btn_clear = new Button();
             Userid_txtbox = new ComboBox();
-            maskedTextBox5 = new MaskedTextBox();
+            FromDateTime_txtbox = new MaskedTextBox();
             label8 = new Label();
             btn_applyfilter = new Button();
             label6 = new Label();
@@ -81,27 +81,27 @@
             label1.TabIndex = 6;
             label1.Text = "تاریخ:";
             // 
-            // FromDateTime_txtbox
+            // DateTime_txtbox
             // 
-            FromDateTime_txtbox.Location = new Point(18, 18);
-            FromDateTime_txtbox.Margin = new Padding(3, 4, 3, 4);
-            FromDateTime_txtbox.Mask = "1000/00/00";
-            FromDateTime_txtbox.Name = "FromDateTime_txtbox";
-            FromDateTime_txtbox.RightToLeft = RightToLeft.No;
-            FromDateTime_txtbox.Size = new Size(107, 28);
-            FromDateTime_txtbox.TabIndex = 0;
-            FromDateTime_txtbox.ValidatingType = typeof(DateTime);
+            DateTime_txtbox.Location = new Point(18, 18);
+            DateTime_txtbox.Margin = new Padding(3, 4, 3, 4);
+            DateTime_txtbox.Mask = "1000/00/00";
+            DateTime_txtbox.Name = "DateTime_txtbox";
+            DateTime_txtbox.RightToLeft = RightToLeft.No;
+            DateTime_txtbox.Size = new Size(107, 28);
+            DateTime_txtbox.TabIndex = 0;
+            DateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
-            // maskedTextBox1
+            // Entry1_txtbox
             // 
-            maskedTextBox1.Location = new Point(18, 65);
-            maskedTextBox1.Margin = new Padding(3, 4, 3, 4);
-            maskedTextBox1.Mask = "00:00:00";
-            maskedTextBox1.Name = "maskedTextBox1";
-            maskedTextBox1.RightToLeft = RightToLeft.No;
-            maskedTextBox1.Size = new Size(107, 28);
-            maskedTextBox1.TabIndex = 1;
-            maskedTextBox1.ValidatingType = typeof(DateTime);
+            Entry1_txtbox.Location = new Point(18, 65);
+            Entry1_txtbox.Margin = new Padding(3, 4, 3, 4);
+            Entry1_txtbox.Mask = "00:00:00";
+            Entry1_txtbox.Name = "Entry1_txtbox";
+            Entry1_txtbox.RightToLeft = RightToLeft.No;
+            Entry1_txtbox.Size = new Size(107, 28);
+            Entry1_txtbox.TabIndex = 1;
+            Entry1_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label2
             // 
@@ -123,16 +123,16 @@
             label3.TabIndex = 10;
             label3.Text = "ساعت خروج:";
             // 
-            // maskedTextBox2
+            // Exit1_txtbox
             // 
-            maskedTextBox2.Location = new Point(18, 116);
-            maskedTextBox2.Margin = new Padding(3, 4, 3, 4);
-            maskedTextBox2.Mask = "00:00:00";
-            maskedTextBox2.Name = "maskedTextBox2";
-            maskedTextBox2.RightToLeft = RightToLeft.No;
-            maskedTextBox2.Size = new Size(107, 28);
-            maskedTextBox2.TabIndex = 2;
-            maskedTextBox2.ValidatingType = typeof(DateTime);
+            Exit1_txtbox.Location = new Point(18, 116);
+            Exit1_txtbox.Margin = new Padding(3, 4, 3, 4);
+            Exit1_txtbox.Mask = "00:00:00";
+            Exit1_txtbox.Name = "Exit1_txtbox";
+            Exit1_txtbox.RightToLeft = RightToLeft.No;
+            Exit1_txtbox.Size = new Size(107, 28);
+            Exit1_txtbox.TabIndex = 2;
+            Exit1_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label4
             // 
@@ -144,16 +144,16 @@
             label4.TabIndex = 12;
             label4.Text = "ساعت ورود دوم:";
             // 
-            // maskedTextBox3
+            // Entry2_txtbox
             // 
-            maskedTextBox3.Location = new Point(18, 168);
-            maskedTextBox3.Margin = new Padding(3, 4, 3, 4);
-            maskedTextBox3.Mask = "00:00:00";
-            maskedTextBox3.Name = "maskedTextBox3";
-            maskedTextBox3.RightToLeft = RightToLeft.No;
-            maskedTextBox3.Size = new Size(107, 28);
-            maskedTextBox3.TabIndex = 3;
-            maskedTextBox3.ValidatingType = typeof(DateTime);
+            Entry2_txtbox.Location = new Point(18, 168);
+            Entry2_txtbox.Margin = new Padding(3, 4, 3, 4);
+            Entry2_txtbox.Mask = "00:00:00";
+            Entry2_txtbox.Name = "Entry2_txtbox";
+            Entry2_txtbox.RightToLeft = RightToLeft.No;
+            Entry2_txtbox.Size = new Size(107, 28);
+            Entry2_txtbox.TabIndex = 3;
+            Entry2_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label5
             // 
@@ -165,16 +165,16 @@
             label5.TabIndex = 14;
             label5.Text = "ساعت خروج دوم:";
             // 
-            // maskedTextBox4
+            // Exit2_txtbox
             // 
-            maskedTextBox4.Location = new Point(18, 217);
-            maskedTextBox4.Margin = new Padding(3, 4, 3, 4);
-            maskedTextBox4.Mask = "00:00:00";
-            maskedTextBox4.Name = "maskedTextBox4";
-            maskedTextBox4.RightToLeft = RightToLeft.No;
-            maskedTextBox4.Size = new Size(107, 28);
-            maskedTextBox4.TabIndex = 4;
-            maskedTextBox4.ValidatingType = typeof(DateTime);
+            Exit2_txtbox.Location = new Point(18, 217);
+            Exit2_txtbox.Margin = new Padding(3, 4, 3, 4);
+            Exit2_txtbox.Mask = "00:00:00";
+            Exit2_txtbox.Name = "Exit2_txtbox";
+            Exit2_txtbox.RightToLeft = RightToLeft.No;
+            Exit2_txtbox.Size = new Size(107, 28);
+            Exit2_txtbox.TabIndex = 4;
+            Exit2_txtbox.ValidatingType = typeof(DateTime);
             // 
             // btn_submit
             // 
@@ -184,20 +184,21 @@
             btn_submit.TabIndex = 5;
             btn_submit.Text = "ثبت تغییرات";
             btn_submit.UseVisualStyleBackColor = true;
+            btn_submit.Click += btn_submit_Click;
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(FromDateTime_txtbox);
+            groupBox1.Controls.Add(DateTime_txtbox);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(btn_submit);
-            groupBox1.Controls.Add(maskedTextBox1);
+            groupBox1.Controls.Add(Entry1_txtbox);
             groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(maskedTextBox4);
-            groupBox1.Controls.Add(maskedTextBox2);
+            groupBox1.Controls.Add(Exit2_txtbox);
+            groupBox1.Controls.Add(Exit1_txtbox);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(maskedTextBox3);
+            groupBox1.Controls.Add(Entry2_txtbox);
             groupBox1.Location = new Point(228, 8);
             groupBox1.Name = "groupBox1";
             groupBox1.RightToLeft = RightToLeft.Yes;
@@ -210,7 +211,7 @@
             // 
             groupBox2.Controls.Add(btn_clear);
             groupBox2.Controls.Add(Userid_txtbox);
-            groupBox2.Controls.Add(maskedTextBox5);
+            groupBox2.Controls.Add(FromDateTime_txtbox);
             groupBox2.Controls.Add(label8);
             groupBox2.Controls.Add(btn_applyfilter);
             groupBox2.Controls.Add(label6);
@@ -247,15 +248,15 @@
             Userid_txtbox.Size = new Size(117, 28);
             Userid_txtbox.TabIndex = 21;
             // 
-            // maskedTextBox5
+            // FromDateTime_txtbox
             // 
-            maskedTextBox5.Location = new Point(10, 18);
-            maskedTextBox5.Mask = "1000/00/00";
-            maskedTextBox5.Name = "maskedTextBox5";
-            maskedTextBox5.RightToLeft = RightToLeft.No;
-            maskedTextBox5.Size = new Size(117, 28);
-            maskedTextBox5.TabIndex = 14;
-            maskedTextBox5.ValidatingType = typeof(DateTime);
+            FromDateTime_txtbox.Location = new Point(10, 18);
+            FromDateTime_txtbox.Mask = "1000/00/00";
+            FromDateTime_txtbox.Name = "FromDateTime_txtbox";
+            FromDateTime_txtbox.RightToLeft = RightToLeft.No;
+            FromDateTime_txtbox.Size = new Size(117, 28);
+            FromDateTime_txtbox.TabIndex = 14;
+            FromDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label8
             // 
@@ -333,20 +334,20 @@
 
         private DataGridView dataView_Attendance;
         private Label label1;
-        private MaskedTextBox FromDateTime_txtbox;
-        private MaskedTextBox maskedTextBox1;
+        private MaskedTextBox DateTime_txtbox;
+        private MaskedTextBox Entry1_txtbox;
         private Label label2;
         private Label label3;
-        private MaskedTextBox maskedTextBox2;
+        private MaskedTextBox Exit1_txtbox;
         private Label label4;
-        private MaskedTextBox maskedTextBox3;
+        private MaskedTextBox Entry2_txtbox;
         private Label label5;
-        private MaskedTextBox maskedTextBox4;
+        private MaskedTextBox Exit2_txtbox;
         private Button btn_submit;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
         private ComboBox Userid_txtbox;
-        private MaskedTextBox maskedTextBox5;
+        private MaskedTextBox FromDateTime_txtbox;
         private Label label8;
         private Button btn_applyfilter;
         private Label label6;
