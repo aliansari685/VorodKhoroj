@@ -7,7 +7,7 @@ public partial class FrmCalc : Form
 
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
-    private string _username;
+    private string _username = "";
     private string _userid;
     private readonly bool _justExcel;
 
@@ -144,15 +144,20 @@ public partial class FrmCalc : Form
             //        .Select(x => int.TryParse(x?.ToString(), out var n) ? n : 0)
             //        .ToList()
             //    : [];
+
             //ToDo: tommorow doing convert ilist to list<int> as database and file:
-            var usersList = _service.UsersList as List<User>;
 
             List<int> users = [];
 
-            users.AddRange(usersList!.Select(variable => variable.UserId));
+            if (_service is { UserListProvider: DbProvider, DbContext: not null })
+            {
+                var usersList = _service.UsersList as List<User>;
+                users.AddRange(usersList!.Select(variable => variable.UserId));
+            }
+            else
+                users = (_service.UsersList as List<int>)!;
 
             if (!int.TryParse(_userid, out var currentId)) return;
-
             var currentIndex = users.IndexOf(currentId);
 
             if (currentIndex == -1) return;
