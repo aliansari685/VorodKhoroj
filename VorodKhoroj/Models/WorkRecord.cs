@@ -2,6 +2,8 @@
 {
     public class WorkRecord
     {
+        [DisplayName("کاربری")] public string UserId { get; set; } = "";
+
         [DisplayName("روز در هفته")]
         public string? DayOfWeek { get; set; }
 

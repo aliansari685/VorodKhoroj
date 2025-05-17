@@ -2,8 +2,8 @@
 {
     public partial class FrmAttendance : Form
     {
-        private string _user;
-        private string _datetime;
+        private string _user = "";
+        private string _datetime = "";
         private readonly AppCoordinator _service;
         private readonly AttendanceFullCalculationService _calcService;
 
@@ -21,11 +21,16 @@
 
         private void DataGridConfig()
         {
-            dataView_Attendance.DataSource = _service.DbContext?.Attendances.Local.ToBindingList();
+            //  dataView_Attendance.DataSource = _service.DbContext?.Attendances.Local.ToBindingList();
 
-            dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(Attendance.DateTime)]!, ListSortDirection.Ascending);
+            //TODO: Tomorrow doing set userid in WorkRecord and show in grid:
 
-            dataView_Attendance.Columns[nameof(Attendance.DateTime)]!.DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+            dataView_Attendance.DataSource = _calcService.Calculate("0", "1403/01/01", PersianDateHelper.PersianCalenderDateNow(), false);
+
+            //   dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(Attendance.DateTime)]!, ListSortDirection.Ascending);
+            //  dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
+
+            //  dataView_Attendance.Columns[nameof(Attendance.DateTime)]!.DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
             Userid_txtbox.DataSource = _service.UsersList;
 
@@ -38,7 +43,7 @@
             {
                 if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res) || int.TryParse(Userid_txtbox.Text, out res))
                 {
-                    dataView_Attendance.DataSource = DataFilterService.ApplyFilter(_service.Records, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, res).ToList();
+                    dataView_Attendance.DataSource = _calcService.Calculate(res.ToString(), FromDateTime_txtbox.Text, toDateTime_txtbox.Text, false);
                 }
                 else
                 {
@@ -62,8 +67,8 @@
         {
             try
             {
-                _user = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(Attendance.UserId)].Value.ToString()!;
-                _datetime = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(Attendance.DateTime)].Value.ToString()!;
+                _user = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.UserId)].Value.ToString()!;
+                _datetime = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)].Value.ToString()!;
 
                 var workRecords = _calcService.Calculate(_user, _datetime, _datetime, false);
 

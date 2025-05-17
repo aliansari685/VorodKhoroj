@@ -115,7 +115,7 @@
             // 
             AttendanceEditToolStripMenuItem.Name = "AttendanceEditToolStripMenuItem";
             AttendanceEditToolStripMenuItem.Size = new Size(180, 24);
-            AttendanceEditToolStripMenuItem.Text = "ویرایش ردیف ناقص";
+            AttendanceEditToolStripMenuItem.Text = "ویرایش ردیف ها";
             AttendanceEditToolStripMenuItem.Click += AttendanceEditToolStripMenuItem_Click;
             // 
             // UsersEditToolStripMenuItem

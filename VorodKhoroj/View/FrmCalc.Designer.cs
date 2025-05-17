@@ -289,6 +289,7 @@
             checkBox_AutoEdit.TabIndex = 42;
             checkBox_AutoEdit.Text = "اصلاح خودکار ردیف ناقص";
             checkBox_AutoEdit.UseVisualStyleBackColor = true;
+            checkBox_AutoEdit.CheckedChanged += checkBox_AutoEdit_CheckedChanged;
             // 
             // lbl_tadil
             // 

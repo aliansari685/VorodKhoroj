@@ -26,6 +26,7 @@ public partial class FrmCalc : Form
     private void FrmCalc_Load(object sender, EventArgs e)
     {
         userid_txtbox.DataSource = _service.UsersList;
+
         if (_service.UserListProvider is DbProvider)
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
@@ -113,9 +114,16 @@ public partial class FrmCalc : Form
 
     private void userid_txtBox_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.KeyData == Keys.Enter && MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        if (e.KeyData == Keys.Enter)
         {
-            _username = userid_txtbox.Text;
+            ReloadData();
+        }
+    }
+
+    private void ReloadData()
+    {
+        if (MessageBox.Show(@"آیا از کار خود اطمینان دارید؟", @"Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
             _userid = CommonItems.GetUserIdValueToString(userid_txtbox);
             ReloadGrid();
             CommonHelper.ShowMessage("انجام شد");
@@ -138,24 +146,20 @@ public partial class FrmCalc : Form
         {
             if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
 
-            ////Convert IList(object) to List<int>:
-            //var users = _service.UsersList is IEnumerable list
-            //    ? list.Cast<object>()
-            //        .Select(x => int.TryParse(x?.ToString(), out var n) ? n : 0)
-            //        .ToList()
-            //    : [];
-
-            //ToDo: tommorow doing convert ilist to list<int> as database and file:
-
+            //Cast iList:
             List<int> users = [];
 
-            if (_service is { UserListProvider: DbProvider, DbContext: not null })
+            switch (_service)
             {
-                var usersList = _service.UsersList as List<User>;
-                users.AddRange(usersList!.Select(variable => variable.UserId));
+                case { UserListProvider: DbProvider, DbContext: not null }:
+                    {
+                        users.AddRange((_service.UsersList as List<User> ?? []).Select(variable => variable.UserId));
+                        break;
+                    }
+                case { UserListProvider: FileProvider }:
+                    users = (_service.UsersList as int[])?.ToList() ?? [];
+                    break;
             }
-            else
-                users = (_service.UsersList as List<int>)!;
 
             if (!int.TryParse(_userid, out var currentId)) return;
             var currentIndex = users.IndexOf(currentId);
@@ -179,14 +183,14 @@ public partial class FrmCalc : Form
 
     }
 
-
     private void DataGridConfig()
     {
         try
         {
-            userid_txtbox.Text = _userid;
-
-            if (userid_txtbox.Text != _userid) throw new ArgumentOutOfRangeException($@"{nameof(_userid)}", @"خطای داخلی ");
+            if (_service is { UserListProvider: FileProvider })
+                _username = userid_txtbox.Text = _userid;
+            else
+                userid_txtbox.Text = _username = (_service.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
 
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
@@ -208,6 +212,8 @@ public partial class FrmCalc : Form
         if (dataView_Calculate.DataSource == null) return;
 
         new WorkRecord().SetDisplayNameInDataGrid(dataView_Calculate);
+
+        dataView_Calculate.Columns[nameof(WorkRecord.UserId)]!.Visible = false;
     }
 
     private void UpdateLabels()
@@ -242,6 +248,10 @@ public partial class FrmCalc : Form
         DataGridViewConfig();
     }
 
+    private void checkBox_AutoEdit_CheckedChanged(object sender, EventArgs e)
+    {
+        ReloadData();
+    }
 
     #region TabPage2:
     private void dataView_late_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -314,6 +324,7 @@ public partial class FrmCalc : Form
                 }).ToList().ToDataTable();
     }
     #endregion
+
 
 
 }
