@@ -206,7 +206,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
 
             return new WorkRecord
             {
-                UserId = filtered.Select(x => x.UserId).ToString(),
+                UserId = g.Key.UserId.ToString(),
                 DayOfWeek = g.Key.Date.ToString("dddd"),
                 Date = g.Key.Date.ToString("yyyy/MM/dd"),
                 EntryTime = minDateTime.ToString("HH:mm:ss"),

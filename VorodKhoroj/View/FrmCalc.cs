@@ -78,24 +78,32 @@ public partial class FrmCalc : Form
 
     private void DataViewCalculateRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
-        if (dataView_Calculate?.Rows.Count > e.RowIndex)
+        try
         {
-            var row = dataView_Calculate.Rows[e.RowIndex];
-
-            if (row.Cells["IsLate"]?.Value is true && checkBox_Islate.Checked)
-                row.DefaultCellStyle.BackColor = Color.Red;
-
-            else if (row.Cells["IsNaghes"]?.Value is true && checkBox_IsNaqes.Checked)
-                row.DefaultCellStyle.BackColor = Color.Orange;
-
-            else if (checkBox_workinholiday.Checked && DateTime.TryParse(row.Cells["Date"]?.Value?.ToString(), out var date)
-                     && _calcServices.OvertimeinHoliday.Contains(date))
-                row.DefaultCellStyle.BackColor = Color.CadetBlue;
-            else
+            if (dataView_Calculate?.Rows.Count > e.RowIndex)
             {
-                row.DefaultCellStyle.BackColor = Color.White;
+                var row = dataView_Calculate.Rows[e.RowIndex];
+
+                if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
+                    row.DefaultCellStyle.BackColor = Color.Red;
+
+                else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_IsNaqes.Checked)
+                    row.DefaultCellStyle.BackColor = Color.Orange;
+
+                else if (checkBox_workinholiday.Checked && DateTime.TryParse(row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(), out var date)
+                         && _calcServices.OvertimeinHoliday.Contains(date))
+                    row.DefaultCellStyle.BackColor = Color.CadetBlue;
+                else
+                {
+                    row.DefaultCellStyle.BackColor = Color.White;
+                }
             }
         }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+
     }
 
     private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -211,7 +219,7 @@ public partial class FrmCalc : Form
     {
         if (dataView_Calculate.DataSource == null) return;
 
-        new WorkRecord().SetDisplayNameInDataGrid(dataView_Calculate);
+        dataView_Calculate.ApplyDisplayNames<WorkRecord>();
 
         dataView_Calculate.Columns[nameof(WorkRecord.UserId)]!.Visible = false;
     }
@@ -303,7 +311,7 @@ public partial class FrmCalc : Form
             {
                 DayOfWeek = g.Date.ToString("dddd"),
                 Date = g.Date.ToString("yyyy/MM/dd")
-            }).ToList().ToDataTable();
+            }).ToList().ToDataTableWithDisplayedName();
 
 
         else if (radioButton_holidays.Checked)
@@ -311,7 +319,7 @@ public partial class FrmCalc : Form
             {
                 DayOfWeek = g.Date.ToString("dddd"),
                 Date = g.Date.ToString("yyyy/MM/dd"),
-            }).ToList().ToDataTable();
+            }).ToList().ToDataTableWithDisplayedName();
 
 
         else if (radioButton_ramadan.Checked)
@@ -321,7 +329,7 @@ public partial class FrmCalc : Form
                     DayOfWeek = g.Date.ToString("dddd"),
                     Date = g.Date.ToString("yyyy/MM/dd"),
                     g.Title,
-                }).ToList().ToDataTable();
+                }).ToList().ToDataTableWithDisplayedName();
     }
     #endregion
 

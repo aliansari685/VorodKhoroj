@@ -21,16 +21,11 @@
 
         private void DataGridConfig()
         {
-            //  dataView_Attendance.DataSource = _service.DbContext?.Attendances.Local.ToBindingList();
+            dataView_Attendance.DataSource = _calcService.Calculate("0", "1403/01/01", PersianDateHelper.PersianCalenderDateNow(), false).ToDataTable();
 
-            //TODO: Tomorrow doing set userid in WorkRecord and show in grid:
+            dataView_Attendance.ApplyDisplayNames<WorkRecord>();
 
-            dataView_Attendance.DataSource = _calcService.Calculate("0", "1403/01/01", PersianDateHelper.PersianCalenderDateNow(), false);
-
-            //   dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(Attendance.DateTime)]!, ListSortDirection.Ascending);
-            //  dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
-
-            //  dataView_Attendance.Columns[nameof(Attendance.DateTime)]!.DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+            dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
 
             Userid_txtbox.DataSource = _service.UsersList;
 
@@ -43,7 +38,8 @@
             {
                 if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res) || int.TryParse(Userid_txtbox.Text, out res))
                 {
-                    dataView_Attendance.DataSource = _calcService.Calculate(res.ToString(), FromDateTime_txtbox.Text, toDateTime_txtbox.Text, false);
+                    dataView_Attendance.DataSource = _calcService.Calculate(res.ToString(), FromDateTime_txtbox.Text, toDateTime_txtbox.Text, false).ToDataTable();
+                    dataView_Attendance.ApplyDisplayNames<WorkRecord>();
                 }
                 else
                 {
@@ -61,30 +57,6 @@
             FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
             toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
             DataGridConfig();
-        }
-
-        private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                _user = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.UserId)].Value.ToString()!;
-                _datetime = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)].Value.ToString()!;
-
-                var workRecords = _calcService.Calculate(_user, _datetime, _datetime, false);
-
-                var result = workRecords.First();
-
-                DateTime_txtbox.Text = result.Date;
-                Entry1_txtbox.Text = result.EntryTime;
-                Exit1_txtbox.Text = result.ExitTime;
-                Entry2_txtbox.Text = result.EntryTime2;
-                Exit2_txtbox.Text = result.ExitTime2;
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-
         }
 
         private void btn_submit_Click(object sender, EventArgs e)
@@ -105,6 +77,32 @@
                 CommonHelper.ShowMessage(ex);
             }
 
+        }
+
+        private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                    return;
+
+                _user = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.UserId)].Value.ToString()!;
+                _datetime = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)].Value.ToString()!;
+
+                var workRecords = _calcService.Calculate(_user, _datetime, _datetime, false);
+
+                var result = workRecords.First();
+
+                DateTime_txtbox.Text = result.Date;
+                Entry1_txtbox.Text = result.EntryTime;
+                Exit1_txtbox.Text = result.ExitTime;
+                Entry2_txtbox.Text = result.EntryTime2;
+                Exit2_txtbox.Text = result.ExitTime2;
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
     }
 }

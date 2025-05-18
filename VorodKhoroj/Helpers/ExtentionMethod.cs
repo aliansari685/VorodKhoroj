@@ -2,6 +2,42 @@
 {
     public static class ExtentionMethod
     {
+        //with attribute DisplayName:
+        public static DataTable ToDataTableWithDisplayedName<T>(this List<T> list)
+        {
+            DataTable table = new();
+            var properties = typeof(T).GetProperties();
+
+            // نگه‌داشتن نگاشت: نام ستون → پراپرتی مرتبط
+            Dictionary<string, PropertyInfo> columnMappings = new();
+
+            // ایجاد ستون‌ها
+            foreach (var prop in properties)
+            {
+                var displayNameAttr = prop.GetCustomAttribute<DisplayNameAttribute>();
+                string columnName = displayNameAttr?.DisplayName ?? prop.Name;
+
+                table.Columns.Add(columnName, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                columnMappings[columnName] = prop;
+            }
+
+            // اضافه کردن داده‌ها
+            foreach (var item in list)
+            {
+                var row = table.NewRow();
+                foreach (var column in columnMappings)
+                {
+                    var prop = column.Value;
+                    var columnName = column.Key;
+                    row[columnName] = prop.GetValue(item) ?? DBNull.Value;
+                }
+                table.Rows.Add(row);
+            }
+
+            return table;
+        }
+
+        //without attribute DisplayName:
         public static DataTable ToDataTable<T>(this List<T> list)
         {
             DataTable table = new();
@@ -26,6 +62,24 @@
             }
 
             return table;
+        }
+
+        public static void ApplyDisplayNames<T>(this DataGridView grid)
+        {
+            var props = typeof(T).GetProperties();
+
+            foreach (DataGridViewColumn column in grid.Columns)
+            {
+                var prop = props.FirstOrDefault(p => p.Name == column.Name);
+                if (prop != null)
+                {
+                    var displayNameAttr = prop.GetCustomAttribute<DisplayNameAttribute>();
+                    if (displayNameAttr != null)
+                    {
+                        column.HeaderText = displayNameAttr.DisplayName;
+                    }
+                }
+            }
         }
 
         public static void SetDisplayNameInDataGrid<T>(this T obj, DataGridView dataGrid)
@@ -58,7 +112,7 @@
                     return attr?.DisplayName ?? prop.Name;
                 }
             }
-            else if (expression.Body is UnaryExpression unary && unary.Operand is MemberExpression unaryMember)
+            else if (expression.Body is UnaryExpression { Operand: MemberExpression unaryMember })
             {
                 var prop = typeof(T).GetProperty(unaryMember.Member.Name);
                 if (prop != null)

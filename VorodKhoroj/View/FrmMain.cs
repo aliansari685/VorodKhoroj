@@ -22,7 +22,7 @@ public partial class FrmMain : Form
     {
         if (!CommonHelper.IsValid(_services.Records.Count)) return;
 
-        dataView.DataSource = _services.Records.ToDataTable();
+        dataView.DataSource = _services.Records.ToDataTableWithDisplayedName();
 
         Userid_txtbox.DataSource = _services.UsersList;
 
@@ -42,7 +42,7 @@ public partial class FrmMain : Form
             dV.Visible = false;
         }
 
-        new Attendance().SetDisplayNameInDataGrid(dataView);
+        //    new Attendance().SetDisplayNameInDataGrid(dataView);
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)
@@ -53,7 +53,7 @@ public partial class FrmMain : Form
                 throw new NullReferenceException("داده ای وجود ندارد");
 
             dataView.DataSource = DataFilterService.ApplyFilter(_services.Records, FromDateTime_txtbox.Text,
-                toDateTime_txtbox.Text, int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))).ToList().ToDataTable();
+                toDateTime_txtbox.Text, int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))).ToList().ToDataTableWithDisplayedName();
 
             DataGridViewConfig();
         }
