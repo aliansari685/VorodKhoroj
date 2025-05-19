@@ -16,12 +16,12 @@
 
         private void FrmAttendance_Load(object sender, EventArgs e)
         {
-            DataGridConfig();
+            DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
         }
 
-        private void DataGridConfig()
+        private void DataGridConfig(string toDataTime, string fromDataTime = "1403/01/01", string userId = "0")
         {
-            dataView_Attendance.DataSource = _calcService.Calculate("0", "1403/01/01", PersianDateHelper.PersianCalenderDateNow(), false).ToDataTable();
+            dataView_Attendance.DataSource = _calcService.Calculate(userId, fromDataTime, toDataTime, false).ToDataTable();
 
             dataView_Attendance.ApplyDisplayNames<WorkRecord>();
 
