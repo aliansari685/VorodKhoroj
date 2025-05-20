@@ -168,7 +168,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
 
             // اگر زمان ورودی و خروجی دوم وجود داشته باشد
             DateTime? minDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.ElementAt(2) : null;
-            DateTime? maxDateTime2 = orderedTimes.Count() > 2 ? orderedTimes.Last() : null;
+            DateTime? maxDateTime2 = orderedTimes.Count() > 2 && orderedTimes.Last() != minDateTime2 ? orderedTimes.Last() : null;
 
             // محاسبه مدت زمان حضور (ورود - خروج)
             var duration = maxDateTime - minDateTime;
@@ -311,7 +311,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
 
             // مجموع تاخیرها به ساعت (زمان تاخیر کل در فرمت ساعت:دقیقه:ثانیه)
             TotalLateTime =
-                    $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
+                        $@"{(int)totalLateMinutes.TotalHours:D2}:{totalLateMinutes.Minutes:D2}:{totalLateMinutes.Seconds:D2}",
 
             // مجموع روزهای ناقص (تعداد روزهایی که فرد کار ناقص داشته)
             TotalIncompleteDays = totalling.ToString(),
@@ -324,7 +324,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
 
             // مجموع اضافه کاری بعد از ساعت کاری (زمان اضافه کاری کل فرد بعد از ساعت کاری رسمی در فرمت ساعت:دقیقه:ثانیه)
             TotalOvertimeAfterWork =
-                    $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
+                        $@"{(int)totalOvertimeMinutes.TotalHours:D2}:{totalOvertimeMinutes.Minutes:D2}:{totalOvertimeMinutes.Seconds:D2}",
 
             // زودترین زمان ورود (اولین زمان ورود فرد در طول دوره)
             EarliestEntryTime = minEntryTime.ToString(@"hh\:mm\:ss"),

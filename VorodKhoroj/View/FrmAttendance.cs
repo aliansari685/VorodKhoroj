@@ -53,21 +53,20 @@
         private void btn_clear_Click(object sender, EventArgs e)
         {
             FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
-            toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
-
-            DataGridConfig(toDateTime_txtbox.Text);
+            DataGridConfig(toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow());
         }
 
         private void btn_submit_Click(object sender, EventArgs e)
         {
             try
             {
-                //var firstAttendance = _service.DbContext?.Attendances.First(x =>
-                //    x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user));
+//                var firstAttendance = _service.DbContext?.Attendances.First(x => x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user));
 
-                //firstAttendance!.DateTime = DateTime.Parse(DateTime_txtbox.Text);
+                var fA = _service.DbContext?.Attendances.ToList().Where(x =>
+                    x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
 
+                MessageBox.Show(fA[0].DateTime.ToLongDateString());
                 //// var attendance = new Attendance() { };
                 //_service.UpdateAttendanceRecord(new Attendance());
             }
