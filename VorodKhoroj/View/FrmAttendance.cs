@@ -17,6 +17,9 @@
         private void FrmAttendance_Load(object sender, EventArgs e)
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
+
+            Userid_txtbox.DataSource = _service.UsersList;
+            CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
         private void DataGridConfig(string toDataTime, string fromDataTime = "1403/01/01", string userId = "0")
@@ -26,10 +29,6 @@
             dataView_Attendance.ApplyDisplayNames<WorkRecord>();
 
             dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
-
-            Userid_txtbox.DataSource = _service.UsersList;
-
-            CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
         private void btn_applyFilter_Click(object sender, EventArgs e)
@@ -38,8 +37,7 @@
             {
                 if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res) || int.TryParse(Userid_txtbox.Text, out res))
                 {
-                    dataView_Attendance.DataSource = _calcService.Calculate(res.ToString(), FromDateTime_txtbox.Text, toDateTime_txtbox.Text, false).ToDataTable();
-                    dataView_Attendance.ApplyDisplayNames<WorkRecord>();
+                    DataGridConfig(toDateTime_txtbox.Text, FromDateTime_txtbox.Text, res.ToString());
                 }
                 else
                 {
@@ -56,21 +54,22 @@
         {
             FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
             toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
-            DataGridConfig();
+
+            DataGridConfig(toDateTime_txtbox.Text);
         }
 
         private void btn_submit_Click(object sender, EventArgs e)
         {
             try
             {
-                var firstAttendance = _service.DbContext?.Attendances.First(x =>
-                    x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user));
+                //var firstAttendance = _service.DbContext?.Attendances.First(x =>
+                //    x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user));
 
-                firstAttendance!.DateTime = DateTime.Parse(DateTime_txtbox.Text);
+                //firstAttendance!.DateTime = DateTime.Parse(DateTime_txtbox.Text);
 
 
-                // var attendance = new Attendance() { };
-                _service.UpdateAttendanceRecord(new Attendance());
+                //// var attendance = new Attendance() { };
+                //_service.UpdateAttendanceRecord(new Attendance());
             }
             catch (Exception ex)
             {
@@ -86,8 +85,9 @@
                 if (e.RowIndex < 0 || e.ColumnIndex < 0)
                     return;
 
-                _user = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.UserId)].Value.ToString()!;
-                _datetime = dataView_Attendance.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)].Value.ToString()!;
+                var thisRow = dataView_Attendance.Rows[e.RowIndex];
+                _user = thisRow.Cells[nameof(WorkRecord.UserId)].Value.ToString()!;
+                _datetime = thisRow.Cells[nameof(WorkRecord.Date)].Value.ToString()!;
 
                 var workRecords = _calcService.Calculate(_user, _datetime, _datetime, false);
 
