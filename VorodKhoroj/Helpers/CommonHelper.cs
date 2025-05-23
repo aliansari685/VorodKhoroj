@@ -20,5 +20,8 @@
 
         public static bool IsValid(params int[] values) => values is { Length: > 0 } && values.All(v => v != 0);
 
+        public static bool IsValid(params MaskedTextBox[] values) => values is { Length: > 0 } && values.All(v => v.MaskFull);
+
+
     }
 }

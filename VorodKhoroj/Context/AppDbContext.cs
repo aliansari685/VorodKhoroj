@@ -26,12 +26,15 @@
 
             modelBuilder.Entity<Attendance>().HasKey(a => new { a.UserId, a.DateTime }); //کلید ترکیبی
 
+            //ToDo : tommorow doing add id for key and edit in model :
+
             // رابطه بین Attendance و User
             modelBuilder.Entity<Attendance>()
-                .HasOne(a => a.User)
-                .WithMany(u => u.Attendances)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                //.HasOne(a => a.User)
+                .HasKey(x => x.Id);
+            //     .WithMany(u => u.Attendances)
+            // .HasForeignKey(a => a.UserId)
+            //.OnDelete(DeleteBehavior.Restrict);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

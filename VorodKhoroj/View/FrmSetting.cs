@@ -57,6 +57,7 @@ public partial class FrmSetting : Form
                 frmProgress.Show();
                 this.Enabled = false;//قفل شدن تمام عملیات این فرم
                 var serverName = txt_ServerName.Text;
+
                 await Task.Run(() =>
                 {
                     _service.DbName = Path.GetFileNameWithoutExtension(saveFile.FileName); //exam:db

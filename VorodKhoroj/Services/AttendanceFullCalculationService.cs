@@ -137,7 +137,6 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
 
 
-            // اصلاح خودکار ورود ناقص
             if (autoEditNaqesRows && orderedTimes.Length == 1)
             {
                 var isLateThursday = isThursday && minDateTime.Hour >= 13;
@@ -171,7 +170,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             DateTime? maxDateTime2 = orderedTimes.Count() > 2 && orderedTimes.Last() != minDateTime2 ? orderedTimes.Last() : null;
 
             // محاسبه مدت زمان حضور (ورود - خروج)
-            var duration = maxDateTime - minDateTime;
+            var duration = (maxDateTime) - minDateTime;
             var duration2 = minDateTime2.HasValue && maxDateTime2.HasValue
                 ? maxDateTime2.Value - minDateTime2.Value
                 : TimeSpan.Zero;
@@ -210,7 +209,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
                 DayOfWeek = g.Key.Date.ToString("dddd"),
                 Date = g.Key.Date.ToString("yyyy/MM/dd"),
                 EntryTime = minDateTime.ToString("HH:mm:ss"),
-                ExitTime = maxDateTime.ToString("HH:mm:ss"),
+                ExitTime = (maxDateTime).ToString("HH:mm:ss"),
                 EntryTime2 = minDateTime2?.ToString("HH:mm:ss"),
                 ExitTime2 = maxDateTime2?.ToString("HH:mm:ss"),
                 DurationMin = totalDuration.TotalMinutes,

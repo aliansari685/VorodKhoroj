@@ -60,21 +60,80 @@
         {
             try
             {
-//                var firstAttendance = _service.DbContext?.Attendances.First(x => x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user));
+                if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false)
+                {
+                    throw new NullReferenceException("خطا در بروزرسانی تردد اول");
+                }
 
-                var fA = _service.DbContext?.Attendances.ToList().Where(x =>
-                    x.DateTime == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+                var attendances = _service.DbContext?.Attendances.Where(x =>
+                    x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+
+                if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
+
+                //Entry1:
+                UpdateAttendance(attendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));
+
+                //Exit1:
+                if (attendances.Count > 1)
+                {
+                    UpdateAttendance(attendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));
+                }
+                else
+                {
+                    AddAttendance(attendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
+                }
+
+                //Entry2:
+                if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox))
+                {
+                    if (attendances.Count > 2)
+                    {
+                        UpdateAttendance(attendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
+                    }
+                    else
+                    {
+                        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+                    }
 
 
-                MessageBox.Show(fA[0].DateTime.ToLongDateString());
-                //// var attendance = new Attendance() { };
-                //_service.UpdateAttendanceRecord(new Attendance());
+                    //Exit2:
+                    if (attendances.Count > 3)
+                    {
+                        UpdateAttendance(attendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
+                    }
+                    else
+                    {
+                        AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
+                    }
+                }
+                _service.DbContext?.SaveChanges();
+
+                CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
+
             }
             catch (Exception ex)
             {
                 CommonHelper.ShowMessage(ex);
             }
 
+        }
+
+        private void AddAttendance(List<Attendance> attendances, int index, TimeSpan tm)
+        {
+            var at = new Attendance
+            {
+                DateTime = attendances[index].DateTime.Date + tm,
+                LoginType = attendances[index].LoginType,
+                UserId = attendances[index].UserId
+            };
+            _service.AddAttendanceRecord(at);
+        }
+
+        private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
+        {
+            var newDateTime = attendances[index].DateTime.Date + tm;
+            attendances[index].DateTime = newDateTime;
+            _service.UpdateAttendanceRecord(attendances[index]);
         }
 
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
