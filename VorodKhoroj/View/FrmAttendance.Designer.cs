@@ -50,9 +50,20 @@
             label6 = new Label();
             toDateTime_txtbox = new MaskedTextBox();
             label7 = new Label();
+            groupBox3 = new GroupBox();
+            checkBox_workinholiday = new CheckBox();
+            checkBox_IsNaqes = new CheckBox();
+            checkBox_Islate = new CheckBox();
+            groupBox4 = new GroupBox();
+            radioBtn_IsNaqes = new RadioButton();
+            radioBtn_IsLate = new RadioButton();
+            radioBtn_All = new RadioButton();
+            radioBtn_Attendance2 = new RadioButton();
             ((ISupportInitialize)dataView_Attendance).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
             SuspendLayout();
             // 
             // dataView_Attendance
@@ -67,9 +78,10 @@
             dataView_Attendance.Margin = new Padding(3, 4, 3, 4);
             dataView_Attendance.Name = "dataView_Attendance";
             dataView_Attendance.ReadOnly = true;
-            dataView_Attendance.Size = new Size(483, 315);
+            dataView_Attendance.Size = new Size(680, 315);
             dataView_Attendance.TabIndex = 6;
             dataView_Attendance.CellClick += dataView_Attendance_CellClick;
+            dataView_Attendance.RowPrePaint += DataViewAttendanceRowPrePaint;
             // 
             // label1
             // 
@@ -217,10 +229,10 @@
             groupBox2.Controls.Add(label6);
             groupBox2.Controls.Add(toDateTime_txtbox);
             groupBox2.Controls.Add(label7);
-            groupBox2.Location = new Point(12, 7);
+            groupBox2.Location = new Point(13, 8);
             groupBox2.Name = "groupBox2";
             groupBox2.RightToLeft = RightToLeft.Yes;
-            groupBox2.Size = new Size(193, 205);
+            groupBox2.Size = new Size(195, 205);
             groupBox2.TabIndex = 16;
             groupBox2.TabStop = false;
             groupBox2.Text = "جستجو";
@@ -308,12 +320,120 @@
             label7.TabIndex = 17;
             label7.Text = "تا:";
             // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(checkBox_workinholiday);
+            groupBox3.Controls.Add(checkBox_IsNaqes);
+            groupBox3.Controls.Add(checkBox_Islate);
+            groupBox3.Location = new Point(487, 7);
+            groupBox3.Name = "groupBox3";
+            groupBox3.RightToLeft = RightToLeft.Yes;
+            groupBox3.Size = new Size(181, 134);
+            groupBox3.TabIndex = 28;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "اعمال استایل";
+            // 
+            // checkBox_workinholiday
+            // 
+            checkBox_workinholiday.AutoSize = true;
+            checkBox_workinholiday.Location = new Point(47, 91);
+            checkBox_workinholiday.Name = "checkBox_workinholiday";
+            checkBox_workinholiday.Size = new Size(103, 24);
+            checkBox_workinholiday.TabIndex = 30;
+            checkBox_workinholiday.Text = "کار در روز تعطیل";
+            checkBox_workinholiday.UseVisualStyleBackColor = true;
+            checkBox_workinholiday.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            // 
+            // checkBox_IsNaqes
+            // 
+            checkBox_IsNaqes.AutoSize = true;
+            checkBox_IsNaqes.Location = new Point(32, 61);
+            checkBox_IsNaqes.Name = "checkBox_IsNaqes";
+            checkBox_IsNaqes.Size = new Size(118, 24);
+            checkBox_IsNaqes.TabIndex = 29;
+            checkBox_IsNaqes.Text = "ورود ناقص و خراب";
+            checkBox_IsNaqes.UseVisualStyleBackColor = true;
+            checkBox_IsNaqes.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            // 
+            // checkBox_Islate
+            // 
+            checkBox_Islate.AutoSize = true;
+            checkBox_Islate.Location = new Point(60, 31);
+            checkBox_Islate.Name = "checkBox_Islate";
+            checkBox_Islate.Size = new Size(90, 24);
+            checkBox_Islate.TabIndex = 28;
+            checkBox_Islate.Text = "ورود ب تاخیر";
+            checkBox_Islate.UseVisualStyleBackColor = true;
+            checkBox_Islate.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(radioBtn_Attendance2);
+            groupBox4.Controls.Add(radioBtn_IsNaqes);
+            groupBox4.Controls.Add(radioBtn_IsLate);
+            groupBox4.Controls.Add(radioBtn_All);
+            groupBox4.Location = new Point(487, 147);
+            groupBox4.Name = "groupBox4";
+            groupBox4.RightToLeft = RightToLeft.Yes;
+            groupBox4.Size = new Size(181, 174);
+            groupBox4.TabIndex = 29;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "نمایش ردیف ها";
+            // 
+            // radioBtn_IsNaqes
+            // 
+            radioBtn_IsNaqes.AutoSize = true;
+            radioBtn_IsNaqes.Location = new Point(6, 101);
+            radioBtn_IsNaqes.Name = "radioBtn_IsNaqes";
+            radioBtn_IsNaqes.Size = new Size(157, 24);
+            radioBtn_IsNaqes.TabIndex = 32;
+            radioBtn_IsNaqes.Text = "روز های ورود ناقص و خراب";
+            radioBtn_IsNaqes.UseVisualStyleBackColor = true;
+            radioBtn_IsNaqes.CheckedChanged += radioBtn_CheckedChanged;
+            // 
+            // radioBtn_IsLate
+            // 
+            radioBtn_IsLate.AutoSize = true;
+            radioBtn_IsLate.Location = new Point(38, 67);
+            radioBtn_IsLate.Name = "radioBtn_IsLate";
+            radioBtn_IsLate.Size = new Size(125, 24);
+            radioBtn_IsLate.TabIndex = 31;
+            radioBtn_IsLate.Text = "روز های ورود با تاخیر";
+            radioBtn_IsLate.UseVisualStyleBackColor = true;
+            radioBtn_IsLate.CheckedChanged += radioBtn_CheckedChanged;
+            // 
+            // radioBtn_All
+            // 
+            radioBtn_All.AutoSize = true;
+            radioBtn_All.Checked = true;
+            radioBtn_All.Location = new Point(116, 33);
+            radioBtn_All.Name = "radioBtn_All";
+            radioBtn_All.Size = new Size(47, 24);
+            radioBtn_All.TabIndex = 30;
+            radioBtn_All.TabStop = true;
+            radioBtn_All.Text = "همه";
+            radioBtn_All.UseVisualStyleBackColor = true;
+            radioBtn_All.CheckedChanged += radioBtn_CheckedChanged;
+            // 
+            // radioBtn_Attendance2
+            // 
+            radioBtn_Attendance2.AutoSize = true;
+            radioBtn_Attendance2.Location = new Point(55, 135);
+            radioBtn_Attendance2.Name = "radioBtn_Attendance2";
+            radioBtn_Attendance2.Size = new Size(108, 24);
+            radioBtn_Attendance2.TabIndex = 33;
+            radioBtn_Attendance2.Text = "روز های تردد دوم";
+            radioBtn_Attendance2.UseVisualStyleBackColor = true;
+            radioBtn_Attendance2.CheckedChanged += radioBtn_CheckedChanged;
+            // 
             // FrmAttendance
             // 
             AcceptButton = btn_applyfilter;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(483, 646);
+            ClientSize = new Size(680, 646);
+            Controls.Add(groupBox4);
+            Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(dataView_Attendance);
@@ -327,6 +447,10 @@
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -354,5 +478,14 @@
         private MaskedTextBox toDateTime_txtbox;
         private Label label7;
         private Button btn_clear;
+        private GroupBox groupBox3;
+        private CheckBox checkBox_workinholiday;
+        private CheckBox checkBox_IsNaqes;
+        private CheckBox checkBox_Islate;
+        private GroupBox groupBox4;
+        private RadioButton radioBtn_All;
+        private RadioButton radioBtn_IsNaqes;
+        private RadioButton radioBtn_IsLate;
+        private RadioButton radioBtn_Attendance2;
     }
 }

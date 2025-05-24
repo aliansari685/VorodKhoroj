@@ -37,12 +37,10 @@ public partial class FrmMain : Form
     {
         dataView.Columns[2].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
 
-        if (dataView.Columns["User"] is not null and var dV)
+        if (dataView.Columns[nameof(Attendance.Id)] is not null and var dV)
         {
             dV.Visible = false;
         }
-
-        //    new Attendance().SetDisplayNameInDataGrid(dataView);
     }
 
     private void Btn_ApplyFilter_Click(object sender, EventArgs e)

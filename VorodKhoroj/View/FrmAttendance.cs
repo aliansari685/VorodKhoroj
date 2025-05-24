@@ -6,6 +6,7 @@
         private string _datetime = "";
         private readonly AppCoordinator _service;
         private readonly AttendanceFullCalculationService _calcService;
+        private List<WorkRecord> _tempRecords = [];
 
         public FrmAttendance(AppCoordinator service, AttendanceFullCalculationService calcServices)
         {
@@ -24,7 +25,9 @@
 
         private void DataGridConfig(string toDataTime, string fromDataTime = "1403/01/01", string userId = "0")
         {
-            dataView_Attendance.DataSource = _calcService.Calculate(userId, fromDataTime, toDataTime, false).ToDataTable();
+            _tempRecords = _calcService.Calculate(userId, fromDataTime, toDataTime, false);
+
+            dataView_Attendance.DataSource = _tempRecords.ToDataTable();
 
             dataView_Attendance.ApplyDisplayNames<WorkRecord>();
 
@@ -35,7 +38,8 @@
         {
             try
             {
-                if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res) || int.TryParse(Userid_txtbox.Text, out res))
+                if (int.TryParse(Userid_txtbox.SelectedValue?.ToString(), out var res) ||
+                    int.TryParse(Userid_txtbox.Text, out res))
                 {
                     DataGridConfig(toDateTime_txtbox.Text, FromDateTime_txtbox.Text, res.ToString());
                 }
@@ -106,10 +110,12 @@
                         AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
                     }
                 }
+
                 _service.DbContext?.SaveChanges();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 
+                DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
             }
             catch (Exception ex)
             {
@@ -127,6 +133,7 @@
                 UserId = attendances[index].UserId
             };
             _service.AddAttendanceRecord(at);
+            _service.LoadRecordsFromDb();
         }
 
         private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
@@ -134,6 +141,7 @@
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
             _service.UpdateAttendanceRecord(attendances[index]);
+            _service.LoadRecordsFromDb();
         }
 
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -161,6 +169,76 @@
             {
                 CommonHelper.ShowMessage(ex);
             }
+        }
+
+        private void checkBox_ApplyStyles_CheckedChanged(object sender, EventArgs e)
+        {
+            dataView_Attendance.Invalidate();
+        }
+
+        private void DataViewAttendanceRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            try
+            {
+                if (dataView_Attendance.Rows.Count > e.RowIndex)
+                {
+                    var row = dataView_Attendance.Rows[e.RowIndex];
+
+                    if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
+                        row.DefaultCellStyle.BackColor = Color.Red;
+
+                    else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_IsNaqes.Checked)
+                        row.DefaultCellStyle.BackColor = Color.Orange;
+
+                    else if (checkBox_workinholiday.Checked && DateTime.TryParse(
+                                                                row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(),
+                                                                out var date)
+                                                            && _calcService.OvertimeinHoliday.Contains(date))
+                        row.DefaultCellStyle.BackColor = Color.CadetBlue;
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+
+        }
+
+        private void radioBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (radioBtn_All.Checked)
+                {
+                    dataView_Attendance.DataSource = _tempRecords.ToDataTable();
+                    CommonHelper.ShowMessage("انجام شد");
+                }
+                else if (radioBtn_IsLate.Checked)
+                {
+                    dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsLate).ToList().ToDataTable();
+                    CommonHelper.ShowMessage("انجام شد");
+                }
+                else if (radioBtn_IsNaqes.Checked)
+                {
+                    dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsNaghes).ToList().ToDataTable();
+                    CommonHelper.ShowMessage("انجام شد");
+                }
+                else if (radioBtn_Attendance2.Checked)
+                {
+                    dataView_Attendance.DataSource = _tempRecords.Where(x => CommonHelper.IsValid(x.EntryTime2)).ToList().ToDataTable();
+                    CommonHelper.ShowMessage("انجام شد");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+
         }
     }
 }
