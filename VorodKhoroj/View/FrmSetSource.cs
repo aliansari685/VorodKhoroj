@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Coordinators;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 public partial class FrmSetSource : Form
 {
@@ -42,7 +40,8 @@ public partial class FrmSetSource : Form
             if (radiobtn_database.Checked)
             {
                 if (_services is { UserListProvider: DbProvider })
-                    throw new InvalidOperationException("لطفا ارتباط قبلی خود را قطع کنید ، برای اینکار میتوانید در تنظیمات از دکمه راه اندازی مجدد استفاده کنید");
+                    throw new InvalidOperationException(
+                        "لطفا ارتباط قبلی خود را قطع کنید ، برای اینکار میتوانید در تنظیمات از دکمه راه اندازی مجدد استفاده کنید");
 
                 if (!CommonHelper.IsValid(txt_ServerName.Text) || !_services.TestServerName(txt_ServerName.Text))
                     throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
@@ -55,6 +54,8 @@ public partial class FrmSetSource : Form
                     _services.DbName = Path.GetFileNameWithoutExtension(openFile.FileName);
 
                     _services.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
+
+                    _services.EnsureIdColumnExists();
 
                     _services.LoadRecordsFromDb();
 

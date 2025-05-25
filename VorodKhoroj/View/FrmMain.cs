@@ -179,7 +179,7 @@ public partial class FrmMain : Form
 
     private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_services is { DbContext: not null, Records.Count: not 0 })
+        if (_services is { DbContext: not null, UserListProvider: DbProvider, Records.Count: not 0 })
         {
             using var frm = new FrmAttendance(_services, _calcServices);
             frm.ShowDialog();

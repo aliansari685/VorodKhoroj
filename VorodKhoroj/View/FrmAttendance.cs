@@ -42,6 +42,7 @@
                     int.TryParse(Userid_txtbox.Text, out res))
                 {
                     DataGridConfig(toDateTime_txtbox.Text, FromDateTime_txtbox.Text, res.ToString());
+                    radioBtn_All.Checked = true;
                 }
                 else
                 {
@@ -58,16 +59,18 @@
         {
             FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
             DataGridConfig(toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow());
+            radioBtn_All.Checked = true;
         }
 
         private void btn_submit_Click(object sender, EventArgs e)
         {
             try
             {
-                if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false)
-                {
-                    throw new NullReferenceException("خطا در بروزرسانی تردد اول");
-                }
+                if (MessageBox.Show("ایا از کار خود اطمینان دارید؟", "تاییدیه", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
+                    {
+                        throw new NullReferenceException("خطا در بروزرسانی تردد اول");
+                    }
 
                 var attendances = _service.DbContext?.Attendances.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
@@ -88,7 +91,7 @@
                 }
 
                 //Entry2:
-                if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox))
+                if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
                 {
                     if (attendances.Count > 2)
                     {
@@ -98,7 +101,6 @@
                     {
                         AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
                     }
-
 
                     //Exit2:
                     if (attendances.Count > 3)
@@ -110,8 +112,12 @@
                         AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
                     }
                 }
+                else
+                    CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
 
                 _service.DbContext?.SaveChanges();
+
+                _service.LoadRecordsFromDb();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 
@@ -133,7 +139,7 @@
                 UserId = attendances[index].UserId
             };
             _service.AddAttendanceRecord(at);
-            _service.LoadRecordsFromDb();
+
         }
 
         private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
@@ -141,7 +147,6 @@
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
             _service.UpdateAttendanceRecord(attendances[index]);
-            _service.LoadRecordsFromDb();
         }
 
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -215,22 +220,18 @@
                 if (radioBtn_All.Checked)
                 {
                     dataView_Attendance.DataSource = _tempRecords.ToDataTable();
-                    CommonHelper.ShowMessage("انجام شد");
                 }
                 else if (radioBtn_IsLate.Checked)
                 {
                     dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsLate).ToList().ToDataTable();
-                    CommonHelper.ShowMessage("انجام شد");
                 }
                 else if (radioBtn_IsNaqes.Checked)
                 {
                     dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsNaghes).ToList().ToDataTable();
-                    CommonHelper.ShowMessage("انجام شد");
                 }
                 else if (radioBtn_Attendance2.Checked)
                 {
                     dataView_Attendance.DataSource = _tempRecords.Where(x => CommonHelper.IsValid(x.EntryTime2!)).ToList().ToDataTable();
-                    CommonHelper.ShowMessage("انجام شد");
                 }
 
             }
