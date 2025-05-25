@@ -229,7 +229,7 @@
                 }
                 else if (radioBtn_Attendance2.Checked)
                 {
-                    dataView_Attendance.DataSource = _tempRecords.Where(x => CommonHelper.IsValid(x.EntryTime2)).ToList().ToDataTable();
+                    dataView_Attendance.DataSource = _tempRecords.Where(x => CommonHelper.IsValid(x.EntryTime2!)).ToList().ToDataTable();
                     CommonHelper.ShowMessage("انجام شد");
                 }
 
