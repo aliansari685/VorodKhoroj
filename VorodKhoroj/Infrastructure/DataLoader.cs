@@ -9,12 +9,12 @@ public class DataLoader(DataRepository repository)
     public IUserDataProvider? ListProvider { get; set; }
     public IList? UsersList => ListProvider?.GetUserDataProvider();
 
-    public void LoadFromFile(string fileName)
+    public void LoadFromFile(string fileName, bool isListProvider = true)
     {
         Records = repository.GetRecordsFromFile(fileName);
-        ListProvider = new FileProvider(repository, Records);
+        if (isListProvider)
+            ListProvider = new FileProvider(repository, Records);
     }
-
     public void LoadFromDb()
     {
         Records = DbContext?.Attendances.ToList() ?? [];

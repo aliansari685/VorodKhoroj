@@ -55,7 +55,7 @@ public partial class FrmSetSource : Form
 
                     _services.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
 
-                    _services.EnsureIdColumnExists();
+                    _services.MigrationsEnsureDatabaseUpToDate();
 
                     _services.LoadRecordsFromDb();
 

@@ -1,7 +1,7 @@
 ﻿namespace VorodKhoroj.Coordinators
 {
-    // هماهنگ ‌کننده‌ی عملیات بین سرویس‌های مختلف برای مدیریت گردش کار ورود و خروج
-    public class AppCoordinator(DataLoader dataLoader, DatabaseService databaseService, AttendanceService attendanceService, UserService userService) : IDisposable
+    // هماهنگ ‌کننده‌ی عملیات بین سرویس‌های مختلف برای مدیریت و گردش کار ورود و خروج
+    public class AppCoordinator(ManualMigrationService migrationService, DataLoader dataLoader, DatabaseService databaseService, AttendanceService attendanceService, UserService userService) : IDisposable
     {
         public string DbName { get; set; } = "";
         public string DbPathName { get; set; } = "";
@@ -9,11 +9,12 @@
         public AppDbContext? DbContext => dataLoader.DbContext;
         public AppDbContext? DbContextMaster => dataLoader.DbContextMaster;
 
-        public List<Attendance> Records => dataLoader.Records;
         public IList? UsersList => dataLoader.UsersList;
         public IUserDataProvider? UserListProvider => dataLoader.ListProvider;
 
-        public void LoadRecordsFromFile(string fileName) => dataLoader.LoadFromFile(fileName);
+        public List<Attendance> Records => dataLoader.Records;
+
+        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) => dataLoader.LoadFromFile(fileName, isListProvider);
         public void LoadRecordsFromDb() => dataLoader.LoadFromDb();
 
         public void InitializeDbContext(string server, AppDbContext.DataBaseLocation location) =>
@@ -34,7 +35,6 @@
 
         public void HandleDetachDatabase()
         {
-            //if (DbContext != null) databaseService.DetachDatabase(DbPathName, DbName, DbContext);
             if (DbContextMaster != null) databaseService.DetachDatabase(DbPathName, DbName, DbContextMaster);
         }
 
@@ -43,7 +43,7 @@
             if (DbContext != null) attendanceService.CopyRecords(records, DbContext);
         }
 
-        public void AddAttendanceRecord(Attendance rec)
+        public void AddAttendanceRecord(List<Attendance> rec)
         {
             if (DbContext != null) attendanceService.AddAttendance(rec, DbContext);
         }
@@ -53,7 +53,7 @@
             if (DbContext != null) attendanceService.UpdateAttendance(rec, DbContext);
         }
 
-        public void AddUserRecord(User rec)
+        public void AddUserRecord(List<User> rec)
         {
             if (DbContext != null) userService.AddUser(rec, DbContext);
         }
@@ -61,6 +61,11 @@
         public void UpdateUserRecord(User rec)
         {
             if (DbContext != null) userService.UpdateUser(rec, DbContext);
+        }
+
+        public void MigrationsEnsureDatabaseUpToDate()
+        {
+            if (DbContext != null) migrationService.EnsureIdColumnExists(DbContext);
         }
 
         public bool TestServerName(string server)
@@ -72,41 +77,6 @@
                 return true;
             }
             catch { return false; }
-        }
-
-        internal void EnsureIdColumnExists()
-        {
-            string addIdColumnSql = @"
-                                -- حذف کلید ترکیبی قدیمی اگر وجود دارد
-                                IF EXISTS (
-                                    SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-                                    WHERE TABLE_NAME = 'Attendances' AND CONSTRAINT_TYPE = 'PRIMARY KEY' AND CONSTRAINT_NAME = 'PK_Attendances'
-                                )
-                                BEGIN
-                                    ALTER TABLE Attendances DROP CONSTRAINT PK_Attendances;
-                                END;
-                                
-                                -- اضافه کردن ستون Id اگر وجود ندارد
-                                IF NOT EXISTS (
-                                    SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-                                    WHERE TABLE_NAME = 'Attendances' AND COLUMN_NAME = 'Id'
-                                )
-                                BEGIN
-                                    ALTER TABLE Attendances ADD Id INT IDENTITY(1,1) NOT NULL;
-                                END;
-                                
-                                -- اضافه کردن کلید اصلی جدید روی Id
-                                IF NOT EXISTS (
-                                    SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-                                    WHERE TABLE_NAME = 'Attendances' AND CONSTRAINT_TYPE = 'PRIMARY KEY'
-                                )
-                                BEGIN
-                                    ALTER TABLE Attendances ADD CONSTRAINT PK_Attendances_Id PRIMARY KEY (Id);
-                                END;
-                                ";
-
-            DbContext?.Database.ExecuteSqlRaw(addIdColumnSql);
-
         }
         public void Dispose()
         {

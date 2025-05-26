@@ -60,6 +60,7 @@ namespace VorodKhoroj
              Host.CreateDefaultBuilder()
                  .ConfigureServices((_, services) =>
                  {
+                     services.AddSingleton<ManualMigrationService>();
                      services.AddSingleton<AttendanceService>();
                      services.AddSingleton<UserService>();
                      services.AddSingleton<DataLoader>();

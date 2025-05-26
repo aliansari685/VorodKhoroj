@@ -138,7 +138,7 @@
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
             };
-            _service.AddAttendanceRecord(at);
+            _service.AddAttendanceRecord([at]);
 
         }
 

@@ -63,8 +63,7 @@ public partial class FrmMain : Form
 
     private void btn_clear_Click(object sender, EventArgs e)
     {
-        TextBoxClear();
-        DataGridConfig();
+        ReloadGrid();
     }
 
     private void TextBoxClear()
@@ -169,6 +168,7 @@ public partial class FrmMain : Form
         {
             using var frm = new FrmUsers(_services);
             frm.ShowDialog();
+            ReloadGrid();
         }
         else
         {
@@ -183,10 +183,32 @@ public partial class FrmMain : Form
         {
             using var frm = new FrmAttendance(_services, _calcServices);
             frm.ShowDialog();
+            ReloadGrid();
         }
         else
         {
             CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
         }
+    }
+
+    private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (_services is { DbContext: not null, UserListProvider: DbProvider, Records.Count: not 0 })
+        {
+            using var frm = new FrmAttendanceAddRange(_services);
+            frm.ShowDialog();
+
+            ReloadGrid();
+        }
+        else
+        {
+            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+        }
+    }
+
+    private void ReloadGrid()
+    {
+        TextBoxClear();
+        DataGridConfig();
     }
 }

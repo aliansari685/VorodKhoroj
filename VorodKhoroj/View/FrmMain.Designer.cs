@@ -50,6 +50,7 @@
             btn_clear = new Button();
             Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
+            AddAttendanceToollStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -108,26 +109,26 @@
             ویرایشردیفهایناقصToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { AttendanceEditToolStripMenuItem, UsersEditToolStripMenuItem });
             ویرایشردیفهایناقصToolStripMenuItem.Font = new Font("IRANSans", 9F);
             ویرایشردیفهایناقصToolStripMenuItem.Name = "ویرایشردیفهایناقصToolStripMenuItem";
-            ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(102, 24);
-            ویرایشردیفهایناقصToolStripMenuItem.Text = "ویرایش ردیف ها";
+            ویرایشردیفهایناقصToolStripMenuItem.Size = new Size(96, 24);
+            ویرایشردیفهایناقصToolStripMenuItem.Text = "ویرایش داده ها";
             // 
             // AttendanceEditToolStripMenuItem
             // 
             AttendanceEditToolStripMenuItem.Name = "AttendanceEditToolStripMenuItem";
-            AttendanceEditToolStripMenuItem.Size = new Size(180, 24);
-            AttendanceEditToolStripMenuItem.Text = "ویرایش ردیف ها";
+            AttendanceEditToolStripMenuItem.Size = new Size(153, 24);
+            AttendanceEditToolStripMenuItem.Text = "ویرایش تردد ها";
             AttendanceEditToolStripMenuItem.Click += AttendanceEditToolStripMenuItem_Click;
             // 
             // UsersEditToolStripMenuItem
             // 
             UsersEditToolStripMenuItem.Name = "UsersEditToolStripMenuItem";
-            UsersEditToolStripMenuItem.Size = new Size(180, 24);
+            UsersEditToolStripMenuItem.Size = new Size(153, 24);
             UsersEditToolStripMenuItem.Text = "ویرایش کاربران";
             UsersEditToolStripMenuItem.Click += UsersEditToolStripMenuItem_Click;
             // 
             // SettingToolStripMenuItem
             // 
-            SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, راهاندازیمجددToolStripMenuItem });
+            SettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DBConfigToolStripMenuItem, راهاندازیمجددToolStripMenuItem, AddAttendanceToollStripMenuItem });
             SettingToolStripMenuItem.Font = new Font("IRANSans", 9F);
             SettingToolStripMenuItem.Name = "SettingToolStripMenuItem";
             SettingToolStripMenuItem.Size = new Size(60, 24);
@@ -136,14 +137,14 @@
             // DBConfigToolStripMenuItem
             // 
             DBConfigToolStripMenuItem.Name = "DBConfigToolStripMenuItem";
-            DBConfigToolStripMenuItem.Size = new Size(163, 24);
+            DBConfigToolStripMenuItem.Size = new Size(249, 24);
             DBConfigToolStripMenuItem.Text = "عملیات پایگاه داده";
             DBConfigToolStripMenuItem.Click += DBConfigToolStripMenuItem_Click;
             // 
             // راهاندازیمجددToolStripMenuItem
             // 
             راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
-            راهاندازیمجددToolStripMenuItem.Size = new Size(163, 24);
+            راهاندازیمجددToolStripMenuItem.Size = new Size(249, 24);
             راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
             راهاندازیمجددToolStripMenuItem.Click += AppRestartToolStripMenuItem_Click;
             // 
@@ -243,6 +244,13 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
+            // AddAttendanceToollStripMenuItem
+            // 
+            AddAttendanceToollStripMenuItem.Name = "AddAttendanceToollStripMenuItem";
+            AddAttendanceToollStripMenuItem.Size = new Size(249, 24);
+            AddAttendanceToollStripMenuItem.Text = "بارگذاری و اضافه کردن دستعه جمعی";
+            AddAttendanceToollStripMenuItem.Click += AddAttendanceToolStripMenuItem_Click;
+            // 
             // FrmMain
             // 
             AcceptButton = btn_applyfilter;
@@ -297,5 +305,6 @@
         private ToolStripMenuItem AttendanceEditToolStripMenuItem;
         private ToolStripMenuItem UsersEditToolStripMenuItem;
         private ToolStripMenuItem FasrExportToolStripMenuItem;
+        private ToolStripMenuItem AddAttendanceToollStripMenuItem;
     }
 }
