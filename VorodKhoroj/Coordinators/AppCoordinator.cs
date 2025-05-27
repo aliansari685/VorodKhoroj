@@ -14,14 +14,25 @@
 
         public List<Attendance> Records => dataLoader.Records;
 
-        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) => dataLoader.LoadFromFile(fileName, isListProvider);
-        public void LoadRecordsFromDb() => dataLoader.LoadFromDb();
+        public void LoadRecordsFromFile(string fileName, bool isListProvider = true)
+        {
+            dataLoader.LoadFromFile(fileName, isListProvider);
+        }
 
-        public void InitializeDbContext(string server, AppDbContext.DataBaseLocation location) =>
+        public void LoadRecordsFromDb()
+        {
+            dataLoader.LoadFromDb();
+        }
+
+        public void InitializeDbContext(string server, AppDbContext.DataBaseLocation location)
+        {
             dataLoader.InitializeDbContext(server, DbPathName, DbName, location);
+        }
 
-        public void InitializeDbContext_Master(string server) =>
+        public void InitializeDbContext_Master(string server)
+        {
             dataLoader.InitializeDbContextMaster(server, DbPathName);
+        }
 
         public void HandleCreateDatabase()
         {

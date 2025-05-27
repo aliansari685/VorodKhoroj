@@ -31,7 +31,7 @@ public partial class FrmSetSource : Form
                 using var openFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" };
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    _services.LoadRecordsFromFile(openFile.FileName);
+                    _services.DataLoaderCoordinator.LoadRecordsFromFile(openFile.FileName);
 
                     Close();
                 }
@@ -39,7 +39,7 @@ public partial class FrmSetSource : Form
 
             if (radiobtn_database.Checked)
             {
-                if (_services is { UserListProvider: DbProvider })
+                if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
                     throw new InvalidOperationException(
                         "لطفا ارتباط قبلی خود را قطع کنید ، برای اینکار میتوانید در تنظیمات از دکمه راه اندازی مجدد استفاده کنید");
 
@@ -53,11 +53,11 @@ public partial class FrmSetSource : Form
 
                     _services.DbName = Path.GetFileNameWithoutExtension(openFile.FileName);
 
-                    _services.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
+                    _services.DataLoaderCoordinator.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
 
                     _services.MigrationsEnsureDatabaseUpToDate();
 
-                    _services.LoadRecordsFromDb();
+                    _services.DataLoaderCoordinator.LoadRecordsFromDb();
 
                     Close();
                 }

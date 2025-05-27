@@ -42,9 +42,9 @@ public partial class FrmFilter : Form
 
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _services.UsersList;
+        Userid_txtbox.DataSource = _services.DataLoaderCoordinator.UsersList;
 
-        if (_services is { UserListProvider: DbProvider })
+        if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }

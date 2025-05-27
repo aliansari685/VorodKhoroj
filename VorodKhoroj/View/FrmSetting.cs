@@ -65,11 +65,11 @@ public partial class FrmSetting : Form
 
                     _service.HandleCreateDatabase();
 
-                    _service.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+                    _service.DataLoaderCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
 
                     _service.HandleCreateTables();
 
-                    _service.CopyAttendancesRecord(_service.Records);
+                    _service.CopyAttendancesRecord(_service.DataLoaderCoordinator.Records);
 
                     _service.HandleDetachDatabase();
                 });

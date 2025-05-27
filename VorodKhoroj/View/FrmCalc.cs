@@ -25,9 +25,9 @@ public partial class FrmCalc : Form
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        userid_txtbox.DataSource = _service.UsersList;
+        userid_txtbox.DataSource = _service.DataLoaderCoordinator.UsersList;
 
-        if (_service.UserListProvider is DbProvider)
+        if (_service.DataLoaderCoordinator.UserListProvider is DbProvider)
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
@@ -152,20 +152,20 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
+            if (_service is { DataLoaderCoordinator.UsersList: null }) return; // or:     if (_service.UsersList == null) return;
 
             //Cast iList:
             List<int> users = [];
 
             switch (_service)
             {
-                case { UserListProvider: DbProvider, DbContext: not null }:
+                case { DataLoaderCoordinator.UserListProvider: DbProvider, DataLoaderCoordinator.DbContext: not null }:
                     {
-                        users.AddRange((_service.UsersList as List<User> ?? []).Select(variable => variable.UserId));
+                        users.AddRange((_service.DataLoaderCoordinator.UsersList as List<User> ?? []).Select(variable => variable.UserId));
                         break;
                     }
-                case { UserListProvider: FileProvider }:
-                    users = (_service.UsersList as int[])?.ToList() ?? [];
+                case { DataLoaderCoordinator.UserListProvider: FileProvider }:
+                    users = (_service.DataLoaderCoordinator.UsersList as int[])?.ToList() ?? [];
                     break;
             }
 
@@ -195,10 +195,10 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { UserListProvider: FileProvider })
+            if (_service is { DataLoaderCoordinator.UserListProvider: FileProvider })
                 _username = userid_txtbox.Text = _userid;
             else
-                userid_txtbox.Text = _username = (_service.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
+                userid_txtbox.Text = _username = (_service.DataLoaderCoordinator.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
 
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();

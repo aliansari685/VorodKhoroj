@@ -18,7 +18,7 @@
             {
                 if (MessageBox.Show($@"آیا کاربر {Userid_txtbox.Text} با نام {UserName_txtbox.Text} ویرایش شود؟", @"تایید", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
+                    var user = _services.DataLoaderCoordinator.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
 
                     user.Name = UserName_txtbox.Text;
 
@@ -38,7 +38,7 @@
         private void DataGridConfig()
         {
             UserName_txtbox.Text = null;
-            dataView_User.DataSource = Userid_txtbox.DataSource = _services.UsersList;
+            dataView_User.DataSource = Userid_txtbox.DataSource = _services.DataLoaderCoordinator.UsersList;
         }
 
         private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)
@@ -47,7 +47,7 @@
 
             try
             {
-                var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
+                var user = _services.DataLoaderCoordinator.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
                 UserName_txtbox.Text = user.Name;
             }
             catch (Exception ex)

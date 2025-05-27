@@ -16,8 +16,8 @@
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services.UsersList;
-            if (_services is { UserListProvider: DbProvider })
+            userid_txtbox.DataSource = _services.DataLoaderCoordinator.UsersList;
+            if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
             {
                 CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
             }
@@ -65,7 +65,7 @@
 
         private async Task AllUsers(SaveFileDialog sfd, List<int> monthList)
         {
-            var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
+            var userid = _services.DataLoaderCoordinator.UsersList ?? throw new NullReferenceException("شی خالی است");
 
             //For Save Path Files
             var directory = Path.GetDirectoryName(sfd.FileName);

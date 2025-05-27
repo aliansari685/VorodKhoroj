@@ -19,7 +19,7 @@
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
 
-            Userid_txtbox.DataSource = _service.UsersList;
+            Userid_txtbox.DataSource = _service.DataLoaderCoordinator.UsersList;
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
@@ -72,7 +72,7 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                var attendances = _service.DbContext?.Attendances.Where(x =>
+                var attendances = _service.DataLoaderCoordinator.DbContext?.Attendances.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
@@ -115,9 +115,9 @@
                 else
                     CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
 
-                _service.DbContext?.SaveChanges();
+                _service.DataLoaderCoordinator.DbContext?.SaveChanges();
 
-                _service.LoadRecordsFromDb();
+                _service.DataLoaderCoordinator.LoadRecordsFromDb();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 

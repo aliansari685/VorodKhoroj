@@ -80,7 +80,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
     {
         if (CommonHelper.IsValid(userId) == false) userId = "0";
 
-        var filtered = DataFilterService.ApplyFilter(recordService.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
+        var filtered = DataFilterService.ApplyFilter(recordService.DataLoaderCoordinator.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
         if (filtered.Any() == false)
             //    throw new ArgumentNullException($"داده ای وجود ندارد");
