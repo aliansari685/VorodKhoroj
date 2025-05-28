@@ -19,8 +19,8 @@ global using System.Reflection;
 global using VorodKhoroj.Context;
 global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Collections;
-global using VorodKhoroj.Infrastructure;
 global using VorodKhoroj.Coordinators;
+global using VorodKhoroj.Interfaces;
 
 
 namespace VorodKhoroj
@@ -60,14 +60,20 @@ namespace VorodKhoroj
              Host.CreateDefaultBuilder()
                  .ConfigureServices((_, services) =>
                  {
+                     //Services:
                      services.AddSingleton<ManualMigrationService>();
-                     services.AddSingleton<AttendanceService>();
-                     services.AddSingleton<UserService>();
-                     services.AddSingleton<DataLoader>();
                      services.AddSingleton<DataRepository>();
                      services.AddSingleton<DatabaseService>();
-                     services.AddSingleton<AppCoordinator>();
                      services.AddTransient<AttendanceFullCalculationService>();
+
+                     //Coordinator:
+                     services.AddSingleton<IAppDbContextProvider, MainCoordinator>();
+                     services.AddSingleton<AttendanceServiceCoordinator>();
+                     services.AddSingleton<DatabaseServiceCoordinator>();
+                     services.AddSingleton<DataLoaderCoordinator>();
+                     services.AddSingleton<ManualMigrationServiceCoordinator>();
+                     services.AddSingleton<UserServiceCoordinator>();
+
                      services.AddScoped<FrmMain>();
                  });
 

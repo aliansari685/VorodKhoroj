@@ -48,7 +48,7 @@
         public required string AverageWorkdayHours { get; set; }
 
         [DisplayName("مقدار کسری به ساعت")]
-        public required string TotalKasriTime { get; set; }
+        public required string TotalFractionTime { get; set; }
 
         [DisplayName("مقدار تعدیل یا اضافه ساعت کاری خالص")]
         public required string TotalAdjustmentOrOvertime { get; set; }

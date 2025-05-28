@@ -31,7 +31,7 @@
             tabpage_detailvorodkhoroj = new TabPage();
             groupBox3 = new GroupBox();
             checkBox_workinholiday = new CheckBox();
-            checkBox_IsNaqes = new CheckBox();
+            checkBox_Isincomplete = new CheckBox();
             checkBox_Islate = new CheckBox();
             btn_perv = new Button();
             btn_next = new Button();
@@ -41,7 +41,7 @@
             checkBox_AutoEdit = new CheckBox();
             lbl_tadil = new Label();
             label22 = new Label();
-            lbl_sumkasri = new Label();
+            lbl_sumFraction = new Label();
             label16 = new Label();
             lbl_sumlate = new Label();
             label17 = new Label();
@@ -89,13 +89,13 @@
             groupBox2 = new GroupBox();
             txtbox_fullwork_ramadan = new MaskedTextBox();
             label27 = new Label();
-            txtbox_naqes_ramazan = new MaskedTextBox();
+            txtbox_incomplete_ramazan = new MaskedTextBox();
             label26 = new Label();
-            txtbox_naqes_farvardin = new MaskedTextBox();
+            txtbox_incomplete_farvardin = new MaskedTextBox();
             label25 = new Label();
-            txtbox_naqes_thrusday = new MaskedTextBox();
+            txtbox_incomplete_thrusday = new MaskedTextBox();
             label24 = new Label();
-            txtbox_naqes_normal = new MaskedTextBox();
+            txtbox_incomplete_normal = new MaskedTextBox();
             label1 = new Label();
             txtbox_late = new MaskedTextBox();
             txtbox_fullwork_farvardin = new MaskedTextBox();
@@ -142,7 +142,7 @@
             // groupBox3
             // 
             groupBox3.Controls.Add(checkBox_workinholiday);
-            groupBox3.Controls.Add(checkBox_IsNaqes);
+            groupBox3.Controls.Add(checkBox_Isincomplete);
             groupBox3.Controls.Add(checkBox_Islate);
             groupBox3.Location = new Point(1072, 56);
             groupBox3.Name = "groupBox3";
@@ -164,18 +164,18 @@
             checkBox_workinholiday.UseVisualStyleBackColor = true;
             checkBox_workinholiday.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
             // 
-            // checkBox_IsNaqes
+            // checkBox_Isincomplete
             // 
-            checkBox_IsNaqes.AutoSize = true;
-            checkBox_IsNaqes.Checked = true;
-            checkBox_IsNaqes.CheckState = CheckState.Checked;
-            checkBox_IsNaqes.Location = new Point(54, 58);
-            checkBox_IsNaqes.Name = "checkBox_IsNaqes";
-            checkBox_IsNaqes.Size = new Size(118, 24);
-            checkBox_IsNaqes.TabIndex = 29;
-            checkBox_IsNaqes.Text = "ورود ناقص و خراب";
-            checkBox_IsNaqes.UseVisualStyleBackColor = true;
-            checkBox_IsNaqes.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            checkBox_Isincomplete.AutoSize = true;
+            checkBox_Isincomplete.Checked = true;
+            checkBox_Isincomplete.CheckState = CheckState.Checked;
+            checkBox_Isincomplete.Location = new Point(54, 58);
+            checkBox_Isincomplete.Name = "checkBox_Isincomplete";
+            checkBox_Isincomplete.Size = new Size(118, 24);
+            checkBox_Isincomplete.TabIndex = 29;
+            checkBox_Isincomplete.Text = "ورود ناقص و خراب";
+            checkBox_Isincomplete.UseVisualStyleBackColor = true;
+            checkBox_Isincomplete.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
             // 
             // checkBox_Islate
             // 
@@ -240,7 +240,7 @@
             panel1.Controls.Add(checkBox_AutoEdit);
             panel1.Controls.Add(lbl_tadil);
             panel1.Controls.Add(label22);
-            panel1.Controls.Add(lbl_sumkasri);
+            panel1.Controls.Add(lbl_sumFraction);
             panel1.Controls.Add(label16);
             panel1.Controls.Add(lbl_sumlate);
             panel1.Controls.Add(label17);
@@ -312,15 +312,15 @@
             label22.TabIndex = 40;
             label22.Text = "تعدیل(اضافه-کسری):";
             // 
-            // lbl_sumkasri
+            // lbl_sumFraction
             // 
-            lbl_sumkasri.AutoSize = true;
-            lbl_sumkasri.Font = new Font("IRANSans", 8F, FontStyle.Bold);
-            lbl_sumkasri.Location = new Point(40, 11);
-            lbl_sumkasri.Name = "lbl_sumkasri";
-            lbl_sumkasri.Size = new Size(57, 19);
-            lbl_sumkasri.TabIndex = 39;
-            lbl_sumkasri.Text = "16:59:59";
+            lbl_sumFraction.AutoSize = true;
+            lbl_sumFraction.Font = new Font("IRANSans", 8F, FontStyle.Bold);
+            lbl_sumFraction.Location = new Point(40, 11);
+            lbl_sumFraction.Name = "lbl_sumFraction";
+            lbl_sumFraction.Size = new Size(57, 19);
+            lbl_sumFraction.TabIndex = 39;
+            lbl_sumFraction.Text = "16:59:59";
             // 
             // label16
             // 
@@ -799,13 +799,13 @@
             // 
             groupBox2.Controls.Add(txtbox_fullwork_ramadan);
             groupBox2.Controls.Add(label27);
-            groupBox2.Controls.Add(txtbox_naqes_ramazan);
+            groupBox2.Controls.Add(txtbox_incomplete_ramazan);
             groupBox2.Controls.Add(label26);
-            groupBox2.Controls.Add(txtbox_naqes_farvardin);
+            groupBox2.Controls.Add(txtbox_incomplete_farvardin);
             groupBox2.Controls.Add(label25);
-            groupBox2.Controls.Add(txtbox_naqes_thrusday);
+            groupBox2.Controls.Add(txtbox_incomplete_thrusday);
             groupBox2.Controls.Add(label24);
-            groupBox2.Controls.Add(txtbox_naqes_normal);
+            groupBox2.Controls.Add(txtbox_incomplete_normal);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(txtbox_late);
             groupBox2.Controls.Add(txtbox_fullwork_farvardin);
@@ -845,17 +845,17 @@
             label27.TabIndex = 43;
             label27.Text = "شرط ساعت کاری کامل رمضان:";
             // 
-            // txtbox_naqes_ramazan
+            // txtbox_incomplete_ramazan
             // 
-            txtbox_naqes_ramazan.Location = new Point(16, 134);
-            txtbox_naqes_ramazan.Mask = "00:00:00";
-            txtbox_naqes_ramazan.Name = "txtbox_naqes_ramazan";
-            txtbox_naqes_ramazan.RightToLeft = RightToLeft.No;
-            txtbox_naqes_ramazan.Size = new Size(59, 28);
-            txtbox_naqes_ramazan.TabIndex = 42;
-            txtbox_naqes_ramazan.Text = "144500";
-            txtbox_naqes_ramazan.TextAlign = HorizontalAlignment.Center;
-            txtbox_naqes_ramazan.ValidatingType = typeof(DateTime);
+            txtbox_incomplete_ramazan.Location = new Point(16, 134);
+            txtbox_incomplete_ramazan.Mask = "00:00:00";
+            txtbox_incomplete_ramazan.Name = "txtbox_incomplete_ramazan";
+            txtbox_incomplete_ramazan.RightToLeft = RightToLeft.No;
+            txtbox_incomplete_ramazan.Size = new Size(59, 28);
+            txtbox_incomplete_ramazan.TabIndex = 42;
+            txtbox_incomplete_ramazan.Text = "144500";
+            txtbox_incomplete_ramazan.TextAlign = HorizontalAlignment.Center;
+            txtbox_incomplete_ramazan.ValidatingType = typeof(DateTime);
             // 
             // label26
             // 
@@ -866,17 +866,17 @@
             label26.TabIndex = 41;
             label26.Text = "شرط اصلاح ردیف های ناقص(رمضان):";
             // 
-            // txtbox_naqes_farvardin
+            // txtbox_incomplete_farvardin
             // 
-            txtbox_naqes_farvardin.Location = new Point(16, 173);
-            txtbox_naqes_farvardin.Mask = "00:00:00";
-            txtbox_naqes_farvardin.Name = "txtbox_naqes_farvardin";
-            txtbox_naqes_farvardin.RightToLeft = RightToLeft.No;
-            txtbox_naqes_farvardin.Size = new Size(59, 28);
-            txtbox_naqes_farvardin.TabIndex = 40;
-            txtbox_naqes_farvardin.Text = "154500";
-            txtbox_naqes_farvardin.TextAlign = HorizontalAlignment.Center;
-            txtbox_naqes_farvardin.ValidatingType = typeof(DateTime);
+            txtbox_incomplete_farvardin.Location = new Point(16, 173);
+            txtbox_incomplete_farvardin.Mask = "00:00:00";
+            txtbox_incomplete_farvardin.Name = "txtbox_incomplete_farvardin";
+            txtbox_incomplete_farvardin.RightToLeft = RightToLeft.No;
+            txtbox_incomplete_farvardin.Size = new Size(59, 28);
+            txtbox_incomplete_farvardin.TabIndex = 40;
+            txtbox_incomplete_farvardin.Text = "154500";
+            txtbox_incomplete_farvardin.TextAlign = HorizontalAlignment.Center;
+            txtbox_incomplete_farvardin.ValidatingType = typeof(DateTime);
             // 
             // label25
             // 
@@ -887,17 +887,17 @@
             label25.TabIndex = 39;
             label25.Text = "شرط اصلاح ردیف های ناقص(فروردین):";
             // 
-            // txtbox_naqes_thrusday
+            // txtbox_incomplete_thrusday
             // 
-            txtbox_naqes_thrusday.Location = new Point(16, 99);
-            txtbox_naqes_thrusday.Mask = "00:00:00";
-            txtbox_naqes_thrusday.Name = "txtbox_naqes_thrusday";
-            txtbox_naqes_thrusday.RightToLeft = RightToLeft.No;
-            txtbox_naqes_thrusday.Size = new Size(59, 28);
-            txtbox_naqes_thrusday.TabIndex = 38;
-            txtbox_naqes_thrusday.Text = "134500";
-            txtbox_naqes_thrusday.TextAlign = HorizontalAlignment.Center;
-            txtbox_naqes_thrusday.ValidatingType = typeof(DateTime);
+            txtbox_incomplete_thrusday.Location = new Point(16, 99);
+            txtbox_incomplete_thrusday.Mask = "00:00:00";
+            txtbox_incomplete_thrusday.Name = "txtbox_incomplete_thrusday";
+            txtbox_incomplete_thrusday.RightToLeft = RightToLeft.No;
+            txtbox_incomplete_thrusday.Size = new Size(59, 28);
+            txtbox_incomplete_thrusday.TabIndex = 38;
+            txtbox_incomplete_thrusday.Text = "134500";
+            txtbox_incomplete_thrusday.TextAlign = HorizontalAlignment.Center;
+            txtbox_incomplete_thrusday.ValidatingType = typeof(DateTime);
             // 
             // label24
             // 
@@ -908,17 +908,17 @@
             label24.TabIndex = 37;
             label24.Text = "شرط اصلاح ردیف های ناقص(پنج شنبه):";
             // 
-            // txtbox_naqes_normal
+            // txtbox_incomplete_normal
             // 
-            txtbox_naqes_normal.Location = new Point(326, 173);
-            txtbox_naqes_normal.Mask = "00:00:00";
-            txtbox_naqes_normal.Name = "txtbox_naqes_normal";
-            txtbox_naqes_normal.RightToLeft = RightToLeft.No;
-            txtbox_naqes_normal.Size = new Size(59, 28);
-            txtbox_naqes_normal.TabIndex = 36;
-            txtbox_naqes_normal.Text = "164500";
-            txtbox_naqes_normal.TextAlign = HorizontalAlignment.Center;
-            txtbox_naqes_normal.ValidatingType = typeof(DateTime);
+            txtbox_incomplete_normal.Location = new Point(326, 173);
+            txtbox_incomplete_normal.Mask = "00:00:00";
+            txtbox_incomplete_normal.Name = "txtbox_incomplete_normal";
+            txtbox_incomplete_normal.RightToLeft = RightToLeft.No;
+            txtbox_incomplete_normal.Size = new Size(59, 28);
+            txtbox_incomplete_normal.TabIndex = 36;
+            txtbox_incomplete_normal.Text = "164500";
+            txtbox_incomplete_normal.TextAlign = HorizontalAlignment.Center;
+            txtbox_incomplete_normal.ValidatingType = typeof(DateTime);
             // 
             // label1
             // 
@@ -1113,7 +1113,7 @@
         private MaskedTextBox txtbox_fullwork_farvardin;
         public Label label23;
         public Label label16;
-        public Label lbl_sumkasri;
+        public Label lbl_sumFraction;
         public Label lbl_tadil;
         public Label label22;
         private GroupBox groupBox2;
@@ -1122,20 +1122,20 @@
         private Button btn_perv;
         public ComboBox userid_txtbox;
         private CheckBox checkBox_AutoEdit;
-        private MaskedTextBox txtbox_naqes_normal;
+        private MaskedTextBox txtbox_incomplete_normal;
         public Label label1;
-        private MaskedTextBox txtbox_naqes_thrusday;
+        private MaskedTextBox txtbox_incomplete_thrusday;
         public Label label24;
-        private MaskedTextBox txtbox_naqes_farvardin;
+        private MaskedTextBox txtbox_incomplete_farvardin;
         public Label label25;
-        private MaskedTextBox txtbox_naqes_ramazan;
+        private MaskedTextBox txtbox_incomplete_ramazan;
         public Label label26;
         private MaskedTextBox txtbox_fullwork_ramadan;
         public Label label27;
         private RadioButton radioButton_ramadan;
         private GroupBox groupBox3;
         private CheckBox checkBox_Islate;
-        private CheckBox checkBox_IsNaqes;
+        private CheckBox checkBox_Isincomplete;
         private CheckBox checkBox_workinholiday;
     }
 }

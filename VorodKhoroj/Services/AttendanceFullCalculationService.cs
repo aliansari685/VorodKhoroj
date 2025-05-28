@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Services;
 
-public class AttendanceFullCalculationService(AppCoordinator recordService)
+public class AttendanceFullCalculationService(MainCoordinator recordService)
 {
     public AttendanceReport? Report { get; private set; }
 
@@ -11,16 +11,16 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
     private TimeSpan _fullWorkFarvardinTm = TimeSpan.Parse("07:45:00");
     private TimeSpan _fullWorkRamadanTm = TimeSpan.Parse("06:45:00");
 
-    private TimeSpan _naqesWorkTm = TimeSpan.Parse("16:45:00");
-    private TimeSpan _naqesWorkThursdayTm = TimeSpan.Parse("13:45:00");
-    private TimeSpan _naqesWorkFarvardinTm = TimeSpan.Parse("15:45:00");
-    private TimeSpan _naqesWorkRamadanTm = TimeSpan.Parse("14:45:00");
+    private TimeSpan _incompleteWorkTm = TimeSpan.Parse("16:45:00");
+    private TimeSpan _incompleteWorkThursdayTm = TimeSpan.Parse("13:45:00");
+    private TimeSpan _incompleteWorkFarvardinTm = TimeSpan.Parse("15:45:00");
+    private TimeSpan _incompleteWorkRamadanTm = TimeSpan.Parse("14:45:00");
 
     public string TitleReport { get; set; } = "";
-    public List<DateTime> QeybathaDaysList { get; private set; } = [];
+    public List<DateTime> AbsenceDaysList { get; private set; } = [];//غیبت ها
     public List<DateTime> HolidaysDaysList { get; private set; } = [];
     public List<TemplateDays> RamadanDaysList { get; private set; } = [];
-    public List<DateTime> OvertimeinHoliday { get; private set; } = [];
+    public List<DateTime> OverTimeHolidayList { get; private set; } = [];//کار در تعطیلات
 
     public AttendanceFullCalculationService WithLateTime(TimeSpan lateTime)
     {
@@ -52,35 +52,35 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
         return this;
     }
 
-    public AttendanceFullCalculationService WithNaqesWorkTime(TimeSpan fullWorkTime)
+    public AttendanceFullCalculationService WithinCompleteWorkTime(TimeSpan fullWorkTime)
     {
-        _naqesWorkTm = fullWorkTime;
+        _incompleteWorkTm = fullWorkTime;
         return this;
     }
 
-    public AttendanceFullCalculationService WithNaqesWorkThursdayTime(TimeSpan thursdayTime)
+    public AttendanceFullCalculationService WithinCompleteWorkThursdayTime(TimeSpan thursdayTime)
     {
-        _naqesWorkThursdayTm = thursdayTime;
+        _incompleteWorkThursdayTm = thursdayTime;
         return this;
     }
 
-    public AttendanceFullCalculationService WithNaqesWorkFarvardinTime(TimeSpan farvardinTime)
+    public AttendanceFullCalculationService WithinCompleteWorkFarvardinTime(TimeSpan farvardinTime)
     {
-        _naqesWorkFarvardinTm = farvardinTime;
+        _incompleteWorkFarvardinTm = farvardinTime;
         return this;
     }
 
-    public AttendanceFullCalculationService WithNaqesWorkRamadanTime(TimeSpan ramadanTime)
+    public AttendanceFullCalculationService WithinCompleteWorkRamadanTime(TimeSpan ramadanTime)
     {
-        _naqesWorkRamadanTm = ramadanTime;
+        _incompleteWorkRamadanTm = ramadanTime;
         return this;
     }
 
-    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditNaqesRows = true)
+    public List<WorkRecord> Calculate(string userId, string fromDateTime, string toDateTime, bool autoEditIncompleteDays = true)
     {
         if (CommonHelper.IsValid(userId) == false) userId = "0";
 
-        var filtered = DataFilterService.ApplyFilter(recordService.DataLoaderCoordinator.Records, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
+        var filtered = DataFilterService.ApplyFilter(recordService.AttendancesList, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
 
         if (filtered.Any() == false)
             //    throw new ArgumentNullException($"داده ای وجود ندارد");
@@ -108,7 +108,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
         var holidays = PersianDateHelper.GetHolidays().Select(h => h.Date.Date).ToList(); // تاریخ تعطیلات
 
         // تاریخ‌های تعطیل که کارمند حضور داشته است
-        OvertimeinHoliday = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
+        OverTimeHolidayList = pr.Where(holidays.Contains).Select(g => g.Date.Date).ToList();
 
         //رمضان
         var ramadanDaysList = pr.Where(ramadanDays.Contains).Select(g => g.Date.Date).ToList();
@@ -117,7 +117,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
         {
             var overtime = TimeSpan.Zero; // مقدار پیش‌فرض اضافه کاری
 
-            var kasri = TimeSpan.Zero; // مقدار پیش‌فرض کسری ساعت
+            var fraction = TimeSpan.Zero; // مقدار پیش‌فرض کسری ساعت
 
             var orderedTimes = g.Select(x => x.DateTime).ToArray(); // آرایه‌ای از زمان‌های ورودی و خروجی
 
@@ -125,7 +125,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             var maxDateTime = orderedTimes.ElementAtOrDefault(1); // زمان خروج اولین کارمند
 
             // بررسی اینکه آیا فرد در تعطیلات کار کرده است
-            var isWorkinginHoliday = OvertimeinHoliday.Contains(minDateTime.Date.Date);
+            var isWorkinginHoliday = OverTimeHolidayList.Contains(minDateTime.Date.Date);
 
             // بررسی اینکه آیا روز جاری پنجشنبه است
             var isThursday = minDateTime.DayOfWeek == DayOfWeek.Thursday;
@@ -137,7 +137,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             var isFarvardin = farvardinDays.Contains(minDateTime.Date);
 
 
-            if (autoEditNaqesRows && orderedTimes.Length == 1)
+            if (autoEditIncompleteDays && orderedTimes.Length == 1)
             {
                 var isLateThursday = isThursday && minDateTime.Hour >= 13;
                 var isLateStandardDay = !isThursday && minDateTime.Hour > 14;
@@ -150,18 +150,18 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             }
 
             //خروج ناقص
-            var exitNaqesWorkTm = _naqesWorkTm;
+            var exitincompleteWorkTm = _incompleteWorkTm;
             if (isThursday)
-                exitNaqesWorkTm = _naqesWorkThursdayTm;
+                exitincompleteWorkTm = _incompleteWorkThursdayTm;
             if (isRamadan)
-                exitNaqesWorkTm = _naqesWorkRamadanTm;
+                exitincompleteWorkTm = _incompleteWorkRamadanTm;
             if (isFarvardin)
-                exitNaqesWorkTm = _naqesWorkFarvardinTm;
+                exitincompleteWorkTm = _incompleteWorkFarvardinTm;
 
             if (maxDateTime == DateTime.MinValue)
             {
-                maxDateTime = autoEditNaqesRows
-                    ? minDateTime.Date + exitNaqesWorkTm
+                maxDateTime = autoEditIncompleteDays
+                    ? minDateTime.Date + exitincompleteWorkTm
                     : minDateTime;
             }
 
@@ -200,7 +200,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             }
             if (totalDuration < standardWorkTime && !isWorkinginHoliday && !isNaghes)
             {
-                kasri = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
+                fraction = standardWorkTime - totalDuration; // کسری ساعت محاسبه می‌شود
             }
 
             return new WorkRecord
@@ -218,7 +218,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
                 LateMinutes = lateMinutes,
                 IsFullWork = fullWork,
                 Overtime = overtime.ToString(@"hh\:mm\:ss"),
-                Kasri = kasri.TotalMinutes,
+                Fraction = fraction.TotalMinutes,
                 IsNaghes = isNaghes
             };
         }).ToArray();
@@ -265,7 +265,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
         var absenceCount = absence.Count();
 
         // تعیین روزهای غیبت و تعطیلات
-        QeybathaDaysList = absence.ToList();
+        AbsenceDaysList = absence.ToList();
         HolidaysDaysList = workDays.Where(day => holidays.Contains(day)).ToList();
 
         // تعداد روزهای اضافه کاری
@@ -284,17 +284,17 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
         var avgTimeSpan = TimeSpan.FromMinutes(avgMinutes);
 
         // محاسبه مجموع کسری زمان
-        var kasriTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.Kasri));
+        var fractionTime = TimeSpan.FromMinutes(groupedData.Sum(x => x.Fraction));
 
         // محاسبه تعدیل یا اضافه کاری خالص
-        var tadil = totalOvertimeMinutes - kasriTime;
+        var pureTime = totalOvertimeMinutes - fractionTime;
 
         #endregion
 
         Report = new AttendanceReport
         {
             // مجموع روزهای کاری (تعداد کل روزهای کاری که فرد در سیستم ثبت کرده است)
-            TotalWorkDays = $"{groupedData.Count()} از {groupedData.Count() + absenceCount}",
+            TotalWorkDays = $"{groupedData.Length} از {groupedData.Count() + absenceCount}",
 
             // مجموع روزهای کاری کامل طبق 8 ساعت و 30 دقیقه کار (تعداد روزهای کاری که فرد کار کامل داشته)
             TotalFullWorkDays = total.ToString(),
@@ -341,10 +341,10 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
             AverageWorkdayHours = avgTimeSpan.ToString(@"hh\:mm\:ss"),
 
             // مقدار کسری به ساعت (مجموع زمان کسری فرد به صورت ساعت:دقیقه:ثانیه)
-            TotalKasriTime = $@"{(int)kasriTime.TotalHours:D2}:{kasriTime.Minutes:D2}:{kasriTime.Seconds:D2}",
+            TotalFractionTime = $@"{(int)fractionTime.TotalHours:D2}:{fractionTime.Minutes:D2}:{fractionTime.Seconds:D2}",
 
             // مقدار تعدیل یا اضافه ساعت کاری خالص (مجموع ساعات اضافه کاری که باید تعدیل شود یا اضافه شود به صورت دقیقه)
-            TotalAdjustmentOrOvertime = tadil.TotalMinutes.ToString("0") + "m"
+            TotalAdjustmentOrOvertime = pureTime.TotalMinutes.ToString("0") + "m"
         };
 
         return groupedData.ToList();
@@ -369,7 +369,7 @@ public class AttendanceFullCalculationService(AppCoordinator recordService)
                 { Report.GetDisplayName(x => x.AverageEntryTime), Report.AverageEntryTime },
                 { Report.GetDisplayName(x => x.AverageExitTime), Report.AverageExitTime },
                 { Report.GetDisplayName(x => x.AverageWorkdayHours), Report.AverageWorkdayHours },
-                { Report.GetDisplayName(x => x.TotalKasriTime), Report.TotalKasriTime },
+                { Report.GetDisplayName(x => x.TotalFractionTime), Report.TotalFractionTime },
                 { Report.GetDisplayName(x => x.TotalAdjustmentOrOvertime), Report.TotalAdjustmentOrOvertime }
             };
     }

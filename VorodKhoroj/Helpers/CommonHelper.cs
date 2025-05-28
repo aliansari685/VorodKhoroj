@@ -4,7 +4,7 @@
     {
         public static void ShowMessage(Exception ex, [CallerMemberName] string methodName = "")
         {
-            string text = $@"خطای داخلی{'\n'}{ex.Message}{'\n'}{ex.InnerException?.Message}";
+            string text = $"خطای داخلی{'\n'}{ex.Message}{'\n'}{ex.InnerException?.Message}";
             string caption = "خطا";
             Log.Error(ex, "MethodName: {MethodName}", methodName);
             MessageBox.Show(text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);

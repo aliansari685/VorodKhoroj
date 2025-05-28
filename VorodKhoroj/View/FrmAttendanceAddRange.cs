@@ -2,9 +2,9 @@
 {
     public partial class FrmAttendanceAddRange : Form
     {
-        private readonly AppCoordinator _services;
+        private readonly MainCoordinator _services;
 
-        public FrmAttendanceAddRange(AppCoordinator services)
+        public FrmAttendanceAddRange(MainCoordinator services)
         {
             InitializeComponent();
             _services = services;
@@ -36,13 +36,13 @@
                         {
                             _services.LoadRecordsFromFile(openFileDialog.FileName, false);
 
-                            var attendanceList = _services.Records;
+                            var attendanceList = _services.AttendancesList;
 
                             var filtered = DataFilterService.ApplyFilter(attendanceList, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, 0).ToList();
 
                             AddOtherUsers(filtered);
 
-                            AddOtherAttendances(filtered, ref count);
+                            AddOtherAttendances(filtered, out count);
 
                             _services.LoadRecordsFromDb();
                         });
@@ -68,7 +68,7 @@
         /// <param name="filtered"></param>
         /// <param name="count"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        private void AddOtherAttendances(List<Attendance> filtered, ref int count)
+        private void AddOtherAttendances(List<Attendance> filtered, out int count)
         {
             // هش ست خیلی پر سرعته توی جستجو
             var existingKeys = _services.DbContext?.Attendances

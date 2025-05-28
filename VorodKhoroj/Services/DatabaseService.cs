@@ -1,8 +1,7 @@
-﻿namespace VorodKhoroj.Infrastructure
+﻿namespace VorodKhoroj.Services
 {
     public class DatabaseService
     {
-
         public void CreateDatabase(string filePath, string dbname, AppDbContext dbContext)
         {
             string createDbQuery = $@"

@@ -52,10 +52,10 @@
             label7 = new Label();
             groupBox3 = new GroupBox();
             checkBox_workinholiday = new CheckBox();
-            checkBox_IsNaqes = new CheckBox();
+            checkBox_Isincomplete = new CheckBox();
             checkBox_Islate = new CheckBox();
             groupBox4 = new GroupBox();
-            radioBtn_IsNaqes = new RadioButton();
+            radioBtn_Isincomplete = new RadioButton();
             radioBtn_IsLate = new RadioButton();
             radioBtn_All = new RadioButton();
             radioBtn_Attendance2 = new RadioButton();
@@ -323,7 +323,7 @@
             // groupBox3
             // 
             groupBox3.Controls.Add(checkBox_workinholiday);
-            groupBox3.Controls.Add(checkBox_IsNaqes);
+            groupBox3.Controls.Add(checkBox_Isincomplete);
             groupBox3.Controls.Add(checkBox_Islate);
             groupBox3.Location = new Point(487, 7);
             groupBox3.Name = "groupBox3";
@@ -344,16 +344,16 @@
             checkBox_workinholiday.UseVisualStyleBackColor = true;
             checkBox_workinholiday.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
             // 
-            // checkBox_IsNaqes
+            // checkBox_Isincomplete
             // 
-            checkBox_IsNaqes.AutoSize = true;
-            checkBox_IsNaqes.Location = new Point(32, 61);
-            checkBox_IsNaqes.Name = "checkBox_IsNaqes";
-            checkBox_IsNaqes.Size = new Size(118, 24);
-            checkBox_IsNaqes.TabIndex = 29;
-            checkBox_IsNaqes.Text = "ورود ناقص و خراب";
-            checkBox_IsNaqes.UseVisualStyleBackColor = true;
-            checkBox_IsNaqes.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
+            checkBox_Isincomplete.AutoSize = true;
+            checkBox_Isincomplete.Location = new Point(32, 61);
+            checkBox_Isincomplete.Name = "checkBox_Isincomplete";
+            checkBox_Isincomplete.Size = new Size(118, 24);
+            checkBox_Isincomplete.TabIndex = 29;
+            checkBox_Isincomplete.Text = "ورود ناقص و خراب";
+            checkBox_Isincomplete.UseVisualStyleBackColor = true;
+            checkBox_Isincomplete.CheckedChanged += checkBox_ApplyStyles_CheckedChanged;
             // 
             // checkBox_Islate
             // 
@@ -369,7 +369,7 @@
             // groupBox4
             // 
             groupBox4.Controls.Add(radioBtn_Attendance2);
-            groupBox4.Controls.Add(radioBtn_IsNaqes);
+            groupBox4.Controls.Add(radioBtn_Isincomplete);
             groupBox4.Controls.Add(radioBtn_IsLate);
             groupBox4.Controls.Add(radioBtn_All);
             groupBox4.Location = new Point(487, 147);
@@ -380,16 +380,16 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "نمایش ردیف ها";
             // 
-            // radioBtn_IsNaqes
+            // radioBtn_Isincomplete
             // 
-            radioBtn_IsNaqes.AutoSize = true;
-            radioBtn_IsNaqes.Location = new Point(6, 101);
-            radioBtn_IsNaqes.Name = "radioBtn_IsNaqes";
-            radioBtn_IsNaqes.Size = new Size(157, 24);
-            radioBtn_IsNaqes.TabIndex = 32;
-            radioBtn_IsNaqes.Text = "روز های ورود ناقص و خراب";
-            radioBtn_IsNaqes.UseVisualStyleBackColor = true;
-            radioBtn_IsNaqes.CheckedChanged += radioBtn_CheckedChanged;
+            radioBtn_Isincomplete.AutoSize = true;
+            radioBtn_Isincomplete.Location = new Point(6, 101);
+            radioBtn_Isincomplete.Name = "radioBtn_Isincomplete";
+            radioBtn_Isincomplete.Size = new Size(157, 24);
+            radioBtn_Isincomplete.TabIndex = 32;
+            radioBtn_Isincomplete.Text = "روز های ورود ناقص و خراب";
+            radioBtn_Isincomplete.UseVisualStyleBackColor = true;
+            radioBtn_Isincomplete.CheckedChanged += radioBtn_CheckedChanged;
             // 
             // radioBtn_IsLate
             // 
@@ -480,11 +480,11 @@
         private Button btn_clear;
         private GroupBox groupBox3;
         private CheckBox checkBox_workinholiday;
-        private CheckBox checkBox_IsNaqes;
+        private CheckBox checkBox_Isincomplete;
         private CheckBox checkBox_Islate;
         private GroupBox groupBox4;
         private RadioButton radioBtn_All;
-        private RadioButton radioBtn_IsNaqes;
+        private RadioButton radioBtn_Isincomplete;
         private RadioButton radioBtn_IsLate;
         private RadioButton radioBtn_Attendance2;
     }

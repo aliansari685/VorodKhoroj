@@ -4,11 +4,11 @@
     {
         private string _user = "";
         private string _datetime = "";
-        private readonly AppCoordinator _service;
+        private readonly MainCoordinator _service;
         private readonly AttendanceFullCalculationService _calcService;
         private List<WorkRecord> _tempRecords = [];
 
-        public FrmAttendance(AppCoordinator service, AttendanceFullCalculationService calcServices)
+        public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
         {
             InitializeComponent();
             _service = service;
@@ -19,7 +19,7 @@
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
 
-            Userid_txtbox.DataSource = _service.DataLoaderCoordinator.UsersList;
+            Userid_txtbox.DataSource = _service.UsersList;
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
@@ -72,7 +72,7 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                var attendances = _service.DataLoaderCoordinator.DbContext?.Attendances.Where(x =>
+                var attendances = _service.DbContext?.Attendances.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
@@ -115,9 +115,9 @@
                 else
                     CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
 
-                _service.DataLoaderCoordinator.DbContext?.SaveChanges();
+                _service.DbContext?.SaveChanges();
 
-                _service.DataLoaderCoordinator.LoadRecordsFromDb();
+                _service.LoadRecordsFromDb();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 
@@ -192,13 +192,13 @@
                     if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
                         row.DefaultCellStyle.BackColor = Color.Red;
 
-                    else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_IsNaqes.Checked)
+                    else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_Isincomplete.Checked)
                         row.DefaultCellStyle.BackColor = Color.Orange;
 
                     else if (checkBox_workinholiday.Checked && DateTime.TryParse(
                                                                 row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(),
                                                                 out var date)
-                                                            && _calcService.OvertimeinHoliday.Contains(date))
+                                                            && _calcService.OverTimeHolidayList.Contains(date))
                         row.DefaultCellStyle.BackColor = Color.CadetBlue;
                     else
                     {
@@ -225,7 +225,7 @@
                 {
                     dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsLate).ToList().ToDataTable();
                 }
-                else if (radioBtn_IsNaqes.Checked)
+                else if (radioBtn_Isincomplete.Checked)
                 {
                     dataView_Attendance.DataSource = _tempRecords.Where(x => x.IsNaghes).ToList().ToDataTable();
                 }

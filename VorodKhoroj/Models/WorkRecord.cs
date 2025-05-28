@@ -41,7 +41,7 @@
         public bool IsFullWork { get; set; }
 
         [DisplayName("مقدار کسری")]
-        public double Kasri { get; set; }
+        public double Fraction { get; set; }
 
         [DisplayName("ردیف ناقص")]
         public bool IsNaghes { get; set; }

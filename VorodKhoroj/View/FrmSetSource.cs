@@ -2,11 +2,11 @@
 
 public partial class FrmSetSource : Form
 {
-    private readonly AppCoordinator _services;
+    private readonly MainCoordinator _services;
 
     private readonly CommonItems _cm = new();
 
-    public FrmSetSource(AppCoordinator services)
+    public FrmSetSource(MainCoordinator services)
     {
         InitializeComponent();
         _services = services;
@@ -31,7 +31,7 @@ public partial class FrmSetSource : Form
                 using var openFile = new OpenFileDialog { Filter = @"Output Files|*.txt;*.dat;" };
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    _services.DataLoaderCoordinator.LoadRecordsFromFile(openFile.FileName);
+                    _services.LoadRecordsFromFile(openFile.FileName);
 
                     Close();
                 }
@@ -39,7 +39,7 @@ public partial class FrmSetSource : Form
 
             if (radiobtn_database.Checked)
             {
-                if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
+                if (_services is { UsersListProvider: DbProvider })
                     throw new InvalidOperationException(
                         "لطفا ارتباط قبلی خود را قطع کنید ، برای اینکار میتوانید در تنظیمات از دکمه راه اندازی مجدد استفاده کنید");
 
@@ -49,15 +49,15 @@ public partial class FrmSetSource : Form
                 using var openFile = new OpenFileDialog { Filter = @"DB Files|*.mdf" };
                 if (openFile.ShowDialog() == DialogResult.OK)
                 {
-                    _services.DbPathName = openFile.FileName;
+                    _services.SetDbPath(openFile.FileName);
 
-                    _services.DbName = Path.GetFileNameWithoutExtension(openFile.FileName);
+                    _services.SetDbName(openFile.FileName);
 
-                    _services.DataLoaderCoordinator.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
+                    _services.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
 
                     _services.MigrationsEnsureDatabaseUpToDate();
 
-                    _services.DataLoaderCoordinator.LoadRecordsFromDb();
+                    _services.LoadRecordsFromDb();
 
                     Close();
                 }

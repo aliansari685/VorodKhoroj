@@ -1,12 +1,12 @@
 ﻿namespace VorodKhoroj.View
 {
-    public partial class FrmFilter_Monthly : Form
+    public partial class FrmFilterMonthly : Form
     {
-        private readonly AppCoordinator _services;
+        private readonly MainCoordinator _services;
         private readonly AttendanceFullCalculationService _calcServices;
         private string _userId;
 
-        public FrmFilter_Monthly(AppCoordinator services, AttendanceFullCalculationService calcServices, string userId)
+        public FrmFilterMonthly(MainCoordinator services, AttendanceFullCalculationService calcServices, string userId)
         {
             InitializeComponent();
             _services = services;
@@ -16,8 +16,8 @@
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services.DataLoaderCoordinator.UsersList;
-            if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
+            userid_txtbox.DataSource = _services.UsersList;
+            if (_services is { UsersListProvider: DbProvider })
             {
                 CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
             }
@@ -65,7 +65,7 @@
 
         private async Task AllUsers(SaveFileDialog sfd, List<int> monthList)
         {
-            var userid = _services.DataLoaderCoordinator.UsersList ?? throw new NullReferenceException("شی خالی است");
+            var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
 
             //For Save Path Files
             var directory = Path.GetDirectoryName(sfd.FileName);

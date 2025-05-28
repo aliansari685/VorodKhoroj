@@ -1,4 +1,4 @@
-﻿namespace VorodKhoroj.Services
+﻿namespace VorodKhoroj.Interfaces
 {
     //Factory Pattern: 
     public interface IUserDataProvider

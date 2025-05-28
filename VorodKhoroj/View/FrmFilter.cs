@@ -2,11 +2,11 @@
 
 public partial class FrmFilter : Form
 {
-    private readonly AppCoordinator _services;
+    private readonly MainCoordinator _services;
     private readonly AttendanceFullCalculationService _calcServices;
     private readonly bool _justExcel;
 
-    public FrmFilter(AppCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcel = false)
+    public FrmFilter(MainCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
 
@@ -42,9 +42,9 @@ public partial class FrmFilter : Form
 
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _services.DataLoaderCoordinator.UsersList;
+        Userid_txtbox.DataSource = _services.UsersList;
 
-        if (_services is { DataLoaderCoordinator.UserListProvider: DbProvider })
+        if (_services is { UsersListProvider: DbProvider })
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }

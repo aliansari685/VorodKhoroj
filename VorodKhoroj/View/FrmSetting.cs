@@ -3,10 +3,10 @@
 public partial class FrmSetting : Form
 {
     private bool _flag;
-    private readonly AppCoordinator _service;
+    private readonly MainCoordinator _service;
     private readonly CommonItems _cm = new();
 
-    public FrmSetting(AppCoordinator services)
+    public FrmSetting(MainCoordinator services)
     {
         InitializeComponent();
         _service = services;
@@ -60,16 +60,16 @@ public partial class FrmSetting : Form
 
                 await Task.Run(() =>
                 {
-                    _service.DbName = Path.GetFileNameWithoutExtension(saveFile.FileName); //exam:db
-                    _service.DbPathName = saveFile.FileName; //exam: d://db.mdf
+                    _service.SetDbName(saveFile.FileName); //exam:db
+                    _service.SetDbPath(saveFile.FileName); //exam: d://db.mdf
 
                     _service.HandleCreateDatabase();
 
-                    _service.DataLoaderCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+                    _service.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
 
                     _service.HandleCreateTables();
 
-                    _service.CopyAttendancesRecord(_service.DataLoaderCoordinator.Records);
+                    _service.CopyAttendancesRecord(_service.AttendancesList);
 
                     _service.HandleDetachDatabase();
                 });

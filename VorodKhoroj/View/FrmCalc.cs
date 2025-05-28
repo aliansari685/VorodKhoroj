@@ -2,7 +2,7 @@
 
 public partial class FrmCalc : Form
 {
-    private readonly AppCoordinator _service;
+    private readonly MainCoordinator _service;
     private readonly AttendanceFullCalculationService _calcServices;
 
     private readonly string _fromDateTime;
@@ -11,7 +11,7 @@ public partial class FrmCalc : Form
     private string _userid;
     private readonly bool _justExcel;
 
-    public FrmCalc(AppCoordinator services, AttendanceFullCalculationService calcServices, string fromDateTime,
+    public FrmCalc(MainCoordinator services, AttendanceFullCalculationService calcServices, string fromDateTime,
         string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
@@ -25,9 +25,9 @@ public partial class FrmCalc : Form
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        userid_txtbox.DataSource = _service.DataLoaderCoordinator.UsersList;
+        userid_txtbox.DataSource = _service.UsersList;
 
-        if (_service.DataLoaderCoordinator.UserListProvider is DbProvider)
+        if (_service.UsersListProvider is DbProvider)
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
@@ -61,10 +61,10 @@ public partial class FrmCalc : Form
             .WithFullWorkThursdayTime(TimeSpan.Parse(txtbox_fullwork_thursday.Text))
             .WithFullWorkFarvardinTime(TimeSpan.Parse(txtbox_fullwork_farvardin.Text))
             .WithFullWorkRamadanTime(TimeSpan.Parse(txtbox_fullwork_ramadan.Text))
-            .WithNaqesWorkTime(TimeSpan.Parse(txtbox_naqes_normal.Text))
-            .WithNaqesWorkThursdayTime(TimeSpan.Parse(txtbox_naqes_thrusday.Text))
-            .WithNaqesWorkFarvardinTime(TimeSpan.Parse(txtbox_naqes_farvardin.Text))
-            .WithNaqesWorkRamadanTime(TimeSpan.Parse(txtbox_naqes_ramazan.Text));
+            .WithinCompleteWorkTime(TimeSpan.Parse(txtbox_incomplete_normal.Text))
+            .WithinCompleteWorkThursdayTime(TimeSpan.Parse(txtbox_incomplete_thrusday.Text))
+            .WithinCompleteWorkFarvardinTime(TimeSpan.Parse(txtbox_incomplete_farvardin.Text))
+            .WithinCompleteWorkRamadanTime(TimeSpan.Parse(txtbox_incomplete_ramazan.Text));
 
         ReloadGrid();
 
@@ -87,11 +87,11 @@ public partial class FrmCalc : Form
                 if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
                     row.DefaultCellStyle.BackColor = Color.Red;
 
-                else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_IsNaqes.Checked)
+                else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_Isincomplete.Checked)
                     row.DefaultCellStyle.BackColor = Color.Orange;
 
                 else if (checkBox_workinholiday.Checked && DateTime.TryParse(row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(), out var date)
-                         && _calcServices.OvertimeinHoliday.Contains(date))
+                         && _calcServices.OverTimeHolidayList.Contains(date))
                     row.DefaultCellStyle.BackColor = Color.CadetBlue;
                 else
                 {
@@ -152,20 +152,20 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { DataLoaderCoordinator.UsersList: null }) return; // or:     if (_service.UsersList == null) return;
+            if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
 
             //Cast iList:
             List<int> users = [];
 
             switch (_service)
             {
-                case { DataLoaderCoordinator.UserListProvider: DbProvider, DataLoaderCoordinator.DbContext: not null }:
+                case { UsersListProvider: DbProvider, DbContext: not null }:
                     {
-                        users.AddRange((_service.DataLoaderCoordinator.UsersList as List<User> ?? []).Select(variable => variable.UserId));
+                        users.AddRange((_service.UsersList as List<User> ?? []).Select(variable => variable.UserId));
                         break;
                     }
-                case { DataLoaderCoordinator.UserListProvider: FileProvider }:
-                    users = (_service.DataLoaderCoordinator.UsersList as int[])?.ToList() ?? [];
+                case { UsersListProvider: FileProvider }:
+                    users = (_service.UsersList as int[])?.ToList() ?? [];
                     break;
             }
 
@@ -195,10 +195,10 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { DataLoaderCoordinator.UserListProvider: FileProvider })
+            if (_service is { UsersListProvider: FileProvider })
                 _username = userid_txtbox.Text = _userid;
             else
-                userid_txtbox.Text = _username = (_service.DataLoaderCoordinator.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
+                userid_txtbox.Text = _username = (_service.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
 
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();
@@ -243,7 +243,7 @@ public partial class FrmCalc : Form
             lbl_avgentry.Text = temp.AverageEntryTime;
             lbl_avgexit.Text = temp.AverageExitTime;
             lbl_avgtimework.Text = temp.AverageWorkdayHours;
-            lbl_sumkasri.Text = temp.TotalKasriTime;
+            lbl_sumFraction.Text = temp.TotalFractionTime;
             lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
             lbl_Information.Text = @$"{_fromDateTime} -- {_toDateTime} -- {_username}";
 
@@ -264,7 +264,7 @@ public partial class FrmCalc : Form
     #region TabPage2:
     private void dataView_late_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
     {
-        if (_calcServices.OvertimeinHoliday.Contains(DateTime.Parse(dataView_late?.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)]?.Value?.ToString()!)))
+        if (_calcServices.OverTimeHolidayList.Contains(DateTime.Parse(dataView_late?.Rows[e.RowIndex].Cells[nameof(WorkRecord.Date)]?.Value?.ToString()!)))
             dataView_late!.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.CadetBlue;
     }
 
@@ -307,7 +307,7 @@ public partial class FrmCalc : Form
         var toDt = DateTime.Parse(_toDateTime);
 
         if (radioButton_qeybat.Checked)
-            dataView_late.DataSource = _calcServices.QeybathaDaysList.Select(g => new
+            dataView_late.DataSource = _calcServices.AbsenceDaysList.Select(g => new
             {
                 DayOfWeek = g.Date.ToString("dddd"),
                 Date = g.Date.ToString("yyyy/MM/dd")

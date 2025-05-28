@@ -1,4 +1,4 @@
-﻿namespace VorodKhoroj.Infrastructure
+﻿namespace VorodKhoroj.Services
 {
     public class DataRepository
     {
@@ -43,7 +43,7 @@
         {
             try
             {
-                //Add User Records From UserID in Attendance
+                //Add User AttendancesList From UserID in Attendance
                 var users = GetUsersAttendances(records)
                     .Select(id => new User { UserId = id })
                     .ToList();
@@ -51,7 +51,7 @@
                 context.Users.AddRange(users);
                 _ = context.SaveChanges();
 
-                //Add Attendance Records
+                //Add Attendance AttendancesList
                 context.Attendances.AddRange(records);
                 _ = context.SaveChanges();
 
@@ -72,7 +72,7 @@
         {
             try
             {
-                //Add Attendance Records
+                //Add Attendance AttendancesList
                 context.Attendances.AddRange(records);
                 _ = context.SaveChanges();
 
@@ -93,7 +93,7 @@
         {
             try
             {
-                //Add Attendance Records
+                //Add Attendance AttendancesList
                 context.Attendances.UpdateRange(records);
                 _ = context.SaveChanges();
 
@@ -113,7 +113,7 @@
         {
             try
             {
-                //Add Attendance Records
+                //Add Attendance AttendancesList
                 context.Users.AddRange(records);
                 _ = context.SaveChanges();
 
@@ -134,7 +134,7 @@
         {
             try
             {
-                //Add Attendance Records
+                //Add Attendance AttendancesList
                 context.Users.UpdateRange(records);
                 _ = context.SaveChanges();
 

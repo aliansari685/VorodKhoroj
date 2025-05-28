@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.View
 {
-    partial class FrmFilter_Monthly
+    partial class FrmFilterMonthly
     {
         /// <summary>
         /// Required designer variable.
@@ -340,7 +340,7 @@
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
-            Name = "FrmFilter_Monthly";
+            Name = "FrmFilterMonthly";
             RightToLeft = RightToLeft.Yes;
             Text = "FrmFilter_Monthly";
             Load += FrmFilter_Monthly_Load;
