@@ -2,12 +2,12 @@
 {
     public partial class FrmAttendanceAddRange : Form
     {
-        private readonly MainCoordinator _services;
+        private readonly MainCoordinator _appCoordinator;
 
-        public FrmAttendanceAddRange(MainCoordinator services)
+        public FrmAttendanceAddRange(MainCoordinator mainCoordinator)
         {
             InitializeComponent();
-            _services = services;
+            _appCoordinator = mainCoordinator;
         }
 
         private void FrmAttendanceAddRange_Load(object sender, EventArgs e)
@@ -34,9 +34,9 @@
 
                         await Task.Run(() =>
                         {
-                            _services.LoadRecordsFromFile(openFileDialog.FileName, false);
+                            _appCoordinator.LoadRecordsFromFile(openFileDialog.FileName, false);
 
-                            var attendanceList = _services.AttendancesList;
+                            var attendanceList = _appCoordinator.AttendancesList;
 
                             var filtered = DataFilterService.ApplyFilter(attendanceList, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, 0).ToList();
 
@@ -44,7 +44,7 @@
 
                             AddOtherAttendances(filtered, out count);
 
-                            _services.LoadRecordsFromDb();
+                            _appCoordinator.LoadRecordsFromDb();
                         });
                         this.Enabled = true;
                         frmProgress.Close();
@@ -71,7 +71,7 @@
         private void AddOtherAttendances(List<Attendance> filtered, out int count)
         {
             // هش ست خیلی پر سرعته توی جستجو
-            var existingKeys = _services.DbContext?.Attendances
+            var existingKeys = _appCoordinator.DbContext?.Attendances
                 .Select(a => new { a.UserId, a.DateTime })
                 .ToHashSet();
 
@@ -79,7 +79,7 @@
             var newRecords = filtered
                 .Where(a => !existingKeys!.Contains(new { a.UserId, a.DateTime }))
                 .ToList();
-            _services.AddAttendanceRecord(newRecords);
+            _appCoordinator.AddAttendanceRecord(newRecords);
             count = newRecords.Count;
         }
 
@@ -92,7 +92,7 @@
         {
 
             // کاربران موجود در دیتابیس
-            var existingUsers = ((List<User>)_services.UsersList! ?? throw new InvalidOperationException("خطای داخلی"))
+            var existingUsers = ((List<User>)_appCoordinator.UsersList! ?? throw new InvalidOperationException("خطای داخلی"))
                 .Select(u => u.UserId)
                 .ToHashSet();
 
@@ -108,7 +108,7 @@
                 .Select(id => new User { UserId = id }) // اگر فقط آیدی داری
                 .ToList();
 
-            _services.AddUserRecord(newUsers);
+            _appCoordinator.AddUserRecord(newUsers);
         }
     }
 }

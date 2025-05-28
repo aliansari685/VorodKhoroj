@@ -3,13 +3,13 @@
 public partial class FrmMain : Form
 {
     private bool _isRestarting;
-    private readonly MainCoordinator _services;
+    private readonly MainCoordinator _appCoordinator;
     private readonly AttendanceFullCalculationService _calcServices;
 
-    public FrmMain(MainCoordinator services, AttendanceFullCalculationService calculationService)
+    public FrmMain(MainCoordinator mainCoordinator, AttendanceFullCalculationService calculationService)
     {
         InitializeComponent();
-        _services = services;
+        _appCoordinator = mainCoordinator;
         _calcServices = calculationService;
     }
 
@@ -20,13 +20,13 @@ public partial class FrmMain : Form
 
     public void DataGridConfig()
     {
-        if (!CommonHelper.IsValid(_services.AttendancesList.Count)) return;
+        if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count)) return;
 
-        dataView.DataSource = _services.AttendancesList.ToDataTableWithDisplayedName();
+        dataView.DataSource = _appCoordinator.AttendancesList.ToDataTableWithDisplayedName();
 
-        Userid_txtbox.DataSource = _services.UsersList;
+        Userid_txtbox.DataSource = _appCoordinator.UsersList;
 
-        if (_services is { UsersListProvider: DbProvider })
+        if (_appCoordinator is { UsersListProvider: DbProvider })
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
@@ -47,10 +47,10 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (CommonHelper.IsValid(_services.AttendancesList.Count) == false)
+            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false)
                 throw new NullReferenceException("داده ای وجود ندارد");
 
-            dataView.DataSource = DataFilterService.ApplyFilter(_services.AttendancesList, FromDateTime_txtbox.Text,
+            dataView.DataSource = DataFilterService.ApplyFilter(_appCoordinator.AttendancesList, FromDateTime_txtbox.Text,
                 toDateTime_txtbox.Text, int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))).ToList().ToDataTableWithDisplayedName();
 
             DataGridViewConfig();
@@ -76,9 +76,9 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (CommonHelper.IsValid(_services.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
-            using FrmFilter frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
+            using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
             frm.ShowDialog();
         }
         catch (Exception ex)
@@ -98,7 +98,7 @@ public partial class FrmMain : Form
         {
             if (CommonHelper.IsValid(dataView.Rows.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
-            using FrmSetting frm = new(_services);
+            using FrmSetting frm = new(_appCoordinator);
             frm.ShowDialog();
         }
         catch (Exception ex)
@@ -111,7 +111,7 @@ public partial class FrmMain : Form
     {
         try
         {
-            using (FrmSetSource frm = new(_services))
+            using (FrmSetSource frm = new(_appCoordinator))
             {
                 dataView.DataSource = null;
                 frm.ShowDialog();
@@ -127,7 +127,7 @@ public partial class FrmMain : Form
 
     private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using FrmFilterMonthly frm = new(_services, _calcServices, Userid_txtbox.Text);
+        using FrmFilterMonthly frm = new(_appCoordinator, _calcServices, Userid_txtbox.Text);
         frm.ShowDialog();
     }
 
@@ -135,11 +135,11 @@ public partial class FrmMain : Form
     {
         try
         {
-            if (CommonHelper.IsValid(_services.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
+            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
 
             var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
 
-            using FrmFilter frm = new(_services, _calcServices, date, date, Userid_txtbox.Text, true);
+            using FrmFilter frm = new(_appCoordinator, _calcServices, date, date, Userid_txtbox.Text, true);
             frm.ShowDialog();
         }
         catch (Exception ex)
@@ -164,9 +164,9 @@ public partial class FrmMain : Form
 
     private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_services is { UsersListProvider: DbProvider, DbContext: not null })
+        if (_appCoordinator is { UsersListProvider: DbProvider, DbContext: not null })
         {
-            using var frm = new FrmUsers(_services);
+            using var frm = new FrmUsers(_appCoordinator);
             frm.ShowDialog();
             ReloadGrid();
         }
@@ -179,9 +179,9 @@ public partial class FrmMain : Form
 
     private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_services is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+        if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
         {
-            using var frm = new FrmAttendance(_services, _calcServices);
+            using var frm = new FrmAttendance(_appCoordinator, _calcServices);
             frm.ShowDialog();
             ReloadGrid();
         }
@@ -193,9 +193,9 @@ public partial class FrmMain : Form
 
     private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (_services is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+        if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
         {
-            using var frm = new FrmAttendanceAddRange(_services);
+            using var frm = new FrmAttendanceAddRange(_appCoordinator);
             frm.ShowDialog();
 
             ReloadGrid();

@@ -2,7 +2,7 @@
 
 public partial class FrmFilter : Form
 {
-    private readonly MainCoordinator _services;
+    private readonly MainCoordinator _appCoordinator;
     private readonly AttendanceFullCalculationService _calcServices;
     private readonly bool _justExcel;
 
@@ -10,7 +10,7 @@ public partial class FrmFilter : Form
     {
         InitializeComponent();
 
-        _services = service;
+        _appCoordinator = service;
         _calcServices = calculationService;
 
         FromDateTime_txtbox.Text = fromDateTime;
@@ -25,7 +25,7 @@ public partial class FrmFilter : Form
         {
             if (Userid_txtbox.Text == "0") throw new NullReferenceException("نام کاربری معتبر نمیباشد");
 
-            using FrmCalc frm = new(_services, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, CommonItems.GetUserIdValueToString(Userid_txtbox), _justExcel);
+            using FrmCalc frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, CommonItems.GetUserIdValueToString(Userid_txtbox), _justExcel);
             frm.ShowDialog();
         }
         catch (Exception ex)
@@ -42,9 +42,9 @@ public partial class FrmFilter : Form
 
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _services.UsersList;
+        Userid_txtbox.DataSource = _appCoordinator.UsersList;
 
-        if (_services is { UsersListProvider: DbProvider })
+        if (_appCoordinator is { UsersListProvider: DbProvider })
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }

@@ -2,11 +2,11 @@
 {
     public partial class FrmUsers : Form
     {
-        private readonly MainCoordinator _services;
-        public FrmUsers(MainCoordinator services)
+        private readonly MainCoordinator _appCoordinator;
+        public FrmUsers(MainCoordinator mainCoordinator)
         {
             InitializeComponent();
-            _services = services;
+            _appCoordinator = mainCoordinator;
         }
         private void FrmUsers_Load(object sender, EventArgs e)
         {
@@ -18,11 +18,11 @@
             {
                 if (MessageBox.Show($@"آیا کاربر {Userid_txtbox.Text} با نام {UserName_txtbox.Text} ویرایش شود؟", @"تایید", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
+                    var user = _appCoordinator.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
 
                     user.Name = UserName_txtbox.Text;
 
-                    _services.UpdateUserRecord(user);
+                    _appCoordinator.UpdateUserRecord(user);
 
                     DataGridConfig();
 
@@ -38,7 +38,7 @@
         private void DataGridConfig()
         {
             UserName_txtbox.Text = null;
-            dataView_User.DataSource = Userid_txtbox.DataSource = _services.UsersList;
+            dataView_User.DataSource = Userid_txtbox.DataSource = _appCoordinator.UsersList;
         }
 
         private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)
@@ -47,7 +47,7 @@
 
             try
             {
-                var user = _services.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
+                var user = _appCoordinator.DbContext!.Users.First(x => x.UserId == int.Parse(Userid_txtbox.Text));
                 UserName_txtbox.Text = user.Name;
             }
             catch (Exception ex)

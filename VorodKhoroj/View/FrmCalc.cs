@@ -2,7 +2,7 @@
 
 public partial class FrmCalc : Form
 {
-    private readonly MainCoordinator _service;
+    private readonly MainCoordinator _appCoordinator;
     private readonly AttendanceFullCalculationService _calcServices;
 
     private readonly string _fromDateTime;
@@ -11,11 +11,11 @@ public partial class FrmCalc : Form
     private string _userid;
     private readonly bool _justExcel;
 
-    public FrmCalc(MainCoordinator services, AttendanceFullCalculationService calcServices, string fromDateTime,
+    public FrmCalc(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
         string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();
-        _service = services;
+        _appCoordinator = mainCoordinator;
         _calcServices = calcServices;
         _fromDateTime = fromDateTime;
         _toDateTime = toDateTime;
@@ -25,9 +25,9 @@ public partial class FrmCalc : Form
 
     private void FrmCalc_Load(object sender, EventArgs e)
     {
-        userid_txtbox.DataSource = _service.UsersList;
+        userid_txtbox.DataSource = _appCoordinator.UsersList;
 
-        if (_service.UsersListProvider is DbProvider)
+        if (_appCoordinator.UsersListProvider is DbProvider)
         {
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
@@ -152,20 +152,20 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { UsersList: null }) return; // or:     if (_service.UsersList == null) return;
+            if (_appCoordinator is { UsersList: null }) return; // or:     if (_appCoordinator.UsersList == null) return;
 
             //Cast iList:
             List<int> users = [];
 
-            switch (_service)
+            switch (_appCoordinator)
             {
                 case { UsersListProvider: DbProvider, DbContext: not null }:
                     {
-                        users.AddRange((_service.UsersList as List<User> ?? []).Select(variable => variable.UserId));
+                        users.AddRange((_appCoordinator.UsersList as List<User> ?? []).Select(variable => variable.UserId));
                         break;
                     }
                 case { UsersListProvider: FileProvider }:
-                    users = (_service.UsersList as int[])?.ToList() ?? [];
+                    users = (_appCoordinator.UsersList as int[])?.ToList() ?? [];
                     break;
             }
 
@@ -195,10 +195,10 @@ public partial class FrmCalc : Form
     {
         try
         {
-            if (_service is { UsersListProvider: FileProvider })
+            if (_appCoordinator is { UsersListProvider: FileProvider })
                 _username = userid_txtbox.Text = _userid;
             else
-                userid_txtbox.Text = _username = (_service.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
+                userid_txtbox.Text = _username = (_appCoordinator.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
 
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked).ToDataTable();

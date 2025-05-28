@@ -4,14 +4,14 @@
     {
         private string _user = "";
         private string _datetime = "";
-        private readonly MainCoordinator _service;
+        private readonly MainCoordinator _appCoordinator;
         private readonly AttendanceFullCalculationService _calcService;
         private List<WorkRecord> _tempRecords = [];
 
         public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
         {
             InitializeComponent();
-            _service = service;
+            _appCoordinator = service;
             _calcService = calcServices;
         }
 
@@ -19,7 +19,7 @@
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
 
-            Userid_txtbox.DataSource = _service.UsersList;
+            Userid_txtbox.DataSource = _appCoordinator.UsersList;
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
@@ -72,7 +72,7 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                var attendances = _service.DbContext?.Attendances.Where(x =>
+                var attendances = _appCoordinator.DbContext?.Attendances.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
@@ -115,9 +115,9 @@
                 else
                     CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
 
-                _service.DbContext?.SaveChanges();
+                _appCoordinator.DbContext?.SaveChanges();
 
-                _service.LoadRecordsFromDb();
+                _appCoordinator.LoadRecordsFromDb();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 
@@ -138,7 +138,7 @@
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
             };
-            _service.AddAttendanceRecord([at]);
+            _appCoordinator.AddAttendanceRecord([at]);
 
         }
 
@@ -146,7 +146,7 @@
         {
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
-            _service.UpdateAttendanceRecord(attendances[index]);
+            _appCoordinator.UpdateAttendanceRecord(attendances[index]);
         }
 
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)

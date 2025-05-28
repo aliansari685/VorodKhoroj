@@ -2,22 +2,22 @@
 {
     public partial class FrmFilterMonthly : Form
     {
-        private readonly MainCoordinator _services;
+        private readonly MainCoordinator _appCoordinator;
         private readonly AttendanceFullCalculationService _calcServices;
         private string _userId;
 
-        public FrmFilterMonthly(MainCoordinator services, AttendanceFullCalculationService calcServices, string userId)
+        public FrmFilterMonthly(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string userId)
         {
             InitializeComponent();
-            _services = services;
+            _appCoordinator = mainCoordinator;
             _calcServices = calcServices;
             _userId = userId;
         }
 
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _services.UsersList;
-            if (_services is { UsersListProvider: DbProvider })
+            userid_txtbox.DataSource = _appCoordinator.UsersList;
+            if (_appCoordinator is { UsersListProvider: DbProvider })
             {
                 CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
             }
@@ -65,7 +65,7 @@
 
         private async Task AllUsers(SaveFileDialog sfd, List<int> monthList)
         {
-            var userid = _services.UsersList ?? throw new NullReferenceException("شی خالی است");
+            var userid = _appCoordinator.UsersList ?? throw new NullReferenceException("شی خالی است");
 
             //For Save Path Files
             var directory = Path.GetDirectoryName(sfd.FileName);

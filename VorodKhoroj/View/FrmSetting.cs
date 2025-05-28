@@ -3,13 +3,13 @@
 public partial class FrmSetting : Form
 {
     private bool _flag;
-    private readonly MainCoordinator _service;
+    private readonly MainCoordinator _appCoordinator;
     private readonly CommonItems _cm = new();
 
-    public FrmSetting(MainCoordinator services)
+    public FrmSetting(MainCoordinator mainCoordinator)
     {
         InitializeComponent();
-        _service = services;
+        _appCoordinator = mainCoordinator;
     }
     private void FrmSetting_Load(object sender, EventArgs e)
     {
@@ -24,7 +24,7 @@ public partial class FrmSetting : Form
     {
         try
         {
-            if (_service.TestServerName(txt_ServerName.Text))
+            if (_appCoordinator.TestServerName(txt_ServerName.Text))
             {
                 _flag = true;
                 CommonHelper.ShowMessage(@"اتصال با موفقیت انجام شد");
@@ -60,18 +60,18 @@ public partial class FrmSetting : Form
 
                 await Task.Run(() =>
                 {
-                    _service.SetDbName(saveFile.FileName); //exam:db
-                    _service.SetDbPath(saveFile.FileName); //exam: d://db.mdf
+                    _appCoordinator.SetDbName(saveFile.FileName); //exam:db
+                    _appCoordinator.SetDbPath(saveFile.FileName); //exam: d://db.mdf
 
-                    _service.HandleCreateDatabase();
+                    _appCoordinator.HandleCreateDatabase();
 
-                    _service.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+                    _appCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
 
-                    _service.HandleCreateTables();
+                    _appCoordinator.HandleCreateTables();
 
-                    _service.CopyAttendancesRecord(_service.AttendancesList);
+                    _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);
 
-                    _service.HandleDetachDatabase();
+                    _appCoordinator.HandleDetachDatabase();
                 });
                 this.Enabled = true;
                 frmProgress.Close();
