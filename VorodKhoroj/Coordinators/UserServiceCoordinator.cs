@@ -1,7 +1,7 @@
 ﻿namespace VorodKhoroj.Coordinators
 {
     // مدیریت داده‌های  User
-    public class UserServiceCoordinator(DataRepository repository, IAppDbContextProvider dbProvider)
+    public class UserServiceCoordinator(DataRepository repository, AppDbContextProvider dbProvider)
     {
         public void AddUser(List<User> rec)
         {

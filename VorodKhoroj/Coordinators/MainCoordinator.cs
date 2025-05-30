@@ -1,16 +1,18 @@
 ﻿namespace VorodKhoroj.Coordinators
 {
     // هماهنگ ‌کننده‌ی عملیات بین سرویس‌های مختلف برای مدیریت و گردش کار ورود و خروج
-    public class MainCoordinator(ManualMigrationServiceCoordinator migrationServiceCoordinator, DataLoaderCoordinator dataLoaderCoordinator, DatabaseServiceCoordinator databaseServiceCoordinator, AttendanceServiceCoordinator attendanceServiceCoordinator, UserServiceCoordinator userServiceCoordinator) : IDisposable, IAppDbContextProvider
+    public class MainCoordinator(AppDbContextProvider dbContextProvider, ManualMigrationServiceCoordinator migrationServiceCoordinator, DataLoaderCoordinator dataLoaderCoordinator, DatabaseServiceCoordinator databaseServiceCoordinator, AttendanceServiceCoordinator attendanceServiceCoordinator, UserServiceCoordinator userServiceCoordinator) : IDisposable
     {
         private string DbName { get; set; } = "";
         public void SetDbName(string dbPath) => DbName = Path.GetFileNameWithoutExtension(dbPath);
 
         private string DbPathName { get; set; } = "";
-        public void SetDbPath(string dbPathname) => DbPathName = Path.GetFileNameWithoutExtension(dbPathname);
+        public void SetDbPath(string dbPathname) => DbPathName = (dbPathname);
 
-        public AppDbContext? DbContext => dataLoaderCoordinator.DbContext;
-        public AppDbContext? DbContextMaster => dataLoaderCoordinator.DbContextMaster;
+
+        public AppDbContext? DbContext => dbContextProvider.DbContext = dataLoaderCoordinator.DbContext;
+        public AppDbContext? DbContextMaster => dbContextProvider.DbContextMaster = dataLoaderCoordinator.DbContextMaster;
+
         public List<Attendance> AttendancesList => dataLoaderCoordinator.Records;
         public IList? UsersList => dataLoaderCoordinator.ListProvider?.GetUserDataProvider();
         public IUserDataProvider? UsersListProvider => dataLoaderCoordinator.ListProvider;
@@ -39,5 +41,7 @@
             DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

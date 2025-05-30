@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Coordinators;
 
-public class DatabaseServiceCoordinator(DatabaseService databaseService, IAppDbContextProvider dbProvider)
+public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbContextProvider dbProvider)
 {
     public void CreateDatabase(string dbPath, string dbName)
     {

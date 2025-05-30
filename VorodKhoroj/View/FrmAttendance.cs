@@ -72,7 +72,10 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                var attendances = _appCoordinator.DbContext?.Attendances.Where(x =>
+                //var attendances = _appCoordinator.DbContext?.Attendances.Where(x =>
+                //    x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+
+                var attendances = _appCoordinator.AttendancesList.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
@@ -87,7 +90,15 @@
                 }
                 else
                 {
+                    MessageBox.Show(attendances.Count.ToString());
+
                     AddAttendance(attendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
+
+                    attendances = _appCoordinator.AttendancesList.Where(x =>
+                       x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+
+                    MessageBox.Show(attendances.Count.ToString());
+
                 }
 
                 //Entry2:
@@ -99,9 +110,17 @@
                     }
                     else
                     {
-                        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
-                    }
+                        MessageBox.Show(attendances.Count.ToString());
 
+                        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+
+                        attendances = _appCoordinator.AttendancesList.Where(x =>
+                           x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+
+                        MessageBox.Show(attendances.Count.ToString());
+
+                    }
+                    //todo : index error 
                     //Exit2:
                     if (attendances.Count > 3)
                     {
@@ -109,13 +128,19 @@
                     }
                     else
                     {
+                        MessageBox.Show(attendances.Count.ToString());
+
                         AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
+
+                        attendances = _appCoordinator.AttendancesList.Where(x =>
+                            x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+
+                        MessageBox.Show(attendances.Count.ToString());
+
                     }
                 }
                 else
                     CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
-
-                _appCoordinator.DbContext?.SaveChanges();
 
                 _appCoordinator.LoadRecordsFromDb();
 

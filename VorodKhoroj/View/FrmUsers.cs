@@ -24,6 +24,8 @@
 
                     _appCoordinator.UpdateUserRecord(user);
 
+                    _appCoordinator.LoadRecordsFromDb();
+
                     DataGridConfig();
 
                     CommonHelper.ShowMessage("انجام شد");

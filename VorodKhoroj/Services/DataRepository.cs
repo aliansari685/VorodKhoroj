@@ -79,6 +79,7 @@
                 context.Database.GetDbConnection().Close();
 
                 Task.Delay(1000);
+                MessageBox.Show("Test");
             }
             catch (DbUpdateException ex)
             {

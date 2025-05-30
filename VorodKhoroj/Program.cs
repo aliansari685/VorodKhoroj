@@ -42,7 +42,7 @@ namespace VorodKhoroj
 
                 var host = CreateHostBuilder().Build();
 
-                var form = host.Services.GetRequiredService<FrmMain>();
+                var form = host.Services.GetRequiredService<FrmMain>(); //Error
 
                 ExcelPackage.License.SetNonCommercialPersonal($@"AliAnsari");
 
@@ -55,27 +55,27 @@ namespace VorodKhoroj
             }
         }
 
-
         static IHostBuilder CreateHostBuilder() =>
-             Host.CreateDefaultBuilder()
-                 .ConfigureServices((_, services) =>
-                 {
-                     //Services:
-                     services.AddSingleton<ManualMigrationService>();
-                     services.AddSingleton<DataRepository>();
-                     services.AddSingleton<DatabaseService>();
-                     services.AddTransient<AttendanceFullCalculationService>();
+            Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                {
+                    // Coordinators:
+                    services.AddSingleton<ManualMigrationServiceCoordinator>();
+                    services.AddSingleton<DatabaseServiceCoordinator>();
+                    services.AddSingleton<AttendanceServiceCoordinator>();
+                    services.AddSingleton<DataLoaderCoordinator>();
+                    services.AddSingleton<UserServiceCoordinator>();
 
-                     //Coordinator:
-                     services.AddSingleton<IAppDbContextProvider, MainCoordinator>();
-                     services.AddSingleton<AttendanceServiceCoordinator>();
-                     services.AddSingleton<DatabaseServiceCoordinator>();
-                     services.AddSingleton<DataLoaderCoordinator>();
-                     services.AddSingleton<ManualMigrationServiceCoordinator>();
-                     services.AddSingleton<UserServiceCoordinator>();
+                    services.AddSingleton<MainCoordinator>();
+                    services.AddSingleton<AppDbContextProvider>();
+                    // Services:
+                    services.AddSingleton<ManualMigrationService>();
+                    services.AddSingleton<DataRepository>();
+                    services.AddSingleton<DatabaseService>();
+                    services.AddTransient<AttendanceFullCalculationService>();
 
-                     services.AddScoped<FrmMain>();
-                 });
+                    services.AddScoped<FrmMain>();
+                });
 
     }
 }

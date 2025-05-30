@@ -1,7 +1,7 @@
 ﻿namespace VorodKhoroj.Coordinators
 {
     // مدیریت داده‌های Attendance 
-    public class AttendanceServiceCoordinator(DataRepository repository, IAppDbContextProvider dbProvider)
+    public class AttendanceServiceCoordinator(DataRepository repository, AppDbContextProvider dbProvider)
     {
         public void CopyRecords(List<Attendance> recs)
         {

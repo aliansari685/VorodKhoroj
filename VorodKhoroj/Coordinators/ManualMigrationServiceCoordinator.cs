@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Coordinators
 {
-    public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, IAppDbContextProvider dbProvider)
+    public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, AppDbContextProvider dbProvider)
     {
         public void EnsureIdColumnExists()
         {
