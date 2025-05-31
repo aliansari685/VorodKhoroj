@@ -72,21 +72,18 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                //var attendances = _appCoordinator.DbContext?.Attendances.Where(x =>
-                //    x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
-
                 var attendances = _appCoordinator.AttendancesList.Where(x =>
                     x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
 
-                //Entry1:
-                UpdateAttendance(attendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));
+                ////Entry1:
+                //UpdateAttendance(attendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));//ok
 
                 //Exit1:
-                if (attendances.Count > 1)
+                if (attendances.Count > 0)
                 {
-                    UpdateAttendance(attendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));
+                    UpdateAttendance(attendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));//ok
                 }
                 else
                 {
@@ -101,46 +98,46 @@
 
                 }
 
-                //Entry2:
-                if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
-                {
-                    if (attendances.Count > 2)
-                    {
-                        UpdateAttendance(attendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
-                    }
-                    else
-                    {
-                        MessageBox.Show(attendances.Count.ToString());
+                ////Entry2:
+                //if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
+                //{
+                //    if (attendances.Count > 2)
+                //    {
+                //        UpdateAttendance(attendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show(attendances.Count.ToString());
 
-                        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+                //        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
 
-                        attendances = _appCoordinator.AttendancesList.Where(x =>
-                           x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+                //        attendances = _appCoordinator.AttendancesList.Where(x =>
+                //           x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
-                        MessageBox.Show(attendances.Count.ToString());
+                //        MessageBox.Show(attendances.Count.ToString());
 
-                    }
-                    //todo : index error 
-                    //Exit2:
-                    if (attendances.Count > 3)
-                    {
-                        UpdateAttendance(attendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
-                    }
-                    else
-                    {
-                        MessageBox.Show(attendances.Count.ToString());
+                //    }
+                //    //todo : index error 
+                //    //Exit2:
+                //    if (attendances.Count > 3)
+                //    {
+                //        UpdateAttendance(attendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
+                //    }
+                //    else
+                //    {
+                //        MessageBox.Show(attendances.Count.ToString());
 
-                        AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
+                //        AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
 
-                        attendances = _appCoordinator.AttendancesList.Where(x =>
-                            x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+                //        attendances = _appCoordinator.AttendancesList.Where(x =>
+                //            x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
-                        MessageBox.Show(attendances.Count.ToString());
+                //        MessageBox.Show(attendances.Count.ToString());
 
-                    }
-                }
-                else
-                    CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
+                //    }
+                //}
+                //else
+                //    CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
 
                 _appCoordinator.LoadRecordsFromDb();
 
@@ -159,6 +156,7 @@
         {
             var at = new Attendance
             {
+
                 DateTime = attendances[index].DateTime.Date + tm,
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
