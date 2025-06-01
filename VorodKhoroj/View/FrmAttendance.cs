@@ -7,6 +7,7 @@
         private readonly MainCoordinator _appCoordinator;
         private readonly AttendanceFullCalculationService _calcService;
         private List<WorkRecord> _tempRecords = [];
+        private List<Attendance> _tempRecordsAttendances => _appCoordinator.AttendancesList;
 
         public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
         {
@@ -72,29 +73,29 @@
                         throw new NullReferenceException("خطا در بروزرسانی تردد اول");
                     }
 
-                var attendances = _appCoordinator.AttendancesList.Where(x =>
-                    x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+                var attendances = FilterAttendances(_datetime, _user);
 
                 if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
 
-                ////Entry1:
-                //UpdateAttendance(attendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));//ok
+                //Entry1:
+                UpdateAttendance(attendances, 0,
+                    attendances[0].DateTime.Date.TimeOfDay < TimeSpan.Parse("12:00:00") //No Entry:
+                        ? TimeSpan.Parse(Entry1_txtbox.Text) //Entry1
+                        : TimeSpan.Parse(Exit1_txtbox.Text)); //Exit1
 
                 //Exit1:
-                if (attendances.Count > 0)
+                if (attendances.Count > 1)// 2=> 0 , 1
                 {
                     UpdateAttendance(attendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));//ok
                 }
                 else
                 {
-                    MessageBox.Show(attendances.Count.ToString());
 
                     AddAttendance(attendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
 
                     attendances = _appCoordinator.AttendancesList.Where(x =>
                        x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
 
-                    MessageBox.Show(attendances.Count.ToString());
 
                 }
 
@@ -152,6 +153,12 @@
 
         }
 
+        private List<Attendance> FilterAttendances(string datetime, string user)
+        {
+            return _tempRecordsAttendances.Where(x =>
+                x.DateTime.Date == DateTime.Parse(datetime) && x.UserId == int.Parse(user)).ToList();
+        }
+
         private void AddAttendance(List<Attendance> attendances, int index, TimeSpan tm)
         {
             var at = new Attendance
@@ -162,6 +169,7 @@
                 UserId = attendances[index].UserId
             };
             _appCoordinator.AddAttendanceRecord([at]);
+            _appCoordinator.LoadRecordsFromDb();
 
         }
 
