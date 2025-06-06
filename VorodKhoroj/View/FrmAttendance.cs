@@ -7,7 +7,8 @@
         private readonly MainCoordinator _appCoordinator;
         private readonly AttendanceFullCalculationService _calcService;
         private List<WorkRecord> _tempRecords = [];
-        private List<Attendance> _tempRecordsAttendances => _appCoordinator.AttendancesList;
+        private List<Attendance> TempRecordsAttendances => _appCoordinator.AttendancesList;
+        private List<Attendance> _tempAttendances = [];
 
         public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
         {
@@ -67,80 +68,22 @@
         {
             try
             {
-                if (MessageBox.Show("ایا از کار خود اطمینان دارید؟", "تاییدیه", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
-                    {
-                        throw new NullReferenceException("خطا در بروزرسانی تردد اول");
-                    }
+                if (MessageBox.Show("ایا از کار خود اطمینان دارید؟", "تاییدیه", MessageBoxButtons.YesNo) == DialogResult.No) return;
 
-                var attendances = FilterAttendances(_datetime, _user);
-
-                if (attendances == null) throw new NullReferenceException("رکوردی یافت نشد");
-
-                //Entry1:
-                UpdateAttendance(attendances, 0,
-                    attendances[0].DateTime.Date.TimeOfDay < TimeSpan.Parse("12:00:00") //No Entry:
-                        ? TimeSpan.Parse(Entry1_txtbox.Text) //Entry1
-                        : TimeSpan.Parse(Exit1_txtbox.Text)); //Exit1
-
-                //Exit1:
-                if (attendances.Count > 1)// 2=> 0 , 1
+                if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
                 {
-                    UpdateAttendance(attendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));//ok
-                }
-                else
-                {
-
-                    AddAttendance(attendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
-
-                    attendances = _appCoordinator.AttendancesList.Where(x =>
-                       x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
-
-
+                    throw new NullReferenceException("خطا در مقادیر ورودی تردد اول");
                 }
 
-                ////Entry2:
-                //if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
-                //{
-                //    if (attendances.Count > 2)
-                //    {
-                //        UpdateAttendance(attendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show(attendances.Count.ToString());
+                _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
 
-                //        AddAttendance(attendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+                if (_tempAttendances == null) throw new NullReferenceException("رکوردی یافت نشد");
 
-                //        attendances = _appCoordinator.AttendancesList.Where(x =>
-                //           x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
+                //Entry 1 And Exit 1:
+                ProcessFirstAttendance();
 
-                //        MessageBox.Show(attendances.Count.ToString());
-
-                //    }
-                //    //todo : index error 
-                //    //Exit2:
-                //    if (attendances.Count > 3)
-                //    {
-                //        UpdateAttendance(attendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
-                //    }
-                //    else
-                //    {
-                //        MessageBox.Show(attendances.Count.ToString());
-
-                //        AddAttendance(attendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
-
-                //        attendances = _appCoordinator.AttendancesList.Where(x =>
-                //            x.DateTime.Date == DateTime.Parse(_datetime) && x.UserId == int.Parse(_user)).ToList();
-
-                //        MessageBox.Show(attendances.Count.ToString());
-
-                //    }
-                //}
-                //else
-                //    CommonHelper.ShowMessage("خطا در بروزرسانی تردد دوم ");
-
-                _appCoordinator.LoadRecordsFromDb();
+                //Entry 2 And Exit 2:
+                ProcessSecondAttendance();
 
                 CommonHelper.ShowMessage("تغییرات با موفقیت انجام شد ");
 
@@ -153,24 +96,57 @@
 
         }
 
-        private List<Attendance> FilterAttendances(string datetime, string user)
+        private void ProcessSecondAttendance()
         {
-            return _tempRecordsAttendances.Where(x =>
-                x.DateTime.Date == DateTime.Parse(datetime) && x.UserId == int.Parse(user)).ToList();
+            //Entry2:
+            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
+            {
+                if (_tempAttendances.Count > 2)
+                    UpdateAttendance(_tempAttendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
+                else
+                    AddAttendance(_tempAttendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+
+                //Exit2:
+                if (_tempAttendances.Count > 3)
+                    UpdateAttendance(_tempAttendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
+                else
+                    AddAttendance(_tempAttendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
+            }
+            else if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 2)
+            {
+                DeleteAttendance(_tempAttendances[2]);
+            }
+
+            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 3)
+                DeleteAttendance(_tempAttendances[3]);
+        }
+
+        private void ProcessFirstAttendance()
+        {
+            //Entry1:
+            if (_tempAttendances[0].DateTime.TimeOfDay > TimeSpan.Parse("12:00:00"))
+            {
+                UpdateAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
+                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));
+            }
+
+            //Exit1:
+            if (_tempAttendances.Count > 1)
+                UpdateAttendance(_tempAttendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));
+            else
+                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
         }
 
         private void AddAttendance(List<Attendance> attendances, int index, TimeSpan tm)
         {
             var at = new Attendance
             {
-
                 DateTime = attendances[index].DateTime.Date + tm,
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
             };
             _appCoordinator.AddAttendanceRecord([at]);
-            _appCoordinator.LoadRecordsFromDb();
-
+            DataReloadOperation();
         }
 
         private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
@@ -178,8 +154,25 @@
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
             _appCoordinator.UpdateAttendanceRecord(attendances[index]);
+            DataReloadOperation();
         }
 
+        private void DeleteAttendance(Attendance attendance)
+        {
+            _appCoordinator.DeleteAttendanceRecord(attendance);
+            DataReloadOperation();
+        }
+        private List<Attendance> FilterAttendances(string datetime, string user)
+        {
+            return TempRecordsAttendances.Where(x =>
+                x.DateTime.Date == DateTime.Parse(datetime) && x.UserId == int.Parse(user)).ToList();
+        }
+
+        private void DataReloadOperation()
+        {
+            _appCoordinator.LoadRecordsFromDb();
+            _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
+        }
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -271,6 +264,12 @@
                 CommonHelper.ShowMessage(ex);
             }
 
+        }
+
+        private void dataView_Attendance_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            var data = (DataGridView)sender;
+            data.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
         }
     }
 }

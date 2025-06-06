@@ -73,12 +73,15 @@
             // هش ست خیلی پر سرعته توی جستجو
             var existingKeys = _appCoordinator.DbContext?.Attendances
                 .Select(a => new { a.UserId, a.DateTime })
+                .ToList() // حالا دیگه LINQ-to-Objects میشه
+                .Select(x => (x.UserId, x.DateTime))
                 .ToHashSet();
 
             // پیدا کردن رکوردهایی که وجود ندارند
             var newRecords = filtered
-                .Where(a => !existingKeys!.Contains(new { a.UserId, a.DateTime }))
+                .Where(a => existingKeys != null && !existingKeys.Contains((a.UserId, a.DateTime)))
                 .ToList();
+
             _appCoordinator.AddAttendanceRecord(newRecords);
             count = newRecords.Count;
         }
@@ -105,7 +108,7 @@
 
             // ایجاد کاربران جدید 
             var newUsers = newUserIds
-                .Select(id => new User { UserId = id }) // اگر فقط آیدی داری
+                .Select(id => new User { UserId = id })
                 .ToList();
 
             _appCoordinator.AddUserRecord(newUsers);

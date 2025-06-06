@@ -49,7 +49,6 @@ public partial class FrmCalc : Form
     private void DataViewCalculateRowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
     {
         var data = (DataGridView)sender;
-
         data.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
     }
 

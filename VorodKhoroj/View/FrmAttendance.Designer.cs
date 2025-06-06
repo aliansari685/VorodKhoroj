@@ -55,10 +55,10 @@
             checkBox_Isincomplete = new CheckBox();
             checkBox_Islate = new CheckBox();
             groupBox4 = new GroupBox();
+            radioBtn_Attendance2 = new RadioButton();
             radioBtn_Isincomplete = new RadioButton();
             radioBtn_IsLate = new RadioButton();
             radioBtn_All = new RadioButton();
-            radioBtn_Attendance2 = new RadioButton();
             ((ISupportInitialize)dataView_Attendance).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -81,6 +81,7 @@
             dataView_Attendance.Size = new Size(680, 315);
             dataView_Attendance.TabIndex = 6;
             dataView_Attendance.CellClick += dataView_Attendance_CellClick;
+            dataView_Attendance.RowPostPaint += dataView_Attendance_RowPostPaint;
             dataView_Attendance.RowPrePaint += DataViewAttendanceRowPrePaint;
             // 
             // label1
@@ -99,6 +100,7 @@
             DateTime_txtbox.Margin = new Padding(3, 4, 3, 4);
             DateTime_txtbox.Mask = "1000/00/00";
             DateTime_txtbox.Name = "DateTime_txtbox";
+            DateTime_txtbox.ReadOnly = true;
             DateTime_txtbox.RightToLeft = RightToLeft.No;
             DateTime_txtbox.Size = new Size(107, 28);
             DateTime_txtbox.TabIndex = 0;
@@ -245,7 +247,7 @@
             btn_clear.Location = new Point(10, 156);
             btn_clear.Name = "btn_clear";
             btn_clear.Size = new Size(39, 38);
-            btn_clear.TabIndex = 20;
+            btn_clear.TabIndex = 4;
             btn_clear.UseVisualStyleBackColor = false;
             btn_clear.Click += btn_clear_Click;
             // 
@@ -258,7 +260,7 @@
             Userid_txtbox.Name = "Userid_txtbox";
             Userid_txtbox.RightToLeft = RightToLeft.No;
             Userid_txtbox.Size = new Size(117, 28);
-            Userid_txtbox.TabIndex = 21;
+            Userid_txtbox.TabIndex = 2;
             // 
             // FromDateTime_txtbox
             // 
@@ -267,7 +269,7 @@
             FromDateTime_txtbox.Name = "FromDateTime_txtbox";
             FromDateTime_txtbox.RightToLeft = RightToLeft.No;
             FromDateTime_txtbox.Size = new Size(117, 28);
-            FromDateTime_txtbox.TabIndex = 14;
+            FromDateTime_txtbox.TabIndex = 0;
             FromDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label8
@@ -285,7 +287,7 @@
             btn_applyfilter.Location = new Point(55, 156);
             btn_applyfilter.Name = "btn_applyfilter";
             btn_applyfilter.Size = new Size(125, 38);
-            btn_applyfilter.TabIndex = 18;
+            btn_applyfilter.TabIndex = 3;
             btn_applyfilter.Text = "جستجو";
             btn_applyfilter.UseVisualStyleBackColor = true;
             btn_applyfilter.Click += btn_applyFilter_Click;
@@ -307,7 +309,7 @@
             toDateTime_txtbox.Name = "toDateTime_txtbox";
             toDateTime_txtbox.RightToLeft = RightToLeft.No;
             toDateTime_txtbox.Size = new Size(117, 28);
-            toDateTime_txtbox.TabIndex = 16;
+            toDateTime_txtbox.TabIndex = 1;
             toDateTime_txtbox.ValidatingType = typeof(DateTime);
             // 
             // label7
@@ -380,6 +382,17 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "نمایش ردیف ها";
             // 
+            // radioBtn_Attendance2
+            // 
+            radioBtn_Attendance2.AutoSize = true;
+            radioBtn_Attendance2.Location = new Point(55, 135);
+            radioBtn_Attendance2.Name = "radioBtn_Attendance2";
+            radioBtn_Attendance2.Size = new Size(108, 24);
+            radioBtn_Attendance2.TabIndex = 33;
+            radioBtn_Attendance2.Text = "روز های تردد دوم";
+            radioBtn_Attendance2.UseVisualStyleBackColor = true;
+            radioBtn_Attendance2.CheckedChanged += radioBtn_CheckedChanged;
+            // 
             // radioBtn_Isincomplete
             // 
             radioBtn_Isincomplete.AutoSize = true;
@@ -414,17 +427,6 @@
             radioBtn_All.Text = "همه";
             radioBtn_All.UseVisualStyleBackColor = true;
             radioBtn_All.CheckedChanged += radioBtn_CheckedChanged;
-            // 
-            // radioBtn_Attendance2
-            // 
-            radioBtn_Attendance2.AutoSize = true;
-            radioBtn_Attendance2.Location = new Point(55, 135);
-            radioBtn_Attendance2.Name = "radioBtn_Attendance2";
-            radioBtn_Attendance2.Size = new Size(108, 24);
-            radioBtn_Attendance2.TabIndex = 33;
-            radioBtn_Attendance2.Text = "روز های تردد دوم";
-            radioBtn_Attendance2.UseVisualStyleBackColor = true;
-            radioBtn_Attendance2.CheckedChanged += radioBtn_CheckedChanged;
             // 
             // FrmAttendance
             // 

@@ -21,6 +21,8 @@ global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Collections;
 global using VorodKhoroj.Coordinators;
 global using VorodKhoroj.Interfaces;
+global using System.Data.Common;
+
 
 
 namespace VorodKhoroj

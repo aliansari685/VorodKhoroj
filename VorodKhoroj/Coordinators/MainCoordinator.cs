@@ -32,6 +32,8 @@
         public void UpdateAttendanceRecord(Attendance attendance) => attendanceServiceCoordinator.UpdateAttendance(attendance);
         public void CopyAttendancesRecord(List<Attendance> records) => attendanceServiceCoordinator.CopyRecords(records);
         public void AddAttendanceRecord(List<Attendance> attendances) => attendanceServiceCoordinator.AddAttendance(attendances);
+        public void DeleteAttendanceRecord(Attendance attendances) => attendanceServiceCoordinator.DeleteAttendance(attendances);
+
 
         public void MigrationsEnsureDatabaseUpToDate() => migrationServiceCoordinator.EnsureIdColumnExists();
 
@@ -41,7 +43,5 @@
             DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);
         }
-
-
     }
 }

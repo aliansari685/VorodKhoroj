@@ -2,6 +2,26 @@
 {
     public class DataRepository
     {
+        private void ExecuteSafeQuery(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (DbException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+
         public List<Attendance> GetRecordsFromFile(string fileAddress)
         {
             List<Attendance> records = [];
@@ -41,7 +61,7 @@
         //DataBase:
         public void AddAttendancesAndUsers(List<Attendance> records, AppDbContext context)
         {
-            try
+            ExecuteSafeQuery(() =>
             {
                 //Add User AttendancesList From UserID in Attendance
                 var users = GetUsersAttendances(records)
@@ -56,102 +76,51 @@
                 _ = context.SaveChanges();
 
                 context.Database.GetDbConnection().Close();
+            });
 
-                Task.Delay(1000);
-            }
-            catch (DbUpdateException ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
         }
         public void AddAttendance(List<Attendance> records, AppDbContext context)
         {
-            try
+            ExecuteSafeQuery(() =>
             {
-                //Add Attendance AttendancesList
                 context.Attendances.AddRange(records);
-                _ = context.SaveChanges();
-
-                context.Database.GetDbConnection().Close();
-
-                Task.Delay(1000);
-                MessageBox.Show("Test");
-            }
-            catch (DbUpdateException ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
+                context.SaveChanges();
+            });
         }
+
+        public void DeleteAttendance(List<Attendance> records, AppDbContext context)
+        {
+            ExecuteSafeQuery(() =>
+            {
+                context.Attendances.RemoveRange(records);
+                _ = context.SaveChanges();
+            });
+        }
+
         public void UpdateAttendance(List<Attendance> records, AppDbContext context)
         {
-            try
+            ExecuteSafeQuery(() =>
             {
-                //Add Attendance AttendancesList
                 context.Attendances.UpdateRange(records);
                 _ = context.SaveChanges();
+            });
 
-                context.Database.GetDbConnection().Close();
-                Task.Delay(1000);
-            }
-            catch (DbUpdateException ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
         }
         public void AddAttendanceUser(List<User> records, AppDbContext context)
         {
-            try
+            ExecuteSafeQuery(() =>
             {
-                //Add Attendance AttendancesList
                 context.Users.AddRange(records);
                 _ = context.SaveChanges();
-
-                context.Database.GetDbConnection().Close();
-
-                Task.Delay(1000);
-            }
-            catch (DbUpdateException ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
+            });
         }
         public void UpdateAttendanceUser(List<User> records, AppDbContext context)
         {
-            try
+            ExecuteSafeQuery(() =>
             {
-                //Add Attendance AttendancesList
                 context.Users.UpdateRange(records);
                 _ = context.SaveChanges();
-
-                context.Database.GetDbConnection().Close();
-                Task.Delay(1000);
-            }
-            catch (DbUpdateException ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
-            catch (Exception ex)
-            {
-                CommonHelper.ShowMessage(ex);
-            }
+            });
         }
-
-
     }
 }

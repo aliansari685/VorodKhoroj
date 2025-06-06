@@ -17,6 +17,11 @@
         {
             if (dbProvider.DbContext != null) repository.UpdateAttendance([rec], dbProvider.DbContext);
         }
+
+        public void DeleteAttendance(Attendance rec)
+        {
+            if (dbProvider.DbContext != null) repository.DeleteAttendance([rec], dbProvider.DbContext);
+        }
     }
 
 }
