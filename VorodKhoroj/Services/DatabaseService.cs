@@ -2,6 +2,12 @@
 {
     public class DatabaseService
     {
+        /// <summary>
+        /// ایجاد دیتابیس جدید با نام و مسیر مشخص
+        /// </summary>
+        /// <param name="filePath">مسیر فایل دیتابیس (mdf)</param>
+        /// <param name="dbname">نام دیتابیس</param>
+        /// <param name="dbContext">کانتکست دیتابیس</param>
         public void CreateDatabase(string filePath, string dbname, AppDbContext dbContext)
         {
             string createDbQuery = $@"
@@ -14,16 +20,25 @@
             dbContext.Database.ExecuteSqlRaw(createDbQuery);
         }
 
+        /// <summary>
+        /// ایجاد جداول دیتابیس در صورت عدم وجود
+        /// </summary>
+        /// <param name="dbContext">کانتکست دیتابیس</param>
         public void CreateTables(AppDbContext dbContext)
         {
             dbContext.Database.EnsureCreated();
         }
 
+        /// <summary>
+        /// قطع اتصال‌ها به دیتابیس و جداکردن دیتابیس (Detach)
+        /// </summary>
+        /// <param name="dbPathName">نام یا مسیر دیتابیس برای شناسایی session ها</param>
+        /// <param name="dbName">نام دیتابیس</param>
+        /// <param name="dbContext">کانتکست دیتابیس</param>
         public void DetachDatabase(string dbPathName, string dbName, AppDbContext dbContext)
         {
             try
             {
-                // 1. بستن اتصال‌ها به دیتابیس هدف
                 var killQuery = $@"
             DECLARE @kill VARCHAR(MAX) = '';
             SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR) + ';'
@@ -33,7 +48,6 @@
 
                 dbContext.Database.ExecuteSqlRaw(killQuery);
 
-
                 var qur = $@" DECLARE @kill VARCHAR(MAX) = '';
                           SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR(5)) + ';'
                           FROM sys.dm_exec_sessions
@@ -41,9 +55,8 @@
                           EXEC(@kill);";
                 dbContext.Database.ExecuteSqlRaw(qur);
 
-                var detachDbQuery = $"EXEC sp_detach_db '{dbName}', 'true';"; //'D:\data\fd.mdf'
+                var detachDbQuery = $"EXEC sp_detach_db '{dbName}', 'true';";
                 dbContext.Database.ExecuteSqlRaw(detachDbQuery);
-
             }
             catch (Exception ex)
             {
@@ -51,5 +64,4 @@
             }
         }
     }
-
 }

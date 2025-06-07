@@ -84,14 +84,18 @@ public partial class FrmCalc : Form
                 var row = dataView_Calculate.Rows[e.RowIndex];
 
                 if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
+                {
                     row.DefaultCellStyle.BackColor = Color.Red;
-
+                }
                 else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_Isincomplete.Checked)
+                {
                     row.DefaultCellStyle.BackColor = Color.Orange;
-
+                }
                 else if (checkBox_workinholiday.Checked && DateTime.TryParse(row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(), out var date)
                          && _calcServices.OverTimeHolidayList.Contains(date))
+                {
                     row.DefaultCellStyle.BackColor = Color.CadetBlue;
+                }
                 else
                 {
                     row.DefaultCellStyle.BackColor = Color.White;
@@ -245,7 +249,6 @@ public partial class FrmCalc : Form
             lbl_sumFraction.Text = temp.TotalFractionTime;
             lbl_tadil.Text = temp.TotalAdjustmentOrOvertime;
             lbl_Information.Text = @$"{_fromDateTime} -- {_toDateTime} -- {_username}";
-
         }
     }
 
@@ -306,32 +309,40 @@ public partial class FrmCalc : Form
         var toDt = DateTime.Parse(_toDateTime);
 
         if (radioButton_qeybat.Checked)
-            dataView_late.DataSource = _calcServices.AbsenceDaysList.Select(g => new
-            {
-                DayOfWeek = g.Date.ToString("dddd"),
-                Date = g.Date.ToString("yyyy/MM/dd")
-            }).ToList().ToDataTableWithDisplayedName();
-
-
+        {
+            dataView_late.DataSource = _calcServices.AbsenceDaysList
+                .Select(g => new
+                {
+                    DayOfWeek = g.Date.ToString("dddd"),
+                    Date = g.Date.ToString("yyyy/MM/dd")
+                })
+                .ToList()
+                .ToDataTableWithDisplayedName();
+        }
         else if (radioButton_holidays.Checked)
-            dataView_late.DataSource = _calcServices.HolidaysDaysList.Select(g => new
-            {
-                DayOfWeek = g.Date.ToString("dddd"),
-                Date = g.Date.ToString("yyyy/MM/dd"),
-            }).ToList().ToDataTableWithDisplayedName();
-
-
+        {
+            dataView_late.DataSource = _calcServices.HolidaysDaysList
+                .Select(g => new
+                {
+                    DayOfWeek = g.Date.ToString("dddd"),
+                    Date = g.Date.ToString("yyyy/MM/dd")
+                })
+                .ToList()
+                .ToDataTableWithDisplayedName();
+        }
         else if (radioButton_ramadan.Checked)
-            dataView_late.DataSource = _calcServices.RamadanDaysList.Where(x => x.Date.Date >= fromDt && x.Date.Date <= toDt).Select(g =>
-                new
+        {
+            dataView_late.DataSource = _calcServices.RamadanDaysList
+                .Where(x => x.Date.Date >= fromDt && x.Date.Date <= toDt)
+                .Select(g => new
                 {
                     DayOfWeek = g.Date.ToString("dddd"),
                     Date = g.Date.ToString("yyyy/MM/dd"),
-                    g.Title,
-                }).ToList().ToDataTableWithDisplayedName();
+                    g.Title
+                })
+                .ToList()
+                .ToDataTableWithDisplayedName();
+        }
     }
     #endregion
-
-
-
 }

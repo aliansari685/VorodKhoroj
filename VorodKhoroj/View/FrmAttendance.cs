@@ -2,13 +2,21 @@
 {
     public partial class FrmAttendance : Form
     {
+        #region Fields:
         private string _user = "";
         private string _datetime = "";
         private readonly MainCoordinator _appCoordinator;
         private readonly AttendanceFullCalculationService _calcService;
+
+        // لیست موقت رکوردهای کاری پس از محاسبه (برای نمایش در دیتاگرید)
         private List<WorkRecord> _tempRecords = [];
+
+        // لیست موقت حضور و غیاب که از Coordinator گرفته می‌شود
         private List<Attendance> TempRecordsAttendances => _appCoordinator.AttendancesList;
+
+        // لیست موقت رکوردهای حضور و غیاب (استفاده در پردازش و ویرایش)
         private List<Attendance> _tempAttendances = [];
+        #endregion
 
         public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
         {
@@ -17,6 +25,7 @@
             _calcService = calcServices;
         }
 
+        #region Form Events
         private void FrmAttendance_Load(object sender, EventArgs e)
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
@@ -25,17 +34,7 @@
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
-        private void DataGridConfig(string toDataTime, string fromDataTime = "1403/01/01", string userId = "0")
-        {
-            _tempRecords = _calcService.Calculate(userId, fromDataTime, toDataTime, false);
-
-            dataView_Attendance.DataSource = _tempRecords.ToDataTable();
-
-            dataView_Attendance.ApplyDisplayNames<WorkRecord>();
-
-            dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
-        }
-
+        //فیلترکردن بر اساس تاریخ و یوزر
         private void btn_applyFilter_Click(object sender, EventArgs e)
         {
             try
@@ -57,6 +56,7 @@
             }
         }
 
+        //پاک کردن فیلترها
         private void btn_clear_Click(object sender, EventArgs e)
         {
             FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
@@ -64,6 +64,7 @@
             radioBtn_All.Checked = true;
         }
 
+        //ثبت مقادیر ورود و خروج
         private void btn_submit_Click(object sender, EventArgs e)
         {
             try
@@ -96,83 +97,7 @@
 
         }
 
-        private void ProcessSecondAttendance()
-        {
-            //Entry2:
-            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
-            {
-                if (_tempAttendances.Count > 2)
-                    UpdateAttendance(_tempAttendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
-                else
-                    AddAttendance(_tempAttendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
-
-                //Exit2:
-                if (_tempAttendances.Count > 3)
-                    UpdateAttendance(_tempAttendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
-                else
-                    AddAttendance(_tempAttendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
-            }
-            else if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 2)
-            {
-                DeleteAttendance(_tempAttendances[2]);
-            }
-
-            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 3)
-                DeleteAttendance(_tempAttendances[3]);
-        }
-
-        private void ProcessFirstAttendance()
-        {
-            //Entry1:
-            if (_tempAttendances[0].DateTime.TimeOfDay > TimeSpan.Parse("12:00:00"))
-            {
-                UpdateAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
-                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));
-            }
-
-            //Exit1:
-            if (_tempAttendances.Count > 1)
-                UpdateAttendance(_tempAttendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));
-            else
-                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
-        }
-
-        private void AddAttendance(List<Attendance> attendances, int index, TimeSpan tm)
-        {
-            var at = new Attendance
-            {
-                DateTime = attendances[index].DateTime.Date + tm,
-                LoginType = attendances[index].LoginType,
-                UserId = attendances[index].UserId
-            };
-            _appCoordinator.AddAttendanceRecord([at]);
-            DataReloadOperation();
-        }
-
-        private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
-        {
-            var newDateTime = attendances[index].DateTime.Date + tm;
-            attendances[index].DateTime = newDateTime;
-            _appCoordinator.UpdateAttendanceRecord(attendances[index]);
-            DataReloadOperation();
-        }
-
-        private void DeleteAttendance(Attendance attendance)
-        {
-            _appCoordinator.DeleteAttendanceRecord(attendance);
-            DataReloadOperation();
-        }
-        private List<Attendance> FilterAttendances(string datetime, string user)
-        {
-            return TempRecordsAttendances.Where(x =>
-                x.DateTime.Date == DateTime.Parse(datetime) && x.UserId == int.Parse(user)).ToList();
-        }
-
-        private void DataReloadOperation()
-        {
-            _appCoordinator.LoadRecordsFromDb();
-            _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
-        }
+        //انتخاب یک رکورد برای نمایش در TextBoxها
         private void dataView_Attendance_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -200,34 +125,35 @@
             }
         }
 
+        // اعمال دوباره رنگ‌ها
         private void checkBox_ApplyStyles_CheckedChanged(object sender, EventArgs e)
         {
             dataView_Attendance.Invalidate();
         }
 
+        //اعمال رنگ ها
         private void DataViewAttendanceRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             try
             {
-                if (dataView_Attendance.Rows.Count > e.RowIndex)
+                if (dataView_Attendance.Rows.Count <= e.RowIndex) return;
+
+                var row = dataView_Attendance.Rows[e.RowIndex];
+
+                if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
+                    row.DefaultCellStyle.BackColor = Color.Red;
+
+                else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_Isincomplete.Checked)
+                    row.DefaultCellStyle.BackColor = Color.Orange;
+
+                else if (checkBox_workinholiday.Checked && DateTime.TryParse(
+                                                            row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(),
+                                                            out var date)
+                                                        && _calcService.OverTimeHolidayList.Contains(date))
+                    row.DefaultCellStyle.BackColor = Color.CadetBlue;
+                else
                 {
-                    var row = dataView_Attendance.Rows[e.RowIndex];
-
-                    if (row.Cells[nameof(WorkRecord.IsLate)]?.Value is true && checkBox_Islate.Checked)
-                        row.DefaultCellStyle.BackColor = Color.Red;
-
-                    else if (row.Cells[nameof(WorkRecord.IsNaghes)]?.Value is true && checkBox_Isincomplete.Checked)
-                        row.DefaultCellStyle.BackColor = Color.Orange;
-
-                    else if (checkBox_workinholiday.Checked && DateTime.TryParse(
-                                                                row.Cells[nameof(WorkRecord.Date)]?.Value?.ToString(),
-                                                                out var date)
-                                                            && _calcService.OverTimeHolidayList.Contains(date))
-                        row.DefaultCellStyle.BackColor = Color.CadetBlue;
-                    else
-                    {
-                        row.DefaultCellStyle.BackColor = Color.White;
-                    }
+                    row.DefaultCellStyle.BackColor = Color.White;
                 }
             }
             catch (Exception ex)
@@ -237,6 +163,7 @@
 
         }
 
+        //تغییر نمایش بر اساس وضعیت رکوردها.
         private void radioBtn_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -266,10 +193,108 @@
 
         }
 
+        //شماره‌گذاری سطرها.
         private void dataView_Attendance_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             var data = (DataGridView)sender;
             data.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
         }
+        #endregion
+
+        #region Core Logic:
+        // تنظیم گرید بر اساس فیلترها.
+        private void DataGridConfig(string toDataTime, string fromDataTime = "1403/01/01", string userId = "0")
+        {
+            _tempRecords = _calcService.Calculate(userId, fromDataTime, toDataTime, false);
+
+            dataView_Attendance.DataSource = _tempRecords.ToDataTable();
+
+            dataView_Attendance.ApplyDisplayNames<WorkRecord>();
+
+            dataView_Attendance.Sort(dataView_Attendance.Columns[nameof(WorkRecord.Date)]!, ListSortDirection.Ascending);
+        }
+
+        //ثبت یا به‌روزرسانی ورود و خروج دوم.
+        private void ProcessSecondAttendance()
+        {
+            //Entry2:
+            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
+            {
+                if (_tempAttendances.Count > 2)
+                    UpdateAttendance(_tempAttendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
+                else
+                    AddAttendance(_tempAttendances, 1, TimeSpan.Parse(Entry2_txtbox.Text));
+
+                //Exit2:
+                if (_tempAttendances.Count > 3)
+                    UpdateAttendance(_tempAttendances, 3, TimeSpan.Parse(Exit2_txtbox.Text));
+                else
+                    AddAttendance(_tempAttendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
+            }
+            else if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 2)
+            {
+                DeleteAttendance(_tempAttendances[2]);
+            }
+
+            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 3)
+                DeleteAttendance(_tempAttendances[3]);
+        }
+
+        //ثبت یا به‌روزرسانی ورود و خروج اول.
+        private void ProcessFirstAttendance()
+        {
+            //Entry1:
+            if (_tempAttendances[0].DateTime.TimeOfDay > TimeSpan.Parse("12:00:00"))
+            {
+                UpdateAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
+                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));
+            }
+
+            //Exit1:
+            if (_tempAttendances.Count > 1)
+                UpdateAttendance(_tempAttendances, 1, TimeSpan.Parse(Exit1_txtbox.Text));
+            else
+                AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
+        }
+
+        //اضافه کردن رکورد
+        private void AddAttendance(List<Attendance> attendances, int index, TimeSpan tm)
+        {
+            var at = new Attendance
+            {
+                DateTime = attendances[index].DateTime.Date + tm,
+                LoginType = attendances[index].LoginType,
+                UserId = attendances[index].UserId
+            };
+            _appCoordinator.AddAttendanceRecord([at]);
+            DataReloadOperation();
+        }
+
+        //اپدیت رکورد
+        private void UpdateAttendance(List<Attendance> attendances, int index, TimeSpan tm)
+        {
+            var newDateTime = attendances[index].DateTime.Date + tm;
+            attendances[index].DateTime = newDateTime;
+            _appCoordinator.UpdateAttendanceRecord(attendances[index]);
+            DataReloadOperation();
+        }
+
+        //حذف رکورد
+        private void DeleteAttendance(Attendance attendance)
+        {
+            _appCoordinator.DeleteAttendanceRecord(attendance);
+            DataReloadOperation();
+        }
+
+        //فیلترکردن لیست کلی بر اساس تاریخ و یوزر
+        private List<Attendance> FilterAttendances(string datetime, string user) => DataFilterService.ApplyFilter(TempRecordsAttendances, datetime, datetime, int.Parse(user)).ToList();
+
+        //بارگذاری مجدد داده‌ها بعد از تغییر
+        private void DataReloadOperation()
+        {
+            _appCoordinator.LoadRecordsFromDb();
+            _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
+        }
+        #endregion
     }
 }

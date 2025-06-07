@@ -1,17 +1,20 @@
 ﻿namespace VorodKhoroj.Helpers
 {
-    public static class ExtentionMethod
+    public static class ExtensionMethod
     {
-        //with attribute DisplayName:
+        /// <summary>
+        /// تبدیل لیست به DataTable با نام ستون‌ها از DisplayNameAttribute
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public static DataTable ToDataTableWithDisplayedName<T>(this List<T> list)
         {
             DataTable table = new();
             var properties = typeof(T).GetProperties();
 
-            // نگه‌داشتن نگاشت: نام ستون → پراپرتی مرتبط
             Dictionary<string, PropertyInfo> columnMappings = new();
 
-            // ایجاد ستون‌ها
             foreach (var prop in properties)
             {
                 var displayNameAttr = prop.GetCustomAttribute<DisplayNameAttribute>();
@@ -21,14 +24,11 @@
                 columnMappings[columnName] = prop;
             }
 
-            // اضافه کردن داده‌ها
             foreach (var item in list)
             {
                 var row = table.NewRow();
-                foreach (var column in columnMappings)
+                foreach (var (columnName, prop) in columnMappings)
                 {
-                    var prop = column.Value;
-                    var columnName = column.Key;
                     row[columnName] = prop.GetValue(item) ?? DBNull.Value;
                 }
                 table.Rows.Add(row);
@@ -37,19 +37,22 @@
             return table;
         }
 
-        //without attribute DisplayName:
+        /// <summary>
+        ///تبدیل لیست به DataTable بدون استفاده از DisplayNameAttribute 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public static DataTable ToDataTable<T>(this List<T> list)
         {
             DataTable table = new();
-            // ایجاد ستون‌ها بر اساس پراپرتی‌های کلاس
             var properties = typeof(T).GetProperties();
+
             foreach (var prop in properties)
             {
-                table.Columns.Add(prop.Name,
-                    Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+                table.Columns.Add(prop.Name, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
             }
 
-            // اضافه کردن داده‌ها
             foreach (var item in list)
             {
                 var row = table.NewRow();
@@ -57,13 +60,17 @@
                 {
                     row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
                 }
-
                 table.Rows.Add(row);
             }
 
             return table;
         }
 
+        /// <summary>
+        /// تنظیم نام ستون‌های DataGridView بر اساس DisplayNameAttribute نوع داده
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="grid"></param>
         public static void ApplyDisplayNames<T>(this DataGridView grid)
         {
             var props = typeof(T).GetProperties();
@@ -75,46 +82,61 @@
                 {
                     var displayNameAttr = prop.GetCustomAttribute<DisplayNameAttribute>();
                     if (displayNameAttr != null)
-                    {
                         column.HeaderText = displayNameAttr.DisplayName;
-                    }
                 }
             }
         }
 
+        /// <summary>
+        /// جایگزین کردن نام ستون‌های DataGridView با DisplayNameها از آبجکت
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="dataGrid"></param>
         public static void SetDisplayNameInDataGrid<T>(this T obj, DataGridView dataGrid)
         {
-            var temp = obj.GetDisplayNames();
-            for (var i = 0; i < temp.Count; i++)
+            var displayNames = obj.GetDisplayNames();
+            for (var i = 0; i < displayNames.Count && i < dataGrid.Columns.Count; i++)
             {
-                dataGrid.Columns[i].HeaderText = temp[i];
+                dataGrid.Columns[i].HeaderText = displayNames[i];
             }
         }
-
+        /// <summary>
+        /// دریافت لیست DisplayNameها از نوع T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static List<string> GetDisplayNames<T>(this T obj)
         {
             return typeof(T)
                 .GetProperties()
                 .Select(prop => prop.GetCustomAttribute<DisplayNameAttribute>())
                 .Where(attr => attr != null)
-                .Select(attr => attr?.DisplayName ?? string.Empty)
+                .Select(attr => attr!.DisplayName)
                 .ToList();
         }
 
+        /// <summary>
+        /// دریافت DisplayName یک پراپرتی خاص از طریق Expression
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public static string GetDisplayName<T, TProperty>(this T obj, Expression<Func<T, TProperty>> expression)
         {
-            if (expression.Body is MemberExpression member)
+            MemberExpression? member = expression.Body switch
+            {
+                MemberExpression m => m,
+                UnaryExpression { Operand: MemberExpression unaryMember } => unaryMember,
+                _ => null
+            };
+
+            if (member != null)
             {
                 var prop = typeof(T).GetProperty(member.Member.Name);
-                if (prop != null)
-                {
-                    var attr = prop.GetCustomAttribute<DisplayNameAttribute>();
-                    return attr?.DisplayName ?? prop.Name;
-                }
-            }
-            else if (expression.Body is UnaryExpression { Operand: MemberExpression unaryMember })
-            {
-                var prop = typeof(T).GetProperty(unaryMember.Member.Name);
                 if (prop != null)
                 {
                     var attr = prop.GetCustomAttribute<DisplayNameAttribute>();

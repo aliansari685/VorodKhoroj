@@ -6,7 +6,7 @@
         public DbSet<Attendance> Attendances { get; set; }
 
         /// <summary>
-        /// داخلی یعنی از قبل اتچ شده 
+        /// نوع دیتابیس: داخلی (از قبل attach شده) یا فایل attach شده
         /// </summary>
         public enum DataBaseLocation
         {
@@ -17,22 +17,20 @@
         {
             DataBaseLocation.AttachDbFilename =>
                 $"Data Source={serverName};Integrated Security=True;AttachDbFilename={dbpath};TrustServerCertificate=True;Encrypt=False;Connection Timeout=5;User Instance=True;",
-
             DataBaseLocation.InternalDataBase =>
                 $"Data Source={serverName};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=5;",
-
             _ => throw new ArgumentException("نوع کانفیگ دیتابیس نامعتبر است.")
         };
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Attendance>().HasKey(x => x.Id);
-
             modelBuilder.Entity<Attendance>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);

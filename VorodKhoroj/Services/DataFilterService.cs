@@ -2,6 +2,15 @@
 {
     public class DataFilterService
     {
+        /// <summary>
+        /// فیتلر داده از بامداد شروع تاریخ تا 23:59 پایان تاریخ با کاربر مشخص
+        /// </summary>
+        /// <param name="records">دیتا تردد</param>
+        /// <param name="fromDate">شروع</param>
+        /// <param name="toDate">پایان</param>
+        /// <param name="userid">کاربر ، اگر مشخص نیس 0 بده</param>
+        /// <returns></returns>
+        /// <exception cref="FormatException"></exception>
         public static IEnumerable<Attendance> ApplyFilter(IList<Attendance> records, string fromDate, string toDate, int userid)
         {
             try

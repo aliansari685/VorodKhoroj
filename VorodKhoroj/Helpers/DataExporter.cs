@@ -2,6 +2,9 @@
 
 public static class DataExporter
 {
+    /// <summary>
+    /// اکسپورت داده‌های DataGridView به فایل اکسل با امکان سفارشی‌سازی عنوان ستون‌ها و عنوان کلی
+    /// </summary>
     public static void ExportDataGrid(DataGridView grid, Dictionary<string, string>? labels = null, string title = "")
     {
         try
@@ -14,7 +17,6 @@ public static class DataExporter
             using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Data");
 
-
             // عنوان ستون‌ها
             for (var col = 0; col < grid.Columns.Count; col++)
                 worksheet.Cells[1, col + 1].Value = grid.Columns[col].HeaderText;
@@ -22,18 +24,16 @@ public static class DataExporter
             // داده‌ها
             for (var row = 0; row < grid.Rows.Count; row++)
                 for (var col = 0; col < grid.Columns.Count; col++)
-                {
                     worksheet.Cells[row + 2, col + 1].Value = grid.Rows[row].Cells[col].Value?.ToString();
-                }
 
+            // عنوان کلی گزارش
             worksheet.Cells[grid.Rows.Count + 3, 1].Value = title;
 
-
-            //خلاصه محاسبات
-            if (labels is not null && labels.Any())
+            // خلاصه محاسبات (لیبل‌ها)
+            if (labels is { Count: > 0 })
             {
-                var labelRow = grid.Rows.Count + 5;
-                var labelCol = 1;
+                int labelRow = grid.Rows.Count + 5;
+                int labelCol = 1;
 
                 foreach (var (key, value) in labels)
                 {
@@ -42,7 +42,7 @@ public static class DataExporter
                     labelCol++;
                 }
             }
-
+            //فیت کردن بین سلول ها
             worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
             File.WriteAllBytes(saveDialog.FileName, package.GetAsByteArray());
 
@@ -54,6 +54,9 @@ public static class DataExporter
         }
     }
 
+    /// <summary>
+    /// اکسپورت داده‌های حضور و غیاب برای ماه‌های انتخاب شده به فایل اکسل
+    /// </summary>
     public static void ExportAttendanceData(
         string userId,
         int year,
@@ -67,22 +70,24 @@ public static class DataExporter
         foreach (var month in selectedMonths)
         {
             var worksheet = package.Workbook.Worksheets.Add($"ماه {month:D2}");
-            var startDate = $"{year}/{month:D2}/01";
-            var endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
+
+            string startDate = $"{year}/{month:D2}/01";
+            string endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
 
             var records = calcService.Calculate(userId, startDate, endDate);
-            if (CommonHelper.IsValid(records.Count)==false) return;
+            if (records.Count == 0) return;
 
-            // داده‌ها با ستون ها
+            // بارگذاری داده‌ها در شیت با ستون‌ها
             worksheet.Cells["A1"].LoadFromCollection(records, true);
 
+            // عنوان گزارش
             worksheet.Cells[records.Count + 3, 1].Value = calcService.TitleReport;
 
-            // لیبل‌ها
+            // درج لیبل‌ها
             if (includeLabels)
             {
-                var labelRow = records.Count + 5;
-                var labelCol = 1;
+                int labelRow = records.Count + 5;
+                int labelCol = 1;
                 var labels = calcService.GetDataWithTitle();
 
                 foreach (var (key, value) in labels)
@@ -95,71 +100,6 @@ public static class DataExporter
 
             worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
         }
-
         File.WriteAllBytes(filePath, package.GetAsByteArray());
     }
-
-    //Old method:
-    //public static void ExportAttendanceData1(
-    //    string userId,
-    //    int year,
-    //    List<int> selectedMonths,
-    //    bool includeLabels,
-    //    string filePath,
-    //    AttendanceCalculationService calcService)
-    //{
-    //    using var package = new ExcelPackage();
-
-    //    foreach (var month in selectedMonths)
-    //    {
-    //        var worksheet = package.Workbook.Worksheets.Add($"ماه {month:D2}");
-
-    //        var startDate = $"{year}/{month:D2}/01";
-    //        var endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
-
-    //        var headers = new WorkRecord().GetDisplayNames();
-    //        var records = calcService.Calculate(userId, startDate, endDate);
-    //        if (records.Count == 0)
-    //            return;
-
-    //        var properties = typeof(WorkRecord).GetProperties();
-
-    //        // عنوان ستون‌ها
-    //        for (var col = 0; col < headers.Count; col++) worksheet.Cells[1, col + 1].Value = headers[col];
-
-    //        // داده‌ها
-    //        for (var row = 0; row < records.Count; row++)
-    //            for (var col = 0; col < headers.Count; col++)
-    //            {
-    //                var value = properties[col].GetValue(records[row]);
-    //                worksheet.Cells[row + 2, col + 1].Value = value?.ToString() ?? "";
-    //            }
-    //        //خلاصه محاسبات
-    //        worksheet.Cells[records.Count + 3, 1].Value = calcService.TitleReport;
-
-    //        // لیبل‌ها
-    //        if (includeLabels)
-    //        {
-    //            var labelRow = records.Count + 5;
-    //            var labelCol = 1;
-    //            var labels = calcService.GetDataWithTitle();
-
-    //            foreach (var (key, value) in labels)
-    //            {
-    //                worksheet.Cells[labelRow, labelCol].Value = key;
-    //                worksheet.Cells[labelRow + 1, labelCol].Value = value;
-    //                labelCol++;
-    //            }
-    //        }
-
-    //        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-    //    }
-
-    //    File.WriteAllBytes(filePath, package.GetAsByteArray());
-    //}
-
-
-
-
-
 }
