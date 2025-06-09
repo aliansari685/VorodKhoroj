@@ -69,7 +69,7 @@
         {
             try
             {
-                if (MessageBox.Show("ایا از کار خود اطمینان دارید؟", "تاییدیه", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                if (MessageBox.Show(@"ایا از کار خود اطمینان دارید؟", @"تاییدیه", MessageBoxButtons.YesNo) == DialogResult.No) return;
 
                 if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
                 {

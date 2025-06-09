@@ -31,7 +31,7 @@
             {
                 Name = "AddItemMenuItem",
                 Size = new Size(180, 22),
-                Text = "افزودن به لیست"
+                Text = @"افزودن به لیست"
             };
 
             addItem.Click += (_, _) =>

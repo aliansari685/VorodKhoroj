@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btn_applyfilter = new Button();
+            btn_addRange = new Button();
             label2 = new Label();
             toDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             FromDateTime_txtbox = new MaskedTextBox();
             SuspendLayout();
             // 
-            // btn_applyfilter
+            // btn_addRange
             // 
-            btn_applyfilter.Location = new Point(12, 88);
-            btn_applyfilter.Margin = new Padding(3, 5, 3, 5);
-            btn_applyfilter.Name = "btn_applyfilter";
-            btn_applyfilter.Size = new Size(178, 49);
-            btn_applyfilter.TabIndex = 2;
-            btn_applyfilter.Text = "ثبت";
-            btn_applyfilter.UseVisualStyleBackColor = true;
-            btn_applyfilter.Click += btn_applyFilter_Click;
+            btn_addRange.Location = new Point(12, 88);
+            btn_addRange.Margin = new Padding(3, 5, 3, 5);
+            btn_addRange.Name = "btn_addRange";
+            btn_addRange.Size = new Size(178, 49);
+            btn_addRange.TabIndex = 2;
+            btn_addRange.Text = "ثبت";
+            btn_addRange.UseVisualStyleBackColor = true;
+            btn_addRange.Click += btn_addRange_Click;
             // 
             // label2
             // 
@@ -88,11 +88,11 @@
             // 
             // FrmAttendanceAddRange
             // 
-            AcceptButton = btn_applyfilter;
+            AcceptButton = btn_addRange;
             AutoScaleDimensions = new SizeF(7F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(206, 148);
-            Controls.Add(btn_applyfilter);
+            Controls.Add(btn_addRange);
             Controls.Add(label2);
             Controls.Add(toDateTime_txtbox);
             Controls.Add(label1);
@@ -108,7 +108,7 @@
         }
 
         #endregion
-        private Button btn_applyfilter;
+        private Button btn_addRange;
         private Label label2;
         public MaskedTextBox toDateTime_txtbox;
         private Label label1;
