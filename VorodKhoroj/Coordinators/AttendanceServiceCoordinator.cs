@@ -8,6 +8,8 @@
         {
             if (dbProvider.DbContext != null)
                 repository.AddAttendancesAndUsers(recs, dbProvider.DbContext);
+            else
+                throw new Exception("خطای دیتابیس");
         }
 
         // افزودن لیستی از رکوردهای Attendance به دیتابیس
@@ -15,6 +17,8 @@
         {
             if (dbProvider.DbContext != null)
                 repository.AddAttendance(rec, dbProvider.DbContext);
+            else
+                throw new Exception("خطای دیتابیس");
         }
 
         // به‌روزرسانی یک رکورد Attendance
@@ -22,6 +26,8 @@
         {
             if (dbProvider.DbContext != null)
                 repository.UpdateAttendance([rec], dbProvider.DbContext);
+            else
+                throw new Exception("خطای دیتابیس");
         }
 
         // حذف یک رکورد Attendance
@@ -29,6 +35,8 @@
         {
             if (dbProvider.DbContext != null)
                 repository.DeleteAttendance([rec], dbProvider.DbContext);
+            else
+                throw new Exception("خطای دیتابیس");
         }
     }
 }

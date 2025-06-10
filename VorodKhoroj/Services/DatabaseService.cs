@@ -18,6 +18,7 @@
                                   SIZE = 5MB );";
 
             dbContext.Database.ExecuteSqlRaw(createDbQuery);
+            MessageBox.Show("ok");
         }
 
         /// <summary>
@@ -27,6 +28,7 @@
         public void CreateTables(AppDbContext dbContext)
         {
             dbContext.Database.EnsureCreated();
+            MessageBox.Show("ok");
         }
 
         /// <summary>

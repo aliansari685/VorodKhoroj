@@ -1,214 +1,253 @@
-﻿namespace VorodKhoroj;
-
-public partial class FrmMain : Form
+﻿namespace VorodKhoroj
 {
-    private bool _isRestarting;
-    private readonly MainCoordinator _appCoordinator;
-    private readonly AttendanceFullCalculationService _calcServices;
-
-    public FrmMain(MainCoordinator mainCoordinator, AttendanceFullCalculationService calculationService)
+    public partial class FrmMain : Form
     {
-        InitializeComponent();
-        _appCoordinator = mainCoordinator;
-        _calcServices = calculationService;
-    }
+        #region Fields
 
-    private void Frm_Main_Load(object sender, EventArgs e)
-    {
-        TextBoxClear();
-    }
+        /// <summary>
+        /// وضعیت ریستارت شدن برنامه
+        /// </summary>
+        private bool _isRestarting;
 
-    public void DataGridConfig()
-    {
-        if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count)) return;
+        /// <summary>
+        /// هماهنگ‌کننده‌ی اصلی برنامه برای مدیریت داده‌ها
+        /// </summary>
+        private readonly MainCoordinator _appCoordinator;
 
-        dataView.DataSource = _appCoordinator.AttendancesList.ToDataTableWithDisplayedName();
+        /// <summary>
+        /// سرویس محاسبه‌ی کامل حضور و غیاب
+        /// </summary>
+        private readonly AttendanceFullCalculationService _calcServices;
 
-        Userid_txtbox.DataSource = _appCoordinator.UsersList;
+        #endregion
 
-        if (_appCoordinator is { UsersListProvider: DbProvider })
+        public FrmMain(MainCoordinator mainCoordinator, AttendanceFullCalculationService calculationService)
         {
-            CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
+            InitializeComponent();
+            _appCoordinator = mainCoordinator;
+            _calcServices = calculationService;
         }
-        DataGridViewConfig();
-    }
+        private void Frm_Main_Load(object sender, EventArgs e) => TextBoxClear();
 
-    private void DataGridViewConfig()
-    {
-        dataView.Columns[2].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
-
-        if (dataView.Columns[nameof(Attendance.Id)] is not null and var dV)
+        #region Grid Operations
+        /// <summary>
+        /// بارگذاری دیتا در دیتاگرید و تنظیمات اولیه
+        /// </summary>
+        public void DataGridConfig()
         {
-            dV.Visible = false;
-        }
-    }
+            if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count)) return;
 
-    private void Btn_ApplyFilter_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false)
-                throw new NullReferenceException("داده ای وجود ندارد");
+            dataView.DataSource = _appCoordinator.AttendancesList.ToDataTableWithDisplayedName();
+            Userid_txtbox.DataSource = _appCoordinator.UsersList;
 
-            dataView.DataSource = DataFilterService.ApplyFilter(_appCoordinator.AttendancesList, FromDateTime_txtbox.Text,
-                toDateTime_txtbox.Text, int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))).ToList().ToDataTableWithDisplayedName();
+            if (_appCoordinator is { UsersListProvider: DbProvider })
+                CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
 
             DataGridViewConfig();
         }
-        catch (Exception ex)
+
+        /// <summary>
+        /// تنظیم فرمت ستون‌ها در دیتاگرید
+        /// </summary>
+        private void DataGridViewConfig()
         {
-            CommonHelper.ShowMessage(ex);
+            dataView.Columns[2].DefaultCellStyle.Format = "yyyy/MM/dd HH:mm:ss";
+
+            if (dataView.Columns[nameof(Attendance.Id)] is not null and var dV)
+                dV.Visible = false;
         }
-    }
 
-    private void btn_clear_Click(object sender, EventArgs e)
-    {
-        ReloadGrid();
-    }
-
-    private void TextBoxClear()
-    {
-        FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
-        toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
-    }
-
-    private void DetailReportToolStripMenuItem_Click(object sender, EventArgs e) //Go To FrmFilter:
-    {
-        try
+        /// <summary>
+        /// رفرش و بارگذاری مجدد اطلاعات
+        /// </summary>
+        private void ReloadGrid()
         {
-            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
-
-            using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
-            frm.ShowDialog();
-        }
-        catch (Exception ex)
-        {
-            CommonHelper.ShowMessage(ex);
-        }
-    }
-
-    public void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-    {
-        dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
-    }
-
-    private void DBConfigToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            if (CommonHelper.IsValid(dataView.Rows.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
-
-            using FrmSetting frm = new(_appCoordinator);
-            frm.ShowDialog();
-        }
-        catch (Exception ex)
-        {
-            CommonHelper.ShowMessage(ex);
-        }
-    }
-
-    private void SwitchDataSourceToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            using (FrmSetSource frm = new(_appCoordinator))
-            {
-                dataView.DataSource = null;
-                frm.ShowDialog();
-            }
-
+            TextBoxClear();
             DataGridConfig();
         }
-        catch (Exception ex)
+        /// <summary>
+        /// نمایش شماره ردیف در DataGridView
+        /// </summary>
+        public void dataView_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e) => dataView.Rows[e.RowIndex].HeaderCell.Value = (e.RowIndex + 1).ToString();
+
+        #endregion
+
+        #region Filter Operations
+
+        /// <summary>
+        /// اعمال فیلتر بر اساس تاریخ و شناسه کاربر
+        /// </summary>
+        private void Btn_ApplyFilter_Click(object sender, EventArgs e)
         {
-            CommonHelper.ShowMessage(ex);
+            try
+            {
+                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                    throw new NullReferenceException("داده ای وجود ندارد");
+
+                var filtered = DataFilterService.ApplyFilter(
+                    _appCoordinator.AttendancesList,
+                    FromDateTime_txtbox.Text,
+                    toDateTime_txtbox.Text,
+                    int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))
+                ).ToList().ToDataTableWithDisplayedName();
+
+                dataView.DataSource = filtered;
+                DataGridViewConfig();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
-    }
 
-    private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        using FrmFilterMonthly frm = new(_appCoordinator, _calcServices, Userid_txtbox.Text);
-        frm.ShowDialog();
-    }
+        /// <summary>
+        /// پاک‌سازی فیلدهای فیلتر
+        /// </summary>
+        private void btn_clear_Click(object sender, EventArgs e) => ReloadGrid();
 
-    private void FastExportToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        try
+        /// <summary>
+        /// تنظیم اولیه مقادیر TextBox ها
+        /// </summary>
+        private void TextBoxClear()
         {
-            if (CommonHelper.IsValid(_appCoordinator.AttendancesList.Count) == false) throw new ArgumentNullException($"داده ای وجود ندارد");
+            FromDateTime_txtbox.Text = Userid_txtbox.Text = "";
+            toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
+        }
 
-            var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
+        #endregion
 
-            using FrmFilter frm = new(_appCoordinator, _calcServices, date, date, Userid_txtbox.Text, true);
+        #region ToolStrip Menu Items
+
+        private void DetailReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                    throw new ArgumentNullException($"داده ای وجود ندارد");
+
+                using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+
+        private void MonthlyReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using FrmFilterMonthly frm = new(_appCoordinator, _calcServices, Userid_txtbox.Text);
             frm.ShowDialog();
         }
-        catch (Exception ex)
-        {
-            CommonHelper.ShowMessage(ex);
-        }
-    }
-    private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        _isRestarting = true;
-        Application.Restart();
-    }
-    private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
-    {
-        if (_isRestarting) return;
 
-        if (MessageBox.Show(@"آیا می‌خواهید از برنامه خارج شوید؟", @"خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+        private void FastExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            e.Cancel = true;
-        }
-    }
+            try
+            {
+                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                    throw new ArgumentNullException($"داده ای وجود ندارد");
 
-    private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        if (_appCoordinator is { UsersListProvider: DbProvider, DbContext: not null })
-        {
-            using var frm = new FrmUsers(_appCoordinator);
-            frm.ShowDialog();
-            ReloadGrid();
-        }
-        else
-        {
-            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+                var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
+
+                using FrmFilter frm = new(_appCoordinator, _calcServices, date, date, Userid_txtbox.Text, true);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
 
-    }
-
-    private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+        private void DBConfigToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using var frm = new FrmAttendance(_appCoordinator, _calcServices);
-            frm.ShowDialog();
-            ReloadGrid();
-        }
-        else
-        {
-            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
-        }
-    }
+            try
+            {
+                if (!CommonHelper.IsValid(dataView.Rows.Count))
+                    throw new ArgumentNullException($"داده ای وجود ندارد");
 
-    private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
-        {
-            using var frm = new FrmAttendanceAddRange(_appCoordinator);
-            frm.ShowDialog();
-
-            ReloadGrid();
+                using FrmSetting frm = new(_appCoordinator);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
-        else
-        {
-            CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
-        }
-    }
 
-    private void ReloadGrid()
-    {
-        TextBoxClear();
-        DataGridConfig();
+        private void SwitchDataSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (FrmSetSource frm = new(_appCoordinator))
+                {
+                    dataView.DataSource = null;
+                    frm.ShowDialog();
+                }
+
+                DataGridConfig();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+
+        private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_appCoordinator is { UsersListProvider: DbProvider, DbContext: not null })
+            {
+                using var frm = new FrmUsers(_appCoordinator);
+                frm.ShowDialog();
+                ReloadGrid();
+            }
+            else
+            {
+                CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+            }
+        }
+
+        private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            {
+                using var frm = new FrmAttendance(_appCoordinator, _calcServices);
+                frm.ShowDialog();
+                ReloadGrid();
+            }
+            else
+            {
+                CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+            }
+        }
+
+        private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            {
+                using var frm = new FrmAttendanceAddRange(_appCoordinator);
+                frm.ShowDialog();
+                ReloadGrid();
+            }
+            else
+            {
+                CommonHelper.ShowMessage("پایگاه داده وجود ندارد . لطفا منبع داده ها رو پایگاه داده انتخاب کنید");
+            }
+        }
+
+        private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _isRestarting = true;
+            Application.Restart();
+        }
+
+        private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_isRestarting) return;
+
+            if (MessageBox.Show("آیا می‌خواهید از برنامه خارج شوید؟", "خروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                e.Cancel = true;
+        }
+
+        #endregion
     }
 }

@@ -13,27 +13,44 @@
             InternalDataBase, AttachDbFilename
         }
 
+        //پشتیبانی کامل از 2 حالت کانکشن استرینگ برای دیتابیس محلی و داخلی
         private readonly string? _connectionString = typeDataBaseLocation switch
         {
             DataBaseLocation.AttachDbFilename =>
                 $"Data Source={serverName};Integrated Security=True;AttachDbFilename={dbpath};TrustServerCertificate=True;Encrypt=False;Connection Timeout=5;User Instance=True;",
+
             DataBaseLocation.InternalDataBase =>
                 $"Data Source={serverName};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=5;",
             _ => throw new ArgumentException("نوع کانفیگ دیتابیس نامعتبر است.")
         };
 
+        //ایجاد کلید اصلی جدول ها
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Attendance>().HasKey(x => x.Id);
-            modelBuilder.Entity<Attendance>()
-                .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+            try
+            {
+                base.OnModelCreating(modelBuilder);
+                modelBuilder.Entity<Attendance>().HasKey(x => x.Id);
+                modelBuilder.Entity<Attendance>()
+                    .Property(x => x.Id)
+                    .ValueGeneratedOnAdd();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_connectionString);
+            try
+            {
+                optionsBuilder.UseSqlServer(_connectionString);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
         }
     }
 }

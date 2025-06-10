@@ -1,33 +1,60 @@
 ﻿namespace VorodKhoroj.View;
 
+/// <summary>
+/// فرم تنظیمات دیتابیس برای تست اتصال و ایجاد دیتابیس جدید.
+/// </summary>
 public partial class FrmSetting : Form
 {
-    private bool _flag;
+    /// <summary>
+    /// آیا اتصال به سرور پایگاه داده با موفقیت تست شده است؟
+    /// </summary>
+    private bool _isDbConnectionTested;
+
+    /// <summary>
+    /// هماهنگ‌کننده اصلی برنامه 
+    /// </summary>
     private readonly MainCoordinator _appCoordinator;
+
+    /// <summary>
+    /// آیتم‌های مشترک فرم
+    /// </summary>
     private readonly CommonItems _cm = new();
 
+    /// <summary>
+    /// سازنده فرم تنظیمات.
+    /// </summary>
+    /// <param name="mainCoordinator">هماهنگ‌کننده برنامه</param>
     public FrmSetting(MainCoordinator mainCoordinator)
     {
         InitializeComponent();
         _appCoordinator = mainCoordinator;
     }
+
+    #region Events
+
+    /// <summary>
+    /// رویداد لود فرم؛ بارگذاری لیست سرورها و تنظیمات منوی راست کلیک.
+    /// </summary>
     private void FrmSetting_Load(object sender, EventArgs e)
     {
         _cm.LoadServerListFromFile(ref txt_ServerName);
-
         _cm.ItemClicked += (_, _) => _cm.LoadServerListFromFile(ref txt_ServerName);
-
         txt_ServerName.ContextMenuStrip = _cm.MenuStrip;
     }
 
+    /// <summary>
+    /// رویداد کلیک روی دکمه تست اتصال به پایگاه داده.
+    /// </summary>
     private void Btn_testDb_Click(object sender, EventArgs e)
     {
         try
         {
+            _appCoordinator.InitializeDbContextMaster(txt_ServerName.Text);
+
             if (_appCoordinator.TestServerName(txt_ServerName.Text))
             {
-                _flag = true;
-                CommonHelper.ShowMessage(@"اتصال با موفقیت انجام شد");
+                _isDbConnectionTested = true;
+                CommonHelper.ShowMessage("اتصال با موفقیت انجام شد");
             }
         }
         catch (Exception ex)
@@ -36,6 +63,9 @@ public partial class FrmSetting : Form
         }
     }
 
+    /// <summary>
+    /// نمایش منوی راست‌کلیک لیست سرورها هنگام کلیک راست روی TextBox.
+    /// </summary>
     private void txt_ServerName_MouseDown(object sender, MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Right)
@@ -44,45 +74,63 @@ public partial class FrmSetting : Form
             _cm.MenuStrip.Show(Cursor.Position);
         }
     }
+
+    /// <summary>
+    /// رویداد کلیک روی دکمه ایجاد دیتابیس جدید و انتقال داده‌ها.
+    /// </summary>
     private async void btn_CreateDatabase_Click(object sender, EventArgs e)
     {
         try
         {
-            if (_flag == false) throw new Exception("نام سرور پایگاه داده معتبر نیس ، لطفا اول تست کنید");
+            if (!_isDbConnectionTested)
+                throw new Exception("نام سرور پایگاه داده معتبر نیست، لطفا ابتدا تست اتصال را انجام دهید.");
 
-            using SaveFileDialog saveFile = new() { Filter = "DB Files|*.mdf", Title = "ذخیره دیتابیس" };
-            if (saveFile.ShowDialog() == DialogResult.OK)
-            {
-                using var frmProgress = new FrmProgressDialog();
-                frmProgress.Show();
-                this.Enabled = false;//قفل شدن تمام عملیات این فرم
-                var serverName = txt_ServerName.Text;
 
-                await Task.Run(() =>
-                {
-                    _appCoordinator.SetDbName(saveFile.FileName); //exam:db
-                    _appCoordinator.SetDbPath(saveFile.FileName); //exam: d://db.mdf
+            using var saveFile = CommonItems.CreateSaveFileDialog("DB Files|*.mdf");
+            if (saveFile.ShowDialog() != DialogResult.OK)
+                return;
 
-                    _appCoordinator.HandleCreateDatabase();
+            using var frmProgress = new FrmProgressDialog();
+            frmProgress.Show(this);
+            Enabled = false;
 
-                    _appCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+            await CreateDatabaseAsync(saveFile.FileName, txt_ServerName.Text);
+            CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
 
-                    _appCoordinator.HandleCreateTables();
-
-                    _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);
-
-                    _appCoordinator.HandleDetachDatabase();
-                });
-                this.Enabled = true;
-                frmProgress.Close();
-
-                CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
-            }
+            frmProgress.Close();
         }
         catch (Exception ex)
         {
             CommonHelper.ShowMessage(ex);
-            this.Enabled = true;
+        }
+        finally
+        {
+            Enabled = true;
         }
     }
+    #endregion
+
+    #region Core Logic
+
+    /// <summary>
+    /// عملیات ایجاد دیتابیس جدید، جدول‌ها و انتقال داده‌ها.
+    /// </summary>
+    /// <param name="dbFilePath">مسیر فایل دیتابیس</param>
+    /// <param name="serverName">نام سرور</param>
+    private Task CreateDatabaseAsync(string dbFilePath, string serverName)
+    {
+        return Task.Run(() =>
+        {
+            _appCoordinator.SetDbName(dbFilePath);
+            _appCoordinator.SetDbPath(dbFilePath);
+            _appCoordinator.HandleCreateDatabase();
+
+            _appCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+            _appCoordinator.HandleCreateTables();
+            _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);
+            _appCoordinator.HandleDetachDatabase();
+        });
+    }
+
+    #endregion
 }

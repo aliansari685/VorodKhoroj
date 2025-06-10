@@ -26,10 +26,7 @@
         /// <summary>
         /// رویداد لود فرم - مقداردهی اولیه تاریخ به روز جاری
         /// </summary>
-        private void FrmAttendanceAddRange_Load(object sender, EventArgs e)
-        {
-            toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
-        }
+        private void FrmAttendanceAddRange_Load(object sender, EventArgs e) => toDateTime_txtbox.Text = PersianDateHelper.PersianCalenderDateNow();
 
         /// <summary>
         /// رویداد کلیک بر روی دکمه اعمال فیلتر و پردازش فایل ورودی
@@ -41,37 +38,32 @@
                 if (CommonHelper.IsValid(FromDateTime_txtbox, toDateTime_txtbox) == false)
                     throw new NullReferenceException("تاریخ معتبر نمیباشد");
 
-                using (OpenFileDialog openFileDialog = new() { Filter = @"Output Files|*.txt;*.dat;" })
+                using var openFile = CommonItems.CreateOpenFileDialog(@"Output Files|*.txt;*.dat;");
+                if (openFile.ShowDialog() != DialogResult.OK) return;
+
+                using var frmProgress = new FrmProgressDialog();
+                frmProgress.Show();
+                this.Enabled = false; // قفل شدن تمام عملیات این فرم
+
+                int count = 0;
+
+                await Task.Run(() =>
                 {
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        using var frmProgress = new FrmProgressDialog();
-                        frmProgress.Show();
-                        this.Enabled = false; // قفل شدن تمام عملیات این فرم
+                    _appCoordinator.LoadRecordsFromFile(openFile.FileName, false);
 
-                        int count = 0;
+                    var attendanceList = _appCoordinator.AttendancesList;
 
-                        await Task.Run(() =>
-                        {
-                            _appCoordinator.LoadRecordsFromFile(openFileDialog.FileName, false);
+                    var filtered = DataFilterService.ApplyFilter(attendanceList, FromDateTime_txtbox.Text,
+                        toDateTime_txtbox.Text, 0).ToList();
 
-                            var attendanceList = _appCoordinator.AttendancesList;
+                    AddOtherUsers(filtered);
 
-                            var filtered = DataFilterService.ApplyFilter(attendanceList, FromDateTime_txtbox.Text,
-                                toDateTime_txtbox.Text, 0).ToList();
+                    AddOtherAttendances(filtered, out count);
+                });
+                frmProgress.Close();
 
-                            AddOtherUsers(filtered);
-
-                            AddOtherAttendances(filtered, out count);
-
-                            _appCoordinator.LoadRecordsFromDb();
-                        });
-                        frmProgress.Close();
-
-                        CommonHelper.ShowMessage($@"تعداد {count} رکورد جدید اضافه شد ");
-                        Close();
-                    }
-                }
+                CommonHelper.ShowMessage($@"تعداد {count} رکورد جدید اضافه شد ");
+                Close();
             }
             catch (Exception ex)
             {
@@ -95,15 +87,15 @@
         private void AddOtherAttendances(List<Attendance> filtered, out int count)
         {
             // هش ست خیلی پرسرعت برای جستجو
-            var existingKeys = _appCoordinator.DbContext?.Attendances
+            var existingKeys = _appCoordinator.AttendancesList
                 .Select(a => new { a.UserId, a.DateTime })
-                .ToList() // حالا دیگه LINQ-to-Objects میشه
+                .ToList()
                 .Select(x => (x.UserId, x.DateTime))
                 .ToHashSet();
 
             // پیدا کردن رکوردهایی که در دیتابیس نیستند
             var newRecords = filtered
-                .Where(a => existingKeys != null && !existingKeys.Contains((a.UserId, a.DateTime)))
+                .Where(a => !existingKeys.Contains((a.UserId, a.DateTime)))
                 .ToList();
 
             _appCoordinator.AddAttendanceRecord(newRecords);
@@ -135,7 +127,6 @@
 
             _appCoordinator.AddUserRecord(newUsers);
         }
-
         #endregion
     }
 }

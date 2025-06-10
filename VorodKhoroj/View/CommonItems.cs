@@ -1,5 +1,8 @@
 ﻿namespace VorodKhoroj.View
 {
+    /// <summary>
+    /// کلاس اشیای پر استفاده در ویندوز فرم 
+    /// </summary>
     public class CommonItems
     {
         /// <summary>
@@ -36,7 +39,7 @@
 
             addItem.Click += (_, _) =>
             {
-                File.AppendAllLines(Path, new[] { Text }); // اضافه کردن متن به فایل
+                File.AppendAllLines(Path, [Text]); // اضافه کردن متن به فایل
                 ItemClicked?.Invoke(this, EventArgs.Empty); // فراخوانی رویداد کلیک
             };
 
@@ -79,5 +82,12 @@
 
             throw new FormatException("خطای تبدیل داده");
         }
+
+        /// <summary>
+        /// ساخت یک OpenFileDialog عمومی با فیلتر مشخص
+        /// </summary>
+        public static OpenFileDialog CreateOpenFileDialog(string filter) => new() { Filter = filter, Title = "باز کردن فایل" };
+        public static SaveFileDialog CreateSaveFileDialog(string filter) => new() { Filter = filter, Title = "ذخیره کردن فایل" };
+
     }
 }

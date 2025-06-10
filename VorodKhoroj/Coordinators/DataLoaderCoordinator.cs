@@ -54,7 +54,6 @@ public class DataLoaderCoordinator(DataRepository repository)
     {
         try
         {
-            InitializeDbContextMaster(server);
             DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
             return true;
         }

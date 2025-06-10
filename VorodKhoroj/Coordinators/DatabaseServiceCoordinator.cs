@@ -9,6 +9,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     {
         if (dbProvider.DbContextMaster != null)
             databaseService.CreateDatabase(dbPath, dbName, dbProvider.DbContextMaster);
+        else
+            throw new Exception("خطای دیتابیس");
     }
 
     /// <summary>
@@ -18,6 +20,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     {
         if (dbProvider.DbContextMaster != null)
             databaseService.DetachDatabase(dbPath, dbName, dbProvider.DbContextMaster);
+        else
+            throw new Exception("خطای دیتابیس");
     }
 
     /// <summary>
@@ -27,5 +31,7 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     {
         if (dbProvider.DbContext != null)
             databaseService.CreateTables(dbProvider.DbContext);
+        else
+            throw new Exception("خطای دیتابیس");
     }
 }

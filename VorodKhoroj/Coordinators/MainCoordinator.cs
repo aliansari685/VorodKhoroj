@@ -52,14 +52,22 @@
         public IUserDataProvider? UsersListProvider => dataLoaderCoordinator.ListProvider;
 
         /// <summary>
-        /// بروزرسانی رکورد یک کاربر خاص
+        /// بروزرسانی رکورد یک کاربر 
         /// </summary>
-        public void UpdateUserRecord(User user) => userServiceCoordinator.UpdateUser(user);
+        public void UpdateUserRecord(User user)
+        {
+            userServiceCoordinator.UpdateUser(user);
+            LoadRecordsFromDb();
+        }
 
         /// <summary>
         /// افزودن لیستی از کاربران جدید
         /// </summary>
-        public void AddUserRecord(List<User> newUsers) => userServiceCoordinator.AddUser(newUsers);
+        public void AddUserRecord(List<User> newUsers)
+        {
+            userServiceCoordinator.AddUser(newUsers);
+            LoadRecordsFromDb();
+        }
 
         /// <summary>
         /// تست اتصال به سرور دیتابیس
@@ -67,21 +75,24 @@
         public bool TestServerName(string server) => dataLoaderCoordinator.TestServerName(server);
 
         /// <summary>
-        /// مقداردهی اولیه کانتکست دیتابیس با توجه به نام سرور، مسیر و نوع دیتابیس
+        /// مقداردهی اولیه کانتکست مستر دیتابیس با توجه به نام سرور
         /// </summary>
-        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation location) =>
-            dataLoaderCoordinator.InitializeDbContext(serverName, DbPathName, DbName, location);
+        public void InitializeDbContextMaster(string serverName) => dataLoaderCoordinator.InitializeDbContextMaster(serverName);
 
         /// <summary>
-        /// بارگذاری داده‌های حضور و غیاب از دیتابیس
+        /// مقداردهی اولیه کانتکست دیتابیس با توجه به نام سرور، مسیر و نوع دیتابیس
+        /// </summary>
+        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation location) => dataLoaderCoordinator.InitializeDbContext(serverName, DbPathName, DbName, location);
+
+        /// <summary>
+        /// بارگذاری تمامی داده‌های حضور و غیاب از دیتابیس
         /// </summary>
         public void LoadRecordsFromDb() => dataLoaderCoordinator.LoadFromDb();
 
         /// <summary>
         /// بارگذاری داده‌ها از فایل (به طور پیش‌فرض ارائه‌دهنده لیست را فعال می‌کند)
         /// </summary>
-        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) =>
-            dataLoaderCoordinator.LoadFromFile(fileName, isListProvider);
+        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) => dataLoaderCoordinator.LoadFromFile(fileName, isListProvider);
 
         /// <summary>
         /// ایجاد دیتابیس جدید
@@ -101,7 +112,11 @@
         /// <summary>
         /// بروزرسانی رکورد حضور و غیاب خاص
         /// </summary>
-        public void UpdateAttendanceRecord(Attendance attendance) => attendanceServiceCoordinator.UpdateAttendance(attendance);
+        public void UpdateAttendanceRecord(Attendance attendance)
+        {
+            attendanceServiceCoordinator.UpdateAttendance(attendance);
+            LoadRecordsFromDb();
+        }
 
         /// <summary>
         /// کپی کردن لیست رکوردهای حضور و غیاب
@@ -111,12 +126,20 @@
         /// <summary>
         /// افزودن رکوردهای جدید حضور و غیاب
         /// </summary>
-        public void AddAttendanceRecord(List<Attendance> attendances) => attendanceServiceCoordinator.AddAttendance(attendances);
+        public void AddAttendanceRecord(List<Attendance> attendances)
+        {
+            attendanceServiceCoordinator.AddAttendance(attendances);
+            LoadRecordsFromDb();
+        }
 
         /// <summary>
         /// حذف یک رکورد حضور و غیاب
         /// </summary>
-        public void DeleteAttendanceRecord(Attendance attendances) => attendanceServiceCoordinator.DeleteAttendance(attendances);
+        public void DeleteAttendanceRecord(Attendance attendances)
+        {
+            attendanceServiceCoordinator.DeleteAttendance(attendances);
+            LoadRecordsFromDb();
+        }
 
         /// <summary>
         /// اطمینان از بروزرسانی ساختار دیتابیس و وجود ستون Id
@@ -125,6 +148,7 @@
 
         public void Dispose()
         {
+            MessageBox.Show("finish");
             DbContext?.Dispose();
             DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);

@@ -290,11 +290,8 @@
         private List<Attendance> FilterAttendances(string datetime, string user) => DataFilterService.ApplyFilter(TempRecordsAttendances, datetime, datetime, int.Parse(user)).ToList();
 
         //بارگذاری مجدد داده‌ها بعد از تغییر
-        private void DataReloadOperation()
-        {
-            _appCoordinator.LoadRecordsFromDb();
-            _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
-        }
+        private void DataReloadOperation() => _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();
+
         #endregion
     }
 }

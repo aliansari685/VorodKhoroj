@@ -9,9 +9,8 @@ public static class DataExporter
     {
         try
         {
-            using SaveFileDialog saveDialog = new() { Filter = @"Excel Files|*.xlsx", Title = @"ذخیره فایل اکسل" };
-
-            if (saveDialog.ShowDialog() != DialogResult.OK)
+            using var saveFile = CommonItems.CreateSaveFileDialog(@"Excel Files|*.xlsx");
+            if (saveFile.ShowDialog() != DialogResult.OK)
                 return;
 
             using var package = new ExcelPackage();
@@ -44,7 +43,7 @@ public static class DataExporter
             }
             //فیت کردن بین سلول ها
             worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-            File.WriteAllBytes(saveDialog.FileName, package.GetAsByteArray());
+            File.WriteAllBytes(saveFile.FileName, package.GetAsByteArray());
 
             CommonHelper.ShowMessage("فایل اکسل با موفقیت ذخیره شد!");
         }

@@ -56,8 +56,10 @@
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(300, 99);
+            ControlBox = false;
             Controls.Add(progressBar1);
             Controls.Add(lbl_percent);
+            Cursor = Cursors.WaitCursor;
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
