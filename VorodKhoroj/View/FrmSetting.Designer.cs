@@ -91,6 +91,7 @@
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FrmSetting";
             Text = "FrmSetting";
             Load += FrmSetting_Load;

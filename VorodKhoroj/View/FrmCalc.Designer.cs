@@ -787,10 +787,10 @@
             // tabPage_
             // 
             tabPage_.Controls.Add(groupBox2);
-            tabPage_.Location = new Point(4, 29);
+            tabPage_.Location = new Point(4, 24);
             tabPage_.Name = "tabPage_";
             tabPage_.Padding = new Padding(3);
-            tabPage_.Size = new Size(1273, 554);
+            tabPage_.Size = new Size(1273, 559);
             tabPage_.TabIndex = 2;
             tabPage_.Text = "تنظیمات شرط ها";
             tabPage_.UseVisualStyleBackColor = true;
@@ -819,7 +819,7 @@
             groupBox2.Dock = DockStyle.Left;
             groupBox2.Location = new Point(3, 3);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(561, 548);
+            groupBox2.Size = new Size(561, 553);
             groupBox2.TabIndex = 35;
             groupBox2.TabStop = false;
             groupBox2.Text = "شرط ها";

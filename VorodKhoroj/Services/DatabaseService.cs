@@ -18,18 +18,14 @@
                                   SIZE = 5MB );";
 
             dbContext.Database.ExecuteSqlRaw(createDbQuery);
-            MessageBox.Show("ok");
         }
 
         /// <summary>
         /// ایجاد جداول دیتابیس در صورت عدم وجود
         /// </summary>
         /// <param name="dbContext">کانتکست دیتابیس</param>
-        public void CreateTables(AppDbContext dbContext)
-        {
-            dbContext.Database.EnsureCreated();
-            MessageBox.Show("ok");
-        }
+        public void CreateTables(AppDbContext dbContext) => dbContext.Database.EnsureCreated();
+
 
         /// <summary>
         /// قطع اتصال‌ها به دیتابیس و جداکردن دیتابیس (Detach)

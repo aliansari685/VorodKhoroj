@@ -51,11 +51,13 @@ public partial class FrmSetting : Form
         {
             _appCoordinator.InitializeDbContextMaster(txt_ServerName.Text);
 
-            if (_appCoordinator.TestServerName(txt_ServerName.Text))
+            if (_appCoordinator.TestServerName(txt_ServerName.Text) == false)
             {
-                _isDbConnectionTested = true;
-                CommonHelper.ShowMessage("اتصال با موفقیت انجام شد");
+                throw new NullReferenceException("ارتباط برقرار نشد");
             }
+
+            _isDbConnectionTested = true;
+            CommonHelper.ShowMessage("اتصال با موفقیت انجام شد");
         }
         catch (Exception ex)
         {
@@ -85,7 +87,6 @@ public partial class FrmSetting : Form
             if (!_isDbConnectionTested)
                 throw new Exception("نام سرور پایگاه داده معتبر نیست، لطفا ابتدا تست اتصال را انجام دهید.");
 
-
             using var saveFile = CommonItems.CreateSaveFileDialog("DB Files|*.mdf");
             if (saveFile.ShowDialog() != DialogResult.OK)
                 return;
@@ -95,6 +96,7 @@ public partial class FrmSetting : Form
             Enabled = false;
 
             await CreateDatabaseAsync(saveFile.FileName, txt_ServerName.Text);
+
             CommonHelper.ShowMessage("دیتابیس با موفقیت ایجاد و داده‌ها منتقل شدند!");
 
             frmProgress.Close();
@@ -124,7 +126,6 @@ public partial class FrmSetting : Form
             _appCoordinator.SetDbName(dbFilePath);
             _appCoordinator.SetDbPath(dbFilePath);
             _appCoordinator.HandleCreateDatabase();
-
             _appCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
             _appCoordinator.HandleCreateTables();
             _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);

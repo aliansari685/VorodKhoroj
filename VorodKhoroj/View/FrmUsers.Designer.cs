@@ -44,10 +44,10 @@
             dataView_User.AllowUserToOrderColumns = true;
             dataView_User.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataView_User.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataView_User.Location = new Point(-2, 178);
+            dataView_User.Location = new Point(-2, 157);
             dataView_User.Name = "dataView_User";
             dataView_User.ReadOnly = true;
-            dataView_User.Size = new Size(276, 243);
+            dataView_User.Size = new Size(332, 271);
             dataView_User.TabIndex = 3;
             // 
             // Userid_txtbox
@@ -56,7 +56,7 @@
             Userid_txtbox.AutoCompleteSource = AutoCompleteSource.ListItems;
             Userid_txtbox.DisplayMember = "userid";
             Userid_txtbox.FormattingEnabled = true;
-            Userid_txtbox.Location = new Point(12, 25);
+            Userid_txtbox.Location = new Point(35, 17);
             Userid_txtbox.Name = "Userid_txtbox";
             Userid_txtbox.Size = new Size(165, 28);
             Userid_txtbox.TabIndex = 0;
@@ -66,7 +66,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(184, 29);
+            label3.Location = new Point(247, 20);
             label3.Name = "label3";
             label3.RightToLeft = RightToLeft.Yes;
             label3.Size = new Size(47, 20);
@@ -75,7 +75,7 @@
             // 
             // btn_submit
             // 
-            btn_submit.Location = new Point(12, 116);
+            btn_submit.Location = new Point(35, 94);
             btn_submit.Name = "btn_submit";
             btn_submit.Size = new Size(259, 46);
             btn_submit.TabIndex = 2;
@@ -85,7 +85,7 @@
             // 
             // UserName_txtbox
             // 
-            UserName_txtbox.Location = new Point(12, 72);
+            UserName_txtbox.Location = new Point(35, 55);
             UserName_txtbox.Name = "UserName_txtbox";
             UserName_txtbox.Size = new Size(165, 28);
             UserName_txtbox.TabIndex = 1;
@@ -93,7 +93,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(183, 76);
+            label1.Location = new Point(206, 59);
             label1.Name = "label1";
             label1.RightToLeft = RightToLeft.Yes;
             label1.Size = new Size(88, 20);
@@ -104,7 +104,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(276, 429);
+            ClientSize = new Size(332, 429);
             Controls.Add(label1);
             Controls.Add(UserName_txtbox);
             Controls.Add(btn_submit);
@@ -114,6 +114,7 @@
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FrmUsers";
             Text = "FrmUsers";
             Load += FrmUsers_Load;

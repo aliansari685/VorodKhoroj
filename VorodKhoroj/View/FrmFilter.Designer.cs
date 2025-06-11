@@ -140,6 +140,7 @@
             Font = new Font("IRANSans", 8.249999F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FrmFilter";
             Text = "FrmFilter";
             Load += FrmFilter_Load;

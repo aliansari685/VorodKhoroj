@@ -1,4 +1,4 @@
-﻿namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.Helpers
 {
     /// <summary>
     /// کلاس اشیای پر استفاده در ویندوز فرم 

@@ -12,6 +12,11 @@
         AttendanceServiceCoordinator attendanceServiceCoordinator,
         UserServiceCoordinator userServiceCoordinator) : IDisposable
     {
+        /// <summary>
+        /// کانتکس که فسید شده از کانتکس اصلی جهت استفاده عمومی در متد ها یا فرم ها
+        /// </summary>
+        public AppDbContext? DbContext => dbContextProvider.DbContext;
+
         private string DbName { get; set; } = "";
 
         /// <summary>
@@ -25,16 +30,6 @@
         /// تنظیم مسیر فایل دیتابیس
         /// </summary>
         public void SetDbPath(string dbPathname) => DbPathName = dbPathname;
-
-        /// <summary>
-        /// دسترسی به کانتکست اصلی دیتابیس (از DataLoader گرفته می‌شود)
-        /// </summary>
-        public AppDbContext? DbContext => dbContextProvider.DbContext = dataLoaderCoordinator.DbContext;
-
-        /// <summary>
-        /// دسترسی به کانتکست دیتابیس اصلی مستر (برای عملیات مدیریتی دیتابیس)
-        /// </summary>
-        public AppDbContext? DbContextMaster => dbContextProvider.DbContextMaster = dataLoaderCoordinator.DbContextMaster;
 
         /// <summary>
         /// لیست رکوردهای حضور و غیاب بارگذاری شده
@@ -148,9 +143,8 @@
 
         public void Dispose()
         {
-            MessageBox.Show("finish");
-            DbContext?.Dispose();
-            DbContextMaster?.Dispose();
+            dataLoaderCoordinator.DbContext?.Dispose();
+            dataLoaderCoordinator.DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

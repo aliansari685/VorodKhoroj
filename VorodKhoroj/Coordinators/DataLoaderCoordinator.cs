@@ -3,7 +3,14 @@
 // بارگذاری داده‌ها از فایل یا دیتابیس
 public class DataLoaderCoordinator(DataRepository repository)
 {
+    /// <summary>
+    /// کانتکست مرکزی برای فراخوانی
+    /// </summary>
     public AppDbContext? DbContext { get; private set; }
+
+    /// <summary>
+    /// کانتکست مستر مرکزی برای فراخوانی
+    /// </summary>
     public AppDbContext? DbContextMaster { get; private set; }
 
     public List<Attendance> Records { get; set; } = [];
@@ -44,7 +51,9 @@ public class DataLoaderCoordinator(DataRepository repository)
     public void InitializeDbContextMaster(string server)
     {
         DbContextMaster?.Dispose();
-        DbContextMaster = new AppDbContext(server, "", "master", AppDbContext.DataBaseLocation.InternalDataBase);
+        DbContextMaster = new AppDbContext(server, string.Empty, "master", AppDbContext.DataBaseLocation.InternalDataBase);
+        if (DbContextMaster == null)
+            throw new NullReferenceException("خطای دیتابیس");
     }
 
     /// <summary>
@@ -54,8 +63,8 @@ public class DataLoaderCoordinator(DataRepository repository)
     {
         try
         {
-            DbContextMaster?.Database.ExecuteSqlRaw("SELECT 1");
-            return true;
+            _ = DbContextMaster?.Database.ExecuteSql($"SELECT 1");
+            return DbContextMaster!.Database.CanConnect();
         }
         catch
         {

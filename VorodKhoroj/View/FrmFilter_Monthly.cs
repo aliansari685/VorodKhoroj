@@ -49,8 +49,7 @@
         /// </summary>
         private void btn_clear_Click(object sender, EventArgs e)
         {
-            foreach (var checkBox in Controls.OfType<CheckBox>().Where(cb => cb.Name.StartsWith("checkBox_") && cb != checkBox_allusers))
-                checkBox.Checked = false;
+            checkBox_esfand.Checked = checkBox_bahman.Checked = checkBox_dey.Checked = checkBox_azar.Checked = checkBox_aban.Checked = checkBox_mehr.Checked = checkBox_shahrivar.Checked = checkBox_mordad.Checked = checkBox_tir.Checked = checkBox_khordad.Checked = checkBox_ordibehesht.Checked = checkBox_farvardin.Checked = false;
         }
 
         /// <summary>
@@ -58,8 +57,7 @@
         /// </summary>
         private void Btn_CheckAll_Click(object sender, EventArgs e)
         {
-            foreach (var checkBox in Controls.OfType<CheckBox>().Where(cb => cb.Name.StartsWith("checkBox_") && cb != checkBox_allusers))
-                checkBox.Checked = true;
+            checkBox_esfand.Checked = checkBox_bahman.Checked = checkBox_dey.Checked = checkBox_azar.Checked = checkBox_aban.Checked = checkBox_mehr.Checked = checkBox_shahrivar.Checked = checkBox_mordad.Checked = checkBox_tir.Checked = checkBox_khordad.Checked = checkBox_ordibehesht.Checked = checkBox_farvardin.Checked = true;
         }
 
         /// <summary>
@@ -91,11 +89,7 @@
         /// <summary>
         /// فعال یا غیرفعال کردن لیست کاربران در صورت انتخاب گزینه همه کاربران
         /// </summary>
-        private void checkBox_allUsers_CheckedChanged(object sender, EventArgs e)
-        {
-            userid_txtbox.Enabled = !checkBox_allusers.Checked;
-        }
-
+        private void checkBox_allUsers_CheckedChanged(object sender, EventArgs e) => userid_txtbox.Enabled = !checkBox_allusers.Checked;
         #endregion
 
         #region Core Logic

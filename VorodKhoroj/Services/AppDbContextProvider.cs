@@ -1,7 +1,11 @@
 ﻿namespace VorodKhoroj.Services;
 
-public class AppDbContextProvider
+public class AppDbContextProvider(DataLoaderCoordinator dataLoaderCoordinator)
 {
-    public AppDbContext? DbContext { get; set; }
-    public AppDbContext? DbContextMaster { get; set; }
+    /// <summary>
+    /// استفاده از facade جهت نظم کانتکس
+    /// </summary>
+    public AppDbContext? DbContext => dataLoaderCoordinator.DbContext;
+
+    public AppDbContext? DbContextMaster => dataLoaderCoordinator.DbContextMaster;
 }

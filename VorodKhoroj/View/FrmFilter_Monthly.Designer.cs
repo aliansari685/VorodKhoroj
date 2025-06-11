@@ -323,7 +323,7 @@
             groupBox2.TabStop = false;
             groupBox2.Tag = "";
             // 
-            // FrmFilter_Monthly
+            // FrmFilterMonthly
             // 
             AcceptButton = Btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
@@ -340,6 +340,7 @@
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FrmFilterMonthly";
             RightToLeft = RightToLeft.Yes;
             Text = "FrmFilter_Monthly";

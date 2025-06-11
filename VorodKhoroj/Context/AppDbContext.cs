@@ -21,6 +21,7 @@
 
             DataBaseLocation.InternalDataBase =>
                 $"Data Source={serverName};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=5;",
+
             _ => throw new ArgumentException("نوع کانفیگ دیتابیس نامعتبر است.")
         };
 

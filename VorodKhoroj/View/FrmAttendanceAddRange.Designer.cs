@@ -100,6 +100,7 @@
             Font = new Font("IRANSans", 8.249999F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "FrmAttendanceAddRange";
             Text = "FrmAttendanceAddRange";
             Load += FrmAttendanceAddRange_Load;
