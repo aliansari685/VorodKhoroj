@@ -41,6 +41,7 @@
             SettingToolStripMenuItem = new ToolStripMenuItem();
             DBConfigToolStripMenuItem = new ToolStripMenuItem();
             راهاندازیمجددToolStripMenuItem = new ToolStripMenuItem();
+            AddAttendanceToollStripMenuItem = new ToolStripMenuItem();
             FromDateTime_txtbox = new MaskedTextBox();
             label1 = new Label();
             label2 = new Label();
@@ -50,7 +51,6 @@
             btn_clear = new Button();
             Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
-            AddAttendanceToollStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -137,16 +137,23 @@
             // DBConfigToolStripMenuItem
             // 
             DBConfigToolStripMenuItem.Name = "DBConfigToolStripMenuItem";
-            DBConfigToolStripMenuItem.Size = new Size(249, 24);
+            DBConfigToolStripMenuItem.Size = new Size(243, 24);
             DBConfigToolStripMenuItem.Text = "عملیات پایگاه داده";
             DBConfigToolStripMenuItem.Click += DBConfigToolStripMenuItem_Click;
             // 
             // راهاندازیمجددToolStripMenuItem
             // 
             راهاندازیمجددToolStripMenuItem.Name = "راهاندازیمجددToolStripMenuItem";
-            راهاندازیمجددToolStripMenuItem.Size = new Size(249, 24);
+            راهاندازیمجددToolStripMenuItem.Size = new Size(243, 24);
             راهاندازیمجددToolStripMenuItem.Text = "راه اندازی مجدد";
             راهاندازیمجددToolStripMenuItem.Click += AppRestartToolStripMenuItem_Click;
+            // 
+            // AddAttendanceToollStripMenuItem
+            // 
+            AddAttendanceToollStripMenuItem.Name = "AddAttendanceToollStripMenuItem";
+            AddAttendanceToollStripMenuItem.Size = new Size(243, 24);
+            AddAttendanceToollStripMenuItem.Text = "بارگذاری و اضافه کردن دسته جمعی";
+            AddAttendanceToollStripMenuItem.Click += AddAttendanceToolStripMenuItem_Click;
             // 
             // FromDateTime_txtbox
             // 
@@ -243,13 +250,6 @@
             dataView.TabIndex = 14;
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
-            // 
-            // AddAttendanceToollStripMenuItem
-            // 
-            AddAttendanceToollStripMenuItem.Name = "AddAttendanceToollStripMenuItem";
-            AddAttendanceToollStripMenuItem.Size = new Size(249, 24);
-            AddAttendanceToollStripMenuItem.Text = "بارگذاری و اضافه کردن دستعه جمعی";
-            AddAttendanceToollStripMenuItem.Click += AddAttendanceToolStripMenuItem_Click;
             // 
             // FrmMain
             // 
