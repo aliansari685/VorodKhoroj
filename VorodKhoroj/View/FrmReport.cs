@@ -3,7 +3,7 @@
 /// <summary>
 /// فرم محاسبه گزارش‌های ورود و خروج.
 /// </summary>
-public partial class FrmCalc : Form
+public partial class FrmReport : Form
 {
     #region Fields
     private readonly MainCoordinator _appCoordinator;
@@ -20,7 +20,7 @@ public partial class FrmCalc : Form
     /// <summary>
     /// سازنده فرم محاسبه.
     /// </summary>
-    public FrmCalc(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
+    public FrmReport(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
         string toDateTime, string userid, bool justExcel = false)
     {
         InitializeComponent();

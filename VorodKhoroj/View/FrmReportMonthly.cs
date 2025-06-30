@@ -76,7 +76,7 @@
                 if (_userId == "0" || checkBox_allusers.Checked)
                     await ExportForAllUsersAsync(saveFile.FileName, monthList);
                 else
-                    DataExporter.ExportAttendanceData(_userId, int.Parse(txtbox_year.Text), monthList, checkBox_withlabels.Checked, saveFile.FileName, _calcServices);
+                    DataExporter.ExportAttendanceData(_userId, (int)(txtbox_year.Value), monthList, checkBox_withlabels.Checked, saveFile.FileName, _calcServices);
 
                 CommonHelper.ShowMessage("فایل اکسل شامل تمام ماه‌ها با موفقیت ذخیره شد!");
             }

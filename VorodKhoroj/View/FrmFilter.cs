@@ -52,7 +52,7 @@ public partial class FrmFilter : Form
             if (Userid_txtbox.Text == "0")
                 throw new NullReferenceException("نام کاربری معتبر نمیباشد");
 
-            using FrmCalc frm = new(
+            using FrmReport frm = new(
                 _appCoordinator,
                 _calcServices,
                 FromDateTime_txtbox.Text,

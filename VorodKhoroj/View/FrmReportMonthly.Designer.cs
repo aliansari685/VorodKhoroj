@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            txtbox_year = new MaskedTextBox();
             checkBox_farvardin = new CheckBox();
             groupBox1 = new GroupBox();
             checkBox_esfand = new CheckBox();
@@ -51,21 +50,11 @@
             checkBox_withlabels = new CheckBox();
             checkBox_allusers = new CheckBox();
             groupBox2 = new GroupBox();
+            txtbox_year = new NumericUpDown();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
+            ((ISupportInitialize)txtbox_year).BeginInit();
             SuspendLayout();
-            // 
-            // txtbox_year
-            // 
-            txtbox_year.Location = new Point(180, 49);
-            txtbox_year.Margin = new Padding(3, 4, 3, 4);
-            txtbox_year.Mask = "0000";
-            txtbox_year.Name = "txtbox_year";
-            txtbox_year.RightToLeft = RightToLeft.No;
-            txtbox_year.Size = new Size(54, 28);
-            txtbox_year.TabIndex = 0;
-            txtbox_year.Text = "1404";
-            txtbox_year.TextAlign = HorizontalAlignment.Center;
             // 
             // checkBox_farvardin
             // 
@@ -323,12 +312,24 @@
             groupBox2.TabStop = false;
             groupBox2.Tag = "";
             // 
+            // txtbox_year
+            // 
+            txtbox_year.Location = new Point(180, 48);
+            txtbox_year.Maximum = new decimal(new int[] { 5000, 0, 0, 0 });
+            txtbox_year.Minimum = new decimal(new int[] { 1395, 0, 0, 0 });
+            txtbox_year.Name = "txtbox_year";
+            txtbox_year.RightToLeft = RightToLeft.No;
+            txtbox_year.Size = new Size(54, 28);
+            txtbox_year.TabIndex = 24;
+            txtbox_year.Value = new decimal(new int[] { 1404, 0, 0, 0 });
+            // 
             // FrmFilterMonthly
             // 
             AcceptButton = Btn_submit;
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(241, 565);
+            Controls.Add(txtbox_year);
             Controls.Add(groupBox2);
             Controls.Add(checkBox_withlabels);
             Controls.Add(Btn_submit);
@@ -336,7 +337,6 @@
             Controls.Add(btn_clear);
             Controls.Add(Btn_CheckAll);
             Controls.Add(groupBox1);
-            Controls.Add(txtbox_year);
             Font = new Font("IRANSans", 9F);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Margin = new Padding(3, 4, 3, 4);
@@ -349,13 +349,13 @@
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            ((ISupportInitialize)txtbox_year).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private MaskedTextBox txtbox_year;
         private CheckBox checkBox_farvardin;
         private GroupBox groupBox1;
         private Button Btn_CheckAll;
@@ -378,5 +378,6 @@
         private CheckBox checkBox_withlabels;
         private CheckBox checkBox_allusers;
         private GroupBox groupBox2;
+        private NumericUpDown txtbox_year;
     }
 }

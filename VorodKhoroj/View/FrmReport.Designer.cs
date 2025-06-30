@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.View
 {
-    partial class FrmCalc
+    partial class FrmReport
     {
         /// <summary>
         /// Required designer variable.
