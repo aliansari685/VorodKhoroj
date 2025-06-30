@@ -53,6 +53,7 @@ public static class DataExporter
         }
     }
 
+
     /// <summary>
     /// اکسپورت داده‌های حضور و غیاب برای ماه‌های انتخاب شده به فایل اکسل
     /// </summary>
@@ -65,24 +66,22 @@ public static class DataExporter
         AttendanceFullCalculationService calcService)
     {
         using var package = new ExcelPackage();
-
+        bool flag = false;
         foreach (var month in selectedMonths)
         {
-            var worksheet = package.Workbook.Worksheets.Add($"ماه {month:D2}");
-
             string startDate = $"{year}/{month:D2}/01";
             string endDate = $"{year}/{month:D2}/{PersianDateHelper.PersianCalendar.GetDaysInMonth(year, month):D2}";
-
             var records = calcService.Calculate(userId, startDate, endDate);
-            if (records.Count == 0) return;
 
-            // بارگذاری داده‌ها در شیت با ستون‌ها
+            // فقط در صورتی که رکورد داشت ادامه می‌دهیم
+            if (records.Count == 0) continue;
+
+            var worksheet = package.Workbook.Worksheets.Add($"ماه {month:D2}");
+
             worksheet.Cells["A1"].LoadFromCollection(records, true);
 
-            // عنوان گزارش
             worksheet.Cells[records.Count + 3, 1].Value = calcService.TitleReport;
-
-            // درج لیبل‌ها
+            flag = true;
             if (includeLabels)
             {
                 int labelRow = records.Count + 5;
@@ -99,6 +98,11 @@ public static class DataExporter
 
             worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
         }
-        File.WriteAllBytes(filePath, package.GetAsByteArray());
+
+        if (flag)
+        {
+            File.WriteAllBytes(filePath, package.GetAsByteArray());
+        }
+
     }
 }
