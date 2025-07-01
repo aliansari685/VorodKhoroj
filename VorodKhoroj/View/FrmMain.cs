@@ -149,7 +149,7 @@
 
                 var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
 
-                using FrmFilter frm = new(_appCoordinator, _calcServices, date, date, Userid_txtbox.Text, true);
+                using FrmFilter frm = new(_appCoordinator, _calcServices, date, date, Userid_txtbox.Text, FrmReport.XGridExport.CalculateGrid);
                 frm.ShowDialog();
             }
             catch (Exception ex)
@@ -248,6 +248,21 @@
                 e.Cancel = true;
         }
 
+        private void MorakhasiReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                    throw new ArgumentNullException($"داده ای وجود ندارد");
+
+                using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
         #endregion
     }
 }

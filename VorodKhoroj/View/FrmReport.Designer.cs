@@ -79,7 +79,7 @@
             OutputExcelToolStripMenuItem = new ToolStripMenuItem();
             tabControl1 = new TabControl();
             tabPage_durationdays = new TabPage();
-            button1 = new Button();
+            BtnExport = new Button();
             groupBox1 = new GroupBox();
             radioButton_ramadan = new RadioButton();
             radioButton_holidays = new RadioButton();
@@ -697,26 +697,26 @@
             // 
             // tabPage_durationdays
             // 
-            tabPage_durationdays.Controls.Add(button1);
+            tabPage_durationdays.Controls.Add(BtnExport);
             tabPage_durationdays.Controls.Add(groupBox1);
             tabPage_durationdays.Controls.Add(dataView_late);
-            tabPage_durationdays.Location = new Point(4, 24);
+            tabPage_durationdays.Location = new Point(4, 29);
             tabPage_durationdays.Name = "tabPage_durationdays";
             tabPage_durationdays.Padding = new Padding(3);
-            tabPage_durationdays.Size = new Size(1273, 559);
+            tabPage_durationdays.Size = new Size(1273, 554);
             tabPage_durationdays.TabIndex = 1;
             tabPage_durationdays.Text = "روز های غیبت";
             tabPage_durationdays.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // BtnExport
             // 
-            button1.Location = new Point(21, 20);
-            button1.Name = "button1";
-            button1.Size = new Size(71, 82);
-            button1.TabIndex = 23;
-            button1.Text = "اکسل";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += BtnExportExcelClick;
+            BtnExport.Location = new Point(21, 20);
+            BtnExport.Name = "BtnExport";
+            BtnExport.Size = new Size(71, 82);
+            BtnExport.TabIndex = 23;
+            BtnExport.Text = "اکسل";
+            BtnExport.UseVisualStyleBackColor = true;
+            BtnExport.Click += BtnExportExcelClick;
             // 
             // groupBox1
             // 
@@ -778,7 +778,7 @@
             dataView_late.ReadOnly = true;
             dataView_late.RightToLeft = RightToLeft.No;
             dataView_late.RowHeadersWidth = 70;
-            dataView_late.Size = new Size(1069, 428);
+            dataView_late.Size = new Size(1069, 388);
             dataView_late.TabIndex = 22;
             dataView_late.VirtualMode = true;
             dataView_late.RowPostPaint += DataViewCalculateRowPostPaint;
@@ -1023,7 +1023,7 @@
             txtbox_fullwork.TextAlign = HorizontalAlignment.Center;
             txtbox_fullwork.ValidatingType = typeof(DateTime);
             // 
-            // FrmCalc
+            // FrmReport
             // 
             AutoScaleDimensions = new SizeF(7F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -1032,7 +1032,7 @@
             Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(3, 4, 3, 4);
-            Name = "FrmCalc";
+            Name = "FrmReport";
             Text = "FrmCalc";
             WindowState = FormWindowState.Maximized;
             Load += FrmCalc_Load;
@@ -1093,7 +1093,7 @@
         private GroupBox groupBox1;
         private RadioButton radioButton_qeybat;
         private RadioButton radioButton_holidays;
-        private Button button1;
+        private Button BtnExport;
         public Label label12;
         public Label lbl_fullwork;
         public Label label15;

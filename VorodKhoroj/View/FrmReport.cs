@@ -6,6 +6,10 @@
 public partial class FrmReport : Form
 {
     #region Fields
+    public enum XGridExport
+    {
+        LateGrid, CalculateGrid
+    }
     private readonly MainCoordinator _appCoordinator;
     private readonly AttendanceFullCalculationService _calcServices;
 
@@ -21,7 +25,7 @@ public partial class FrmReport : Form
     /// سازنده فرم محاسبه.
     /// </summary>
     public FrmReport(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
-        string toDateTime, string userid, bool justExcel = false)
+        string toDateTime, string userid)//, bool justExcel = false)
     {
         InitializeComponent();
         _appCoordinator = mainCoordinator;
@@ -29,30 +33,10 @@ public partial class FrmReport : Form
         _fromDateTime = fromDateTime;
         _toDateTime = toDateTime;
         _userid = userid;
-        _justExcel = justExcel;
+        //_justExcel = justExcel;
     }
 
-    private void FrmCalc_Load(object sender, EventArgs e)
-    {
-        userid_txtbox.DataSource = _appCoordinator.UsersList;
-
-        if (_appCoordinator.UsersListProvider is DbProvider)
-            CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
-
-        ReloadGrid();
-
-        if (dataView_Calculate.DataSource == null)
-        {
-            Close();
-            return;
-        }
-        //درصورتی که فرم فقط برای ساخت اکسل صدا زده شود
-        if (_justExcel)
-        {
-            DataGridToExcel();
-            Close();
-        }
-    }
+    private void FrmCalc_Load(object sender, EventArgs e) => Configure();
 
     private void checkBox_ApplyStyles_CheckedChanged(object sender, EventArgs e) => dataView_Calculate.Invalidate();
 
@@ -87,7 +71,7 @@ public partial class FrmReport : Form
 
     private void btn_perv_Click(object sender, EventArgs e) => ChangeUser(false);
 
-    private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e) => DataGridToExcel();
+    private void OutputExcelToolStripMenuItem_Click(object sender, EventArgs e) => CalculateGridToExcel();
 
     private void userid_txtBox_KeyDown(object sender, KeyEventArgs e)
     {
@@ -127,7 +111,59 @@ public partial class FrmReport : Form
     #endregion
 
     #region Core Logic
-    private void DataGridToExcel()
+    /// <summary>
+    /// راه اندازی فرم
+    /// </summary>
+    public void Configure()
+    {
+        userid_txtbox.DataSource = _appCoordinator.UsersList;
+
+        if (_appCoordinator.UsersListProvider is DbProvider)
+            CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
+
+        ReloadGrid();
+
+        if (dataView_Calculate.DataSource == null)
+            Close();
+    }
+
+    /// <summary>
+    ///درصورتی که فرم فقط برای ساخت اکسل صدا زده شود بدون نمایش آن متیونید از این متد استفاده کنید
+    /// </summary>
+    public void ExportToExcel(XGridExport gridExport)
+    {
+        switch (gridExport)
+        {
+            case XGridExport.CalculateGrid:
+                {
+                    CalculateGridToExcel();
+                    Close();
+                    break;
+                }
+
+            case XGridExport.LateGrid:
+                {
+                    LateGridToExcel();
+                    Close();
+                    break;
+                }
+        }
+    }
+    /// <summary>
+    /// خروجی اکسل دیتاگرید تاخیر و مرخصی
+    /// </summary>
+    public void LateGridToExcel()
+    {
+        try
+        {
+            DataExporter.ExportDataGrid(dataView_late);
+        }
+        catch (Exception ex)
+        {
+            CommonHelper.ShowMessage(ex);
+        }
+    }
+    private void CalculateGridToExcel()
     {
         try
         {

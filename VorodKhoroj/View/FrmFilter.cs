@@ -18,9 +18,9 @@ public partial class FrmFilter : Form
     private readonly AttendanceFullCalculationService _calcServices;
 
     /// <summary>
-    /// مشخص می‌کند که فقط خروجی اکسل مورد نیاز است یا خیر.
+    /// مشخص می‌کند که فقط خروجی اکسل مورد نیاز 
     /// </summary>
-    private readonly bool _justExcel;
+    private readonly FrmReport.XGridExport _exportType;
 
     #endregion
 
@@ -29,7 +29,7 @@ public partial class FrmFilter : Form
     /// <summary>
     /// سازنده فرم فیلتر.
     /// </summary>
-    public FrmFilter(MainCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, bool justExcel = false)
+    public FrmFilter(MainCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime, string toDateTime, string userid, FrmReport.XGridExport exportType = default)
     {
         InitializeComponent();
 
@@ -39,7 +39,7 @@ public partial class FrmFilter : Form
         FromDateTime_txtbox.Text = fromDateTime;
         toDateTime_txtbox.Text = toDateTime;
         Userid_txtbox.Text = userid;
-        _justExcel = justExcel;
+        _exportType = exportType;
     }
 
     /// <summary>
@@ -50,17 +50,17 @@ public partial class FrmFilter : Form
         try
         {
             if (Userid_txtbox.Text == "0")
-                throw new NullReferenceException("نام کاربری معتبر نمیباشد");
+                throw new NullReferenceException(" کاربری معتبر نمیباشد");
 
             using FrmReport frm = new(
                 _appCoordinator,
                 _calcServices,
                 FromDateTime_txtbox.Text,
                 toDateTime_txtbox.Text,
-                CommonItems.GetUserIdValueToString(Userid_txtbox),
-                _justExcel
-            );
-            frm.ShowDialog();
+                CommonItems.GetUserIdValueToString(Userid_txtbox));
+            frm.Configure();
+            frm.ExportToExcel(_exportType);
+
         }
         catch (Exception ex)
         {

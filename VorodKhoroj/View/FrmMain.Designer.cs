@@ -51,6 +51,7 @@
             btn_clear = new Button();
             Userid_txtbox = new ComboBox();
             dataView = new DataGridView();
+            MorakhasiReportToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((ISupportInitialize)dataView).BeginInit();
             SuspendLayout();
@@ -77,7 +78,7 @@
             // 
             // گزارشToolStripMenuItem
             // 
-            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DetailReportToolStripMenuItem, MonthlyReportToolStripMenuItem, FasrExportToolStripMenuItem });
+            گزارشToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { DetailReportToolStripMenuItem, MonthlyReportToolStripMenuItem, MorakhasiReportToolStripMenuItem, FasrExportToolStripMenuItem });
             گزارشToolStripMenuItem.Font = new Font("IRANSans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             گزارشToolStripMenuItem.Name = "گزارشToolStripMenuItem";
             گزارشToolStripMenuItem.Size = new Size(59, 24);
@@ -86,21 +87,21 @@
             // DetailReportToolStripMenuItem
             // 
             DetailReportToolStripMenuItem.Name = "DetailReportToolStripMenuItem";
-            DetailReportToolStripMenuItem.Size = new Size(141, 24);
+            DetailReportToolStripMenuItem.Size = new Size(180, 24);
             DetailReportToolStripMenuItem.Text = "ریز جزییات";
             DetailReportToolStripMenuItem.Click += DetailReportToolStripMenuItem_Click;
             // 
             // MonthlyReportToolStripMenuItem
             // 
             MonthlyReportToolStripMenuItem.Name = "MonthlyReportToolStripMenuItem";
-            MonthlyReportToolStripMenuItem.Size = new Size(141, 24);
+            MonthlyReportToolStripMenuItem.Size = new Size(180, 24);
             MonthlyReportToolStripMenuItem.Text = "گزارش ماهانه";
             MonthlyReportToolStripMenuItem.Click += MonthlyReportToolStripMenuItem_Click;
             // 
             // FasrExportToolStripMenuItem
             // 
             FasrExportToolStripMenuItem.Name = "FasrExportToolStripMenuItem";
-            FasrExportToolStripMenuItem.Size = new Size(141, 24);
+            FasrExportToolStripMenuItem.Size = new Size(180, 24);
             FasrExportToolStripMenuItem.Text = "گزارش سریع";
             FasrExportToolStripMenuItem.Click += FastExportToolStripMenuItem_Click;
             // 
@@ -251,6 +252,13 @@
             dataView.VirtualMode = true;
             dataView.RowPostPaint += dataView_RowPostPaint;
             // 
+            // MorakhasiReportToolStripMenuItem
+            // 
+            MorakhasiReportToolStripMenuItem.Name = "MorakhasiReportToolStripMenuItem";
+            MorakhasiReportToolStripMenuItem.Size = new Size(180, 24);
+            MorakhasiReportToolStripMenuItem.Text = "گزارش مرخصی";
+            MorakhasiReportToolStripMenuItem.Click += MorakhasiReportToolStripMenuItem_Click;
+            // 
             // FrmMain
             // 
             AcceptButton = btn_applyfilter;
@@ -306,5 +314,6 @@
         private ToolStripMenuItem UsersEditToolStripMenuItem;
         private ToolStripMenuItem FasrExportToolStripMenuItem;
         private ToolStripMenuItem AddAttendanceToollStripMenuItem;
+        private ToolStripMenuItem MorakhasiReportToolStripMenuItem;
     }
 }
