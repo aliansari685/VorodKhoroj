@@ -3,6 +3,29 @@
     public static class CommonHelper
     {
         /// <summary>
+        /// اجرای سالم کوئری
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteSafeQuery(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (DbUpdateException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (DbException ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+            catch (Exception ex)
+            {
+                CommonHelper.ShowMessage(ex);
+            }
+        }
+        /// <summary>
         /// نمایش پیغام خطا با جزییات Exception و لاگ انداختن خطا
         /// </summary>
         public static void ShowMessage(Exception ex, [CallerMemberName] string methodName = "")

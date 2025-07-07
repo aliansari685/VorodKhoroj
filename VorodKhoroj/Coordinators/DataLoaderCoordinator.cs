@@ -1,7 +1,7 @@
 ﻿namespace VorodKhoroj.Coordinators;
 
 // بارگذاری داده‌ها از فایل یا دیتابیس
-public class DataLoaderCoordinator(DataRepository repository)
+public class DataLoaderCoordinator(DataRepository dataRepository, AttendanceFileReader attendanceFileReader)
 {
     /// <summary>
     /// کانتکست مرکزی برای فراخوانی
@@ -14,7 +14,7 @@ public class DataLoaderCoordinator(DataRepository repository)
     public AppDbContext? DbContextMaster { get; private set; }
 
     public List<Attendance> Records { get; set; } = [];
-    public IUserDataProvider? ListProvider { get; set; }
+    public IUserDataProvider? ListProvider { get; set; } 
 
     /// <summary>
     /// بارگذاری داده‌ها از فایل تکست یا مشابه
@@ -23,8 +23,8 @@ public class DataLoaderCoordinator(DataRepository repository)
     /// <param name="isListProvider">آیا ListProvider تنظیم شود</param>
     public void LoadFromFile(string fileName, bool isListProvider = true)
     {
-        Records = repository.GetRecordsFromFile(fileName);
-        ListProvider = isListProvider ? new FileProvider(repository, Records) : null;
+        Records = attendanceFileReader.GetRecordsFromFile(fileName);
+        ListProvider = isListProvider ? new FileProvider(dataRepository, Records) : null;
     }
 
     /// <summary>

@@ -79,13 +79,16 @@ namespace VorodKhoroj
                     services.AddSingleton<DataLoaderCoordinator>();
                     services.AddSingleton<UserServiceCoordinator>();
                     services.AddSingleton<MainCoordinator>();
+
                     services.AddSingleton<AppDbContextProvider>();
 
                     // Services:
                     services.AddSingleton<ManualMigrationService>();
                     services.AddSingleton<DataRepository>();
                     services.AddSingleton<DatabaseService>();
+                    services.AddSingleton<AttendanceFileReader>();
                     services.AddTransient<AttendanceFullCalculationService>();
+
 
                     // Forms:
                     services.AddScoped<FrmMain>();
