@@ -1,5 +1,8 @@
 ﻿namespace VorodKhoroj.Services
 {
+    /// <summary>
+    /// کلاس خواندن داده ها از فایل
+    /// </summary>
     public class AttendanceFileReader
     {
 

@@ -3,6 +3,8 @@
     public partial class FrmAttendance : Form
     {
         #region Fields:
+
+        private readonly TimeSpan _lastArrivalTime = TimeSpan.Parse("12:00:00");
         private string _user = "";
         private string _datetime = "";
         private readonly MainCoordinator _appCoordinator;
@@ -118,6 +120,8 @@
                 Exit1_txtbox.Text = result.ExitTime;
                 Entry2_txtbox.Text = result.EntryTime2;
                 Exit2_txtbox.Text = result.ExitTime2;
+
+                Entry1_txtbox.Enabled = TimeSpan.Parse(Entry1_txtbox.Text) > _lastArrivalTime;
             }
             catch (Exception ex)
             {
@@ -244,7 +248,7 @@
         private void ProcessFirstAttendance()
         {
             //Entry1:
-            if (_tempAttendances[0].DateTime.TimeOfDay > TimeSpan.Parse("12:00:00"))
+            if (_tempAttendances[0].DateTime.TimeOfDay > _lastArrivalTime)
             {
                 UpdateAttendance(_tempAttendances, 0, TimeSpan.Parse(Exit1_txtbox.Text));
                 AddAttendance(_tempAttendances, 0, TimeSpan.Parse(Entry1_txtbox.Text));

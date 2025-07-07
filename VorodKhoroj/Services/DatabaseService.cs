@@ -1,5 +1,8 @@
 ﻿namespace VorodKhoroj.Services
 {
+    /// <summary>
+    /// تنظمیات پایه و اولیه دیتابیس مثل ایجاد کردن
+    /// </summary>
     public class DatabaseService
     {
         /// <summary>
@@ -59,6 +62,21 @@
             catch (Exception ex)
             {
                 CommonHelper.ShowMessage(ex);
+            }
+        }
+        /// <summary>
+        /// تست ارتباط با سرور SQL
+        /// </summary>
+        public bool TestServerName(string server, AppDbContext dbContextMaster)
+        {
+            try
+            {
+                _ = dbContextMaster.Database.ExecuteSql($"SELECT 1");
+                return dbContextMaster.Database.CanConnect();
+            }
+            catch
+            {
+                return false;
             }
         }
     }

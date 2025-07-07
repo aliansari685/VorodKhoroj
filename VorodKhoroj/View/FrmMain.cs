@@ -255,7 +255,7 @@
                 if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
-                using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
+                using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, FrmReport.XGridExport.LateGrid);
                 frm.ShowDialog();
             }
             catch (Exception ex)

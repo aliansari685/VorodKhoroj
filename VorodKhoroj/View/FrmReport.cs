@@ -8,7 +8,7 @@ public partial class FrmReport : Form
     #region Fields
     public enum XGridExport
     {
-        LateGrid, CalculateGrid
+        None, LateGrid, CalculateGrid
     }
     private readonly MainCoordinator _appCoordinator;
     private readonly AttendanceFullCalculationService _calcServices;
@@ -17,7 +17,6 @@ public partial class FrmReport : Form
     private readonly string _toDateTime;
     private string _username = "";
     private string _userid;
-    private readonly bool _justExcel;
     #endregion
 
     #region Form Event
@@ -25,7 +24,7 @@ public partial class FrmReport : Form
     /// سازنده فرم محاسبه.
     /// </summary>
     public FrmReport(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
-        string toDateTime, string userid)//, bool justExcel = false)
+        string toDateTime, string userid)
     {
         InitializeComponent();
         _appCoordinator = mainCoordinator;
@@ -33,7 +32,6 @@ public partial class FrmReport : Form
         _fromDateTime = fromDateTime;
         _toDateTime = toDateTime;
         _userid = userid;
-        //_justExcel = justExcel;
     }
 
     private void FrmCalc_Load(object sender, EventArgs e) => Configure();

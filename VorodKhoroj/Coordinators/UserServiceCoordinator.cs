@@ -4,17 +4,17 @@
     /// مدیریت عملیات مربوط به جدول User
     /// </summary>
     /// <param name="repository"></param>
-    /// <param name="dbProvider"></param>
-    public class UserServiceCoordinator(DataRepository repository, AppDbContextProvider dbProvider)
+    /// <param name="dbConfiguration"></param>
+    public class UserServiceCoordinator(DataRepository repository, AppDbContextConfiguration dbConfiguration)
     {
         public void AddUser(List<User> rec)
         {
-            if (dbProvider.DbContext != null) repository.AddAttendanceUser(rec, dbProvider.DbContext);
+            if (dbConfiguration.DbContext != null) repository.AddAttendanceUser(rec, dbConfiguration.DbContext);
         }
 
         public void UpdateUser(User rec)
         {
-            if (dbProvider.DbContext != null) repository.UpdateAttendanceUser([rec], dbProvider.DbContext);
+            if (dbConfiguration.DbContext != null) repository.UpdateAttendanceUser([rec], dbConfiguration.DbContext);
         }
     }
 }

@@ -5,7 +5,7 @@
     /// این کلاس نقطه اتصال تمام سرویس‌ها است و وظایف مربوط به داده‌های کاربران و حضور و غیاب را مدیریت می‌کند.
     /// </summary>
     public class MainCoordinator(
-        AppDbContextProvider dbContextProvider,
+        AppDbContextConfiguration dbContextConfiguration,
         ManualMigrationServiceCoordinator migrationServiceCoordinator,
         DataLoaderCoordinator dataLoaderCoordinator,
         DatabaseServiceCoordinator databaseServiceCoordinator,
@@ -15,7 +15,7 @@
         /// <summary>
         /// کانتکس که فسید شده از کانتکس اصلی جهت استفاده عمومی در متد ها یا فرم ها
         /// </summary>
-        public AppDbContext? DbContext => dbContextProvider.DbContext;
+        public AppDbContext? DbContext => dbContextConfiguration.DbContext;
 
         private string DbName { get; set; } = "";
 
@@ -65,24 +65,19 @@
         }
 
         /// <summary>
-        /// تست اتصال به سرور دیتابیس
-        /// </summary>
-        public bool TestServerName(string server) => dataLoaderCoordinator.TestServerName(server);
-
-        /// <summary>
         /// مقداردهی اولیه کانتکست مستر دیتابیس با توجه به نام سرور
         /// </summary>
-        public void InitializeDbContextMaster(string serverName) => dataLoaderCoordinator.InitializeDbContextMaster(serverName);
+        public void InitializeDbContextMaster(string serverName) => dbContextConfiguration.InitializeDbContextMaster(serverName);
 
         /// <summary>
         /// مقداردهی اولیه کانتکست دیتابیس با توجه به نام سرور، مسیر و نوع دیتابیس
         /// </summary>
-        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation location) => dataLoaderCoordinator.InitializeDbContext(serverName, DbPathName, DbName, location);
+        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation location) => dbContextConfiguration.InitializeDbContext(serverName, DbPathName, DbName, location);
 
         /// <summary>
         /// بارگذاری تمامی داده‌های حضور و غیاب از دیتابیس
         /// </summary>
-        public void LoadRecordsFromDb() => dataLoaderCoordinator.LoadFromDb();
+        public void LoadRecordsFromDb() => dataLoaderCoordinator.LoadFromDb(DbContext);
 
         /// <summary>
         /// بارگذاری داده‌ها از فایل (به طور پیش‌فرض ارائه‌دهنده لیست را فعال می‌کند)
@@ -103,6 +98,12 @@
         /// ایجاد جداول مورد نیاز در دیتابیس
         /// </summary>
         public void HandleCreateTables() => databaseServiceCoordinator.CreateTables();
+
+        /// <summary>
+        /// تست اتصال به سرور دیتابیس
+        /// </summary>
+        public bool TestServerName(string server) => databaseServiceCoordinator.TestServerName(server);
+
 
         /// <summary>
         /// بروزرسانی رکورد حضور و غیاب خاص
@@ -143,8 +144,8 @@
 
         public void Dispose()
         {
-            dataLoaderCoordinator.DbContext?.Dispose();
-            dataLoaderCoordinator.DbContextMaster?.Dispose();
+            dbContextConfiguration.DbContext?.Dispose();
+            dbContextConfiguration.DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

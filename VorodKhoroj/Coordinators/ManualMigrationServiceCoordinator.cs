@@ -4,14 +4,14 @@
 ///     کلاس مایگریشن و اپدیت دستی دیتابیس بصورت نسخه ای
 /// </summary>
 /// <param name="migrationService"></param>
-/// <param name="dbProvider"></param>
-public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, AppDbContextProvider dbProvider)
+/// <param name="dbConfiguration"></param>
+public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, AppDbContextConfiguration dbConfiguration)
 {
     /// <summary>
     ///     مایگریشن وجود ستون ایدی و در صورت نداشتن اضافه شود
     /// </summary>
     public void EnsureIdColumnExists()
     {
-        if (dbProvider.DbContext != null) migrationService.EnsureIdColumnExists(dbProvider.DbContext);
+        if (dbConfiguration.DbContext != null) migrationService.EnsureIdColumnExists(dbConfiguration.DbContext);
     }
 }

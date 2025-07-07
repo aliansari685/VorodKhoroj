@@ -80,7 +80,7 @@ namespace VorodKhoroj
                     services.AddSingleton<UserServiceCoordinator>();
                     services.AddSingleton<MainCoordinator>();
 
-                    services.AddSingleton<AppDbContextProvider>();
+                    services.AddSingleton<AppDbContextConfiguration>();
 
                     // Services:
                     services.AddSingleton<ManualMigrationService>();

@@ -1,14 +1,14 @@
 ﻿namespace VorodKhoroj.Coordinators;
 
-public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbContextProvider dbProvider)
+public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbContextConfiguration dbConfiguration)
 {
     /// <summary>
     /// ایجاد دیتابیس جدید با مسیر و نام مشخص
     /// </summary>
     public void CreateDatabase(string dbPath, string dbName)
     {
-        if (dbProvider.DbContextMaster != null)
-            databaseService.CreateDatabase(dbPath, dbName, dbProvider.DbContextMaster);
+        if (dbConfiguration.DbContextMaster != null)
+            databaseService.CreateDatabase(dbPath, dbName, dbConfiguration.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -18,8 +18,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     /// </summary>
     public void DetachDatabase(string dbPath, string dbName)
     {
-        if (dbProvider.DbContextMaster != null)
-            databaseService.DetachDatabase(dbPath, dbName, dbProvider.DbContextMaster);
+        if (dbConfiguration.DbContextMaster != null)
+            databaseService.DetachDatabase(dbPath, dbName, dbConfiguration.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -29,9 +29,21 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     /// </summary>
     public void CreateTables()
     {
-        if (dbProvider.DbContext != null)
-            databaseService.CreateTables(dbProvider.DbContext);
+        if (dbConfiguration.DbContext != null)
+            databaseService.CreateTables(dbConfiguration.DbContext);
         else
             throw new Exception("خطای دیتابیس");
     }
+
+    /// <summary>
+    /// تست ارتباط با سرور SQL
+    /// </summary>
+    public bool TestServerName(string server)
+    {
+        if (dbConfiguration.DbContextMaster != null)
+            return databaseService.TestServerName(server, dbConfiguration.DbContextMaster);
+
+        throw new Exception("خطای دیتابیس");
+    }
+
 }
