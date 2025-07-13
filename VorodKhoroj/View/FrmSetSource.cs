@@ -1,4 +1,7 @@
-﻿namespace VorodKhoroj.View
+﻿using VorodKhoroj.Application.Coordinators;
+using VorodKhoroj.Domain.Interfaces;
+
+namespace VorodKhoroj.View
 {
     /// <summary>
     /// فرم انتخاب منبع داده ها

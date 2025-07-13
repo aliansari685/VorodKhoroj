@@ -1,4 +1,8 @@
-﻿namespace VorodKhoroj.View
+﻿using VorodKhoroj.Application.Coordinators;
+using VorodKhoroj.Application.Services;
+using VorodKhoroj.Domain.Interfaces;
+
+namespace VorodKhoroj.View
 {
     public partial class FrmFilterMonthly : Form
     {

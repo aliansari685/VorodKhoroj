@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Application.Coordinators;
+
+namespace VorodKhoroj.View;
 
 /// <summary>
 /// فرم مدیریت کاربران (ویرایش نام کاربران ثبت‌شده).

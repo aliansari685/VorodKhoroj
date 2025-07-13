@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View;
+﻿using VorodKhoroj.Application.Coordinators;
+
+namespace VorodKhoroj.View;
 
 /// <summary>
 /// فرم تنظیمات دیتابیس برای تست اتصال و ایجاد دیتابیس جدید.

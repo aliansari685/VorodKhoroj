@@ -8,7 +8,7 @@ global using OfficeOpenXml;
 global using System.ComponentModel.DataAnnotations;
 global using Microsoft.EntityFrameworkCore;
 global using System.Runtime.CompilerServices;
-global using VorodKhoroj.Services;
+global using VorodKhoroj.Application.Services;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using VorodKhoroj.Helpers;
@@ -19,9 +19,11 @@ global using System.Reflection;
 global using VorodKhoroj.Context;
 global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Collections;
-global using VorodKhoroj.Coordinators;
-global using VorodKhoroj.Interfaces;
+global using VorodKhoroj.Application.Coordinators;
+global using VorodKhoroj.Domain.Interfaces;
 global using System.Data.Common;
+using VorodKhoroj.Application.Coordinators;
+using VorodKhoroj.Application.Services;
 
 namespace VorodKhoroj
 {

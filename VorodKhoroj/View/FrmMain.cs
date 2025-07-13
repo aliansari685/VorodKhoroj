@@ -1,4 +1,8 @@
-﻿namespace VorodKhoroj
+﻿using VorodKhoroj.Application.Coordinators;
+using VorodKhoroj.Application.Services;
+using VorodKhoroj.Domain.Interfaces;
+
+namespace VorodKhoroj
 {
     public partial class FrmMain : Form
     {
