@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Application.Services;
-
-namespace VorodKhoroj.Domain.Interfaces
+﻿namespace VorodKhoroj.Domain.Interfaces
 {
     /// <summary>
     /// عملیات دریافت کربران از پروایدر های مشخص شده

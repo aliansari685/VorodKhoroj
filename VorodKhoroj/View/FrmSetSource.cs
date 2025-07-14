@@ -84,7 +84,7 @@ namespace VorodKhoroj.View
             if (_appCoordinator is { UsersListProvider: DbProvider })
                 throw new InvalidOperationException("لطفا ارتباط قبلی را قطع کنید (با استفاده از راه‌اندازی مجدد)");
 
-            if (!CommonHelper.IsValid(txt_ServerName.Text))
+            if (!Validation.IsValid(txt_ServerName.Text))
                 throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
 
             _appCoordinator.InitializeDbContextMaster(txt_ServerName.Text);

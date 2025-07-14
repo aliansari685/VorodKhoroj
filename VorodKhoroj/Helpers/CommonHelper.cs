@@ -14,7 +14,7 @@
             }
             catch (DbUpdateException ex)
             {
-                CommonHelper.ShowMessage(ex);
+                ShowMessage(ex);
             }
             catch (DbException ex)
             {
@@ -25,6 +25,7 @@
                 CommonHelper.ShowMessage(ex);
             }
         }
+
         /// <summary>
         /// نمایش پیغام خطا با جزییات Exception و لاگ انداختن خطا
         /// </summary>
@@ -45,20 +46,5 @@
             const string caption = "پیام";
             MessageBox.Show(message, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
-        /// <summary>
-        /// اعتبارسنجی رشته‌ها (غیرخالی بودن)
-        /// </summary>
-        public static bool IsValid(params string[] str) => !str.Any(string.IsNullOrWhiteSpace);
-
-        /// <summary>
-        /// اعتبارسنجی اعداد (نبود صفر)
-        /// </summary>
-        public static bool IsValid(params int[] values) => values is { Length: > 0 } && values.All(v => v != 0);
-
-        /// <summary>
-        /// اعتبارسنجی MaskedTextBoxها (پر بودن کامل ماسک)
-        /// </summary>
-        public static bool IsValid(params MaskedTextBox[] values) => values is { Length: > 0 } && values.All(v => v.MaskFull);
     }
 }

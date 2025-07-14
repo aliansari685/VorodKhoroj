@@ -66,7 +66,7 @@ public partial class FrmUsers : Form
     /// </summary>
     private void Userid_txtbox_SelectedValueChanged(object sender, EventArgs e)
     {
-        if (!CommonHelper.IsValid(Userid_txtbox.Text)) return;
+        if (!Validation.IsValid(Userid_txtbox.Text)) return;
 
         try
         {

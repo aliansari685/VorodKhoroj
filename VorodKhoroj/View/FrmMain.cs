@@ -1,7 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
-using VorodKhoroj.Domain.Interfaces;
-
+﻿
 namespace VorodKhoroj
 {
     public partial class FrmMain : Form
@@ -39,7 +36,7 @@ namespace VorodKhoroj
         /// </summary>
         public void DataGridConfig()
         {
-            if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count)) return;
+            if (!Validation.IsValid(_appCoordinator.AttendancesList.Count)) return;
 
             dataView.DataSource = _appCoordinator.AttendancesList.ToDataTableWithDisplayedName();
             Userid_txtbox.DataSource = _appCoordinator.UsersList;
@@ -85,7 +82,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new NullReferenceException("داده ای وجود ندارد");
 
                 var filtered = DataFilterService.ApplyFilter(
@@ -126,7 +123,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
@@ -148,7 +145,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
@@ -166,7 +163,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!CommonHelper.IsValid(dataView.Rows.Count))
+                if (!Validation.IsValid(dataView.Rows.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 using FrmSetting frm = new(_appCoordinator);
@@ -241,7 +238,7 @@ namespace VorodKhoroj
         private void AppRestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _isRestarting = true;
-            Application.Restart();
+            System.Windows.Forms.Application.Restart();
         }
 
         private void Frm_Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -256,7 +253,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!CommonHelper.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, FrmReport.XGridExport.LateGrid);

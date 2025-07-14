@@ -76,7 +76,7 @@ namespace VorodKhoroj.View
             {
                 if (MessageBox.Show(@"ایا از کار خود اطمینان دارید؟", @"تاییدیه", MessageBoxButtons.YesNo) == DialogResult.No) return;
 
-                if (CommonHelper.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
+                if (Validation.IsValid(Entry1_txtbox, Exit1_txtbox) == false || Entry1_txtbox.Text == Exit1_txtbox.Text)
                 {
                     throw new NullReferenceException("خطا در مقادیر ورودی تردد اول");
                 }
@@ -189,7 +189,7 @@ namespace VorodKhoroj.View
                 }
                 else if (radioBtn_Attendance2.Checked)
                 {
-                    dataView_Attendance.DataSource = _tempRecords.Where(x => CommonHelper.IsValid(x.EntryTime2!)).ToList().ToDataTable();
+                    dataView_Attendance.DataSource = _tempRecords.Where(x => Validation.IsValid(x.EntryTime2!)).ToList().ToDataTable();
                 }
 
             }
@@ -225,7 +225,7 @@ namespace VorodKhoroj.View
         private void ProcessSecondAttendance()
         {
             //Entry2:
-            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
+            if (Validation.IsValid(Entry2_txtbox, Exit2_txtbox) && Entry2_txtbox.Text != Exit2_txtbox.Text)
             {
                 if (_tempAttendances.Count > 2)
                     UpdateAttendance(_tempAttendances, 2, TimeSpan.Parse(Entry2_txtbox.Text));
@@ -238,12 +238,12 @@ namespace VorodKhoroj.View
                 else
                     AddAttendance(_tempAttendances, 2, TimeSpan.Parse(Exit2_txtbox.Text));
             }
-            else if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 2)
+            else if (Validation.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 2)
             {
                 DeleteAttendance(_tempAttendances[2]);
             }
 
-            if (CommonHelper.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 3)
+            if (Validation.IsValid(Entry2_txtbox, Exit2_txtbox) == false && _tempAttendances.Count > 3)
                 DeleteAttendance(_tempAttendances[3]);
         }
 

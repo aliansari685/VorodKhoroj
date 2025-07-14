@@ -10,7 +10,7 @@ public class PersianDateHelper
     public static List<EventDay> GetRamadanDays()
     {
         var list = new List<EventDay>();
-        var excelPath = Application.StartupPath + @"Resources\ramadan.xlsx";
+        var excelPath = System.Windows.Forms.Application.StartupPath + @"Resources\ramadan.xlsx";
         using var package = new ExcelPackage(new FileInfo(excelPath));
         var worksheet = package.Workbook.Worksheets[0]; // اولین شیت
         var rowCount = worksheet.Dimension.Rows; // تعداد سطرها
@@ -31,7 +31,7 @@ public class PersianDateHelper
     {
         var farvardinHolidays = new List<int> { 1, 2, 3, 4, 12, 13 };
         var list = new List<EventDay>();
-        var excelPath = Application.StartupPath + @"Resources\holiday.xlsx";
+        var excelPath = System.Windows.Forms.Application.StartupPath + @"Resources\holiday.xlsx";
         using (var package = new ExcelPackage(new FileInfo(excelPath)))
         {
             var worksheet = package.Workbook.Worksheets[0];

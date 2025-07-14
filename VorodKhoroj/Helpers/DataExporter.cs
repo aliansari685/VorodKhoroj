@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Application.Services;
-
-namespace VorodKhoroj.Helpers;
+﻿namespace VorodKhoroj.Helpers;
 
 public static class DataExporter
 {

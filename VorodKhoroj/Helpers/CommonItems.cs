@@ -8,7 +8,7 @@
         /// <summary>
         /// مسیر فایل متنی لیست سرورها
         /// </summary>
-        public static readonly string Path = Application.StartupPath + @"\tmpFile\serverList.txt";
+        public static readonly string Path = System.Windows.Forms.Application.StartupPath + @"\tmpFile\serverList.txt";
 
         /// <summary>
         /// متنی که به لیست اضافه می‌شود

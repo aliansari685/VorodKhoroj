@@ -38,7 +38,7 @@ namespace VorodKhoroj.View
         {
             try
             {
-                if (CommonHelper.IsValid(FromDateTime_txtbox, toDateTime_txtbox) == false)
+                if (Validation.IsValid(FromDateTime_txtbox, toDateTime_txtbox) == false)
                     throw new NullReferenceException("تاریخ معتبر نمیباشد");
 
                 using var openFile = CommonItems.CreateOpenFileDialog(@"Output Files|*.txt;*.dat;");

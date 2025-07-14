@@ -22,8 +22,6 @@ global using System.Collections;
 global using VorodKhoroj.Application.Coordinators;
 global using VorodKhoroj.Domain.Interfaces;
 global using System.Data.Common;
-using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
 
 namespace VorodKhoroj
 {
@@ -38,8 +36,9 @@ namespace VorodKhoroj
         {
             try
             {
+               
                 // تنظیم مسیر فایل لاگ و پیکربندی Serilog
-                var path = Application.StartupPath + @"tmpFile\log.txt";
+                var path = System.Windows.Forms.Application.StartupPath + @"tmpFile\log.txt";
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Information()
                     .Enrich.FromLogContext()
@@ -59,7 +58,7 @@ namespace VorodKhoroj
                 // تنظیم لایسنس EPPlus برای خروجی اکسل
                 ExcelPackage.License.SetNonCommercialPersonal(@"Ali Ansari");
 
-                Application.Run(form);
+                System.Windows.Forms.Application.Run(form);
             }
             catch (Exception ex)
             {
