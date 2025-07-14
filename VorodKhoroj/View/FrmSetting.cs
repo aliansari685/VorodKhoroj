@@ -51,7 +51,7 @@ public partial class FrmSetting : Form
     {
         try
         {
-            _appCoordinator.InitializeDbContextMaster(txt_ServerName.Text);
+            _appCoordinator.DbContextConfiguration.InitializeDbContextMaster(txt_ServerName.Text);
 
             if (_appCoordinator.TestServerName(txt_ServerName.Text) == false)
             {
@@ -128,7 +128,7 @@ public partial class FrmSetting : Form
             _appCoordinator.SetDbName(dbFilePath);
             _appCoordinator.SetDbPath(dbFilePath);
             _appCoordinator.HandleCreateDatabase();
-            _appCoordinator.InitializeDbContext(serverName, AppDbContext.DataBaseLocation.InternalDataBase);
+            _appCoordinator.DbContextConfiguration.InitializeDbContext(serverName, _appCoordinator.DbPathName, _appCoordinator.DbName, Enums.DataBaseLocation.InternalDataBase);
             _appCoordinator.HandleCreateTables();
             _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);
             _appCoordinator.HandleDetachDatabase();

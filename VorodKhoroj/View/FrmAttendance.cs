@@ -1,7 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmAttendance : Form
     {

@@ -22,6 +22,7 @@ global using System.Collections;
 global using VorodKhoroj.Application.Coordinators;
 global using VorodKhoroj.Domain.Interfaces;
 global using System.Data.Common;
+global using VorodKhoroj.Domain;
 
 namespace VorodKhoroj
 {
@@ -36,7 +37,7 @@ namespace VorodKhoroj
         {
             try
             {
-               
+
                 // تنظیم مسیر فایل لاگ و پیکربندی Serilog
                 var path = System.Windows.Forms.Application.StartupPath + @"tmpFile\log.txt";
                 Log.Logger = new LoggerConfiguration()
@@ -81,7 +82,7 @@ namespace VorodKhoroj
                     services.AddSingleton<UserServiceCoordinator>();
                     services.AddSingleton<MainCoordinator>();
 
-                    services.AddSingleton<AppDbContextConfiguration>();
+                    services.AddScoped<IDbContextConfiguration, AppDbContextConfiguration>();
 
                     // Services:
                     services.AddSingleton<ManualMigrationService>();

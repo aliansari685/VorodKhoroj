@@ -1,4 +1,5 @@
-﻿using VorodKhoroj.Application.Coordinators;
+﻿using System.Xml.Linq;
+using VorodKhoroj.Application.Coordinators;
 using VorodKhoroj.Domain.Interfaces;
 
 namespace VorodKhoroj.View
@@ -87,7 +88,7 @@ namespace VorodKhoroj.View
             if (!Validation.IsValid(txt_ServerName.Text))
                 throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
 
-            _appCoordinator.InitializeDbContextMaster(txt_ServerName.Text);
+            _appCoordinator.DbContextConfiguration.InitializeDbContextMaster(txt_ServerName.Text);
 
             if (!_appCoordinator.TestServerName(txt_ServerName.Text))
                 throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
@@ -99,7 +100,7 @@ namespace VorodKhoroj.View
 
                 _appCoordinator.SetDbPath(dbPath);
                 _appCoordinator.SetDbName(dbPath);
-                _appCoordinator.InitializeDbContext(txt_ServerName.Text, AppDbContext.DataBaseLocation.AttachDbFilename);
+                _appCoordinator.DbContextConfiguration.InitializeDbContext(txt_ServerName.Text, _appCoordinator.DbPathName, _appCoordinator.DbName, Enums.DataBaseLocation.AttachDbFilename);
                 _appCoordinator.MigrationsEnsureDatabaseUpToDate();
                 _appCoordinator.LoadRecordsFromDb();
 

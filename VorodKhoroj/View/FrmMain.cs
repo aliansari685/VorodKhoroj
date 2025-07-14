@@ -195,7 +195,7 @@ namespace VorodKhoroj
 
         private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { UsersListProvider: DbProvider, DbContext: not null })
+            if (_appCoordinator is { UsersListProvider: DbProvider, DbContextConfiguration.DbContext: not null })
             {
                 using var frm = new FrmUsers(_appCoordinator);
                 frm.ShowDialog();
@@ -209,7 +209,7 @@ namespace VorodKhoroj
 
         private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
             {
                 using var frm = new FrmAttendance(_appCoordinator, _calcServices);
                 frm.ShowDialog();
@@ -223,7 +223,7 @@ namespace VorodKhoroj
 
         private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
             {
                 using var frm = new FrmAttendanceAddRange(_appCoordinator);
                 frm.ShowDialog();

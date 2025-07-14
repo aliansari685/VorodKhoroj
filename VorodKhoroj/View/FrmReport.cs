@@ -1,8 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
-using VorodKhoroj.Domain.Interfaces;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 /// <summary>
 /// فرم محاسبه گزارش‌های ورود و خروج.
@@ -190,7 +186,7 @@ public partial class FrmReport : Form
             List<int> users = [];
             switch (_appCoordinator)
             {
-                case { UsersListProvider: DbProvider, DbContext: not null }:
+                case { UsersListProvider: DbProvider, DbContextConfiguration.DbContext: not null }:
                     users.AddRange((_appCoordinator.UsersList as List<User> ?? []).Select(u => u.UserId));
                     break;
                 case { UsersListProvider: FileProvider }:

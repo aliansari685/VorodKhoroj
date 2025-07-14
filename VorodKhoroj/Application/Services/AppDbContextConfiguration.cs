@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Application.Services;
 
-public class AppDbContextConfiguration
+public class AppDbContextConfiguration:IDbContextConfiguration
 {
     /// <summary>
     /// کانتکست  مرکزی برای فراخوانی
@@ -15,7 +15,7 @@ public class AppDbContextConfiguration
     /// <summary>
     /// مقداردهی اولیه DbContext با مشخصات دیتابیس
     /// </summary>
-    public void InitializeDbContext(string server, string path, string name, AppDbContext.DataBaseLocation location)
+    public void InitializeDbContext(string server, string path, string name, Enums.DataBaseLocation location)
     {
         DbContext?.Dispose();
         DbContext = new AppDbContext(server, path, name, location);
@@ -27,7 +27,7 @@ public class AppDbContextConfiguration
     public void InitializeDbContextMaster(string server)
     {
         DbContextMaster?.Dispose();
-        DbContextMaster = new AppDbContext(server, string.Empty, "master", AppDbContext.DataBaseLocation.InternalDataBase);
+        DbContextMaster = new AppDbContext(server, string.Empty, "master", Enums.DataBaseLocation.InternalDataBase);
         if (DbContextMaster == null)
             throw new NullReferenceException("خطای دیتابیس");
     }

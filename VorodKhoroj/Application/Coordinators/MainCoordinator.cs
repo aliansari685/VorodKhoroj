@@ -4,26 +4,43 @@
     /// هماهنگ‌کننده اصلی برای مدیریت عملیات و گردش کار بین سرویس‌ها و دیتابیس
     /// این کلاس نقطه اتصال تمام سرویس‌ها است و وظایف مربوط به داده‌های کاربران و حضور و غیاب را مدیریت می‌کند.
     /// </summary>
-    public class MainCoordinator(
-        AppDbContextConfiguration dbContextConfiguration,
-        ManualMigrationServiceCoordinator migrationServiceCoordinator,
-        DataLoaderCoordinator dataLoaderCoordinator,
-        DatabaseServiceCoordinator databaseServiceCoordinator,
-        AttendanceServiceCoordinator attendanceServiceCoordinator,
-        UserServiceCoordinator userServiceCoordinator) : IDisposable
+    public class MainCoordinator : IDisposable
     {
+        public readonly IDbContextConfiguration DbContextConfiguration;
+        public readonly ManualMigrationServiceCoordinator MigrationServiceCoordinator;
+        public readonly DataLoaderCoordinator DataLoaderCoordinator;
+        public readonly DatabaseServiceCoordinator DatabaseServiceCoordinator;
+        public readonly AttendanceServiceCoordinator AttendanceServiceCoordinator;
+        public readonly UserServiceCoordinator UserServiceCoordinator;
+
         /// <summary>
-        /// کانتکس که فسید شده از کانتکس اصلی جهت استفاده عمومی در متد ها یا فرم ها
+        /// هماهنگ‌کننده اصلی برای مدیریت عملیات و گردش کار بین سرویس‌ها و دیتابیس
+        /// این کلاس نقطه اتصال تمام سرویس‌ها است و وظایف مربوط به داده‌های کاربران و حضور و غیاب را مدیریت می‌کند.
         /// </summary>
-        public AppDbContext? DbContext => dbContextConfiguration.DbContext;
-        private string DbName { get; set; } = "";
+        public MainCoordinator(IDbContextConfiguration dbContextConfiguration,
+            ManualMigrationServiceCoordinator migrationServiceCoordinator,
+            DataLoaderCoordinator dataLoaderCoordinator,
+            DatabaseServiceCoordinator databaseServiceCoordinator,
+            AttendanceServiceCoordinator attendanceServiceCoordinator,
+            UserServiceCoordinator userServiceCoordinator)
+        {
+            DbContextConfiguration = dbContextConfiguration;
+            MigrationServiceCoordinator = migrationServiceCoordinator;
+            DataLoaderCoordinator = dataLoaderCoordinator;
+            DatabaseServiceCoordinator = databaseServiceCoordinator;
+            AttendanceServiceCoordinator = attendanceServiceCoordinator;
+            UserServiceCoordinator = userServiceCoordinator;
+        }
+
+
+        public string DbName { get; private set; } = "";
 
         /// <summary>
         /// تنظیم نام دیتابیس (بدون پسوند) از مسیر فایل داده شده
         /// </summary>
         public void SetDbName(string dbPath) => DbName = Path.GetFileNameWithoutExtension(dbPath);
 
-        private string DbPathName { get; set; } = "";
+        public string DbPathName { get; private set; } = "";
 
         /// <summary>
         /// تنظیم مسیر فایل دیتابیس
@@ -33,24 +50,24 @@
         /// <summary>
         /// لیست رکوردهای حضور و غیاب بارگذاری شده
         /// </summary>
-        public List<Attendance> AttendancesList => dataLoaderCoordinator.Records;
+        public List<Attendance> AttendancesList => DataLoaderCoordinator.Records;
 
         /// <summary>
         /// لیست کاربران بارگذاری شده، به صورت آبجکت های عمومی
         /// </summary>
-        public IList? UsersList => dataLoaderCoordinator.ListProvider?.GetUserDataProvider();
+        public IList? UsersList => DataLoaderCoordinator.ListProvider?.GetUserDataProvider();
 
         /// <summary>
         /// ارائه‌دهنده داده‌های کاربران
         /// </summary>
-        public IUserDataProvider? UsersListProvider => dataLoaderCoordinator.ListProvider;
+        public IUserDataProvider? UsersListProvider => DataLoaderCoordinator.ListProvider;
 
         /// <summary>
         /// بروزرسانی رکورد یک کاربر 
         /// </summary>
         public void UpdateUserRecord(User user)
         {
-            userServiceCoordinator.UpdateUser(user);
+            UserServiceCoordinator.UpdateUser(user);
             LoadRecordsFromDb();
         }
 
@@ -59,49 +76,40 @@
         /// </summary>
         public void AddUserRecord(List<User> newUsers)
         {
-            userServiceCoordinator.AddUser(newUsers);
+            UserServiceCoordinator.AddUser(newUsers);
             LoadRecordsFromDb();
         }
 
-        /// <summary>
-        /// مقداردهی اولیه کانتکست مستر دیتابیس با توجه به نام سرور
-        /// </summary>
-        public void InitializeDbContextMaster(string serverName) => dbContextConfiguration.InitializeDbContextMaster(serverName);
-
-        /// <summary>
-        /// مقداردهی اولیه کانتکست دیتابیس با توجه به نام سرور، مسیر و نوع دیتابیس
-        /// </summary>
-        public void InitializeDbContext(string serverName, AppDbContext.DataBaseLocation location) => dbContextConfiguration.InitializeDbContext(serverName, DbPathName, DbName, location);
 
         /// <summary>
         /// بارگذاری تمامی داده‌های حضور و غیاب از دیتابیس
         /// </summary>
-        public void LoadRecordsFromDb() => dataLoaderCoordinator.LoadFromDb(DbContext);
+        public void LoadRecordsFromDb() => DataLoaderCoordinator.LoadFromDb(DbContextConfiguration.DbContext);
 
         /// <summary>
         /// بارگذاری داده‌ها از فایل (به طور پیش‌فرض ارائه‌دهنده لیست را فعال می‌کند)
         /// </summary>
-        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) => dataLoaderCoordinator.LoadFromFile(fileName, isListProvider);
+        public void LoadRecordsFromFile(string fileName, bool isListProvider = true) => DataLoaderCoordinator.LoadFromFile(fileName, isListProvider);
 
         /// <summary>
         /// ایجاد دیتابیس جدید
         /// </summary>
-        public void HandleCreateDatabase() => databaseServiceCoordinator.CreateDatabase(DbPathName, DbName);
+        public void HandleCreateDatabase() => DatabaseServiceCoordinator.CreateDatabase(DbPathName, DbName);
 
         /// <summary>
         /// جدا کردن دیتابیس (Detach)
         /// </summary>
-        public void HandleDetachDatabase() => databaseServiceCoordinator.DetachDatabase(DbPathName, DbName);
+        public void HandleDetachDatabase() => DatabaseServiceCoordinator.DetachDatabase(DbPathName, DbName);
 
         /// <summary>
         /// ایجاد جداول مورد نیاز در دیتابیس
         /// </summary>
-        public void HandleCreateTables() => databaseServiceCoordinator.CreateTables();
+        public void HandleCreateTables() => DatabaseServiceCoordinator.CreateTables();
 
         /// <summary>
         /// تست اتصال به سرور دیتابیس
         /// </summary>
-        public bool TestServerName(string server) => databaseServiceCoordinator.TestServerName(server);
+        public bool TestServerName(string server) => DatabaseServiceCoordinator.TestServerName(server);
 
 
         /// <summary>
@@ -109,21 +117,21 @@
         /// </summary>
         public void UpdateAttendanceRecord(Attendance attendance)
         {
-            attendanceServiceCoordinator.UpdateAttendance(attendance);
+            AttendanceServiceCoordinator.UpdateAttendance(attendance);
             LoadRecordsFromDb();
         }
 
         /// <summary>
         /// کپی کردن لیست رکوردهای حضور و غیاب
         /// </summary>
-        public void CopyAttendancesRecord(List<Attendance> records) => attendanceServiceCoordinator.CopyRecords(records);
+        public void CopyAttendancesRecord(List<Attendance> records) => AttendanceServiceCoordinator.CopyRecords(records);
 
         /// <summary>
         /// افزودن رکوردهای جدید حضور و غیاب
         /// </summary>
         public void AddAttendanceRecord(List<Attendance> attendances)
         {
-            attendanceServiceCoordinator.AddAttendance(attendances);
+            AttendanceServiceCoordinator.AddAttendance(attendances);
             LoadRecordsFromDb();
         }
 
@@ -132,19 +140,19 @@
         /// </summary>
         public void DeleteAttendanceRecord(Attendance attendances)
         {
-            attendanceServiceCoordinator.DeleteAttendance(attendances);
+            AttendanceServiceCoordinator.DeleteAttendance(attendances);
             LoadRecordsFromDb();
         }
 
         /// <summary>
         /// اطمینان از بروزرسانی ساختار دیتابیس و وجود ستون Id
         /// </summary>
-        public void MigrationsEnsureDatabaseUpToDate() => migrationServiceCoordinator.EnsureIdColumnExists();
+        public void MigrationsEnsureDatabaseUpToDate() => MigrationServiceCoordinator.EnsureIdColumnExists();
 
         public void Dispose()
         {
-            dbContextConfiguration.DbContext?.Dispose();
-            dbContextConfiguration.DbContextMaster?.Dispose();
+            DbContextConfiguration.DbContext?.Dispose();
+            DbContextConfiguration.DbContextMaster?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

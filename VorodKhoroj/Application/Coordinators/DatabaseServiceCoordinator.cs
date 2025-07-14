@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Application.Services;
-
-namespace VorodKhoroj.Application.Coordinators;
+﻿namespace VorodKhoroj.Application.Coordinators;
 
 public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbContextConfiguration dbConfiguration)
 {
