@@ -1,14 +1,16 @@
-﻿namespace VorodKhoroj.Application.Coordinators;
+﻿using VorodKhoroj.Infrastructure.Persistence;
 
-public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbContextConfiguration dbConfiguration)
+namespace VorodKhoroj.Application.Coordinators;
+
+public class DatabaseServiceCoordinator(DatabaseInitializerService databaseInitializerService, DbContextInitializer dbInitializer)
 {
     /// <summary>
     /// ایجاد دیتابیس جدید با مسیر و نام مشخص
     /// </summary>
     public void CreateDatabase(string dbPath, string dbName)
     {
-        if (dbConfiguration.DbContextMaster != null)
-            databaseService.CreateDatabase(dbPath, dbName, dbConfiguration.DbContextMaster);
+        if (dbInitializer.DbContextMaster != null)
+            databaseInitializerService.CreateDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -18,8 +20,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     /// </summary>
     public void DetachDatabase(string dbPath, string dbName)
     {
-        if (dbConfiguration.DbContextMaster != null)
-            databaseService.DetachDatabase(dbPath, dbName, dbConfiguration.DbContextMaster);
+        if (dbInitializer.DbContextMaster != null)
+            databaseInitializerService.DetachDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -29,8 +31,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     /// </summary>
     public void CreateTables()
     {
-        if (dbConfiguration.DbContext != null)
-            databaseService.CreateTables(dbConfiguration.DbContext);
+        if (dbInitializer.DbContext != null)
+            databaseInitializerService.CreateTables(dbInitializer.DbContext);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -40,8 +42,8 @@ public class DatabaseServiceCoordinator(DatabaseService databaseService, AppDbCo
     /// </summary>
     public bool TestServerName(string server)
     {
-        if (dbConfiguration.DbContextMaster != null)
-            return databaseService.TestServerName(server, dbConfiguration.DbContextMaster);
+        if (dbInitializer.DbContextMaster != null)
+            return databaseInitializerService.TestServerName(server, dbInitializer.DbContextMaster);
 
         throw new Exception("خطای دیتابیس");
     }

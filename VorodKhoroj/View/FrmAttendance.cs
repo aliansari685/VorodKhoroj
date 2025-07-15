@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.View
+﻿using VorodKhoroj.Infrastructure;
+
+namespace VorodKhoroj.View
 {
     public partial class FrmAttendance : Form
     {
@@ -8,7 +10,7 @@
         private string _user = "";
         private string _datetime = "";
         private readonly MainCoordinator _appCoordinator;
-        private readonly AttendanceFullCalculationService _calcService;
+        private readonly AttendanceAnalyzer _calcService;
 
         // لیست موقت رکوردهای کاری پس از محاسبه (برای نمایش در دیتاگرید)
         private List<WorkRecord> _tempRecords = [];
@@ -20,7 +22,7 @@
         private List<Attendance> _tempAttendances = [];
         #endregion
 
-        public FrmAttendance(MainCoordinator service, AttendanceFullCalculationService calcServices)
+        public FrmAttendance(MainCoordinator service, AttendanceAnalyzer calcServices)
         {
             InitializeComponent();
             _appCoordinator = service;
@@ -291,7 +293,7 @@
         }
 
         //فیلترکردن لیست کلی بر اساس تاریخ و یوزر
-        private List<Attendance> FilterAttendances(string datetime, string user) => DataFilterService.ApplyFilter(TempRecordsAttendances, datetime, datetime, int.Parse(user)).ToList();
+        private List<Attendance> FilterAttendances(string datetime, string user) => AttendanceRecordFilter.ApplyFilter(TempRecordsAttendances, datetime, datetime, int.Parse(user)).ToList();
 
         //بارگذاری مجدد داده‌ها بعد از تغییر
         private void DataReloadOperation() => _tempAttendances = FilterAttendances(_datetime, _user).OrderBy(x => x.DateTime).ToList();

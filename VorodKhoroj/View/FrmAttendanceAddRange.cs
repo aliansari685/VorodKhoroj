@@ -1,5 +1,5 @@
 ﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
+using VorodKhoroj.Infrastructure;
 
 namespace VorodKhoroj.View
 {
@@ -56,7 +56,7 @@ namespace VorodKhoroj.View
 
                     var attendanceList = _appCoordinator.AttendancesList;
 
-                    var filtered = DataFilterService.ApplyFilter(attendanceList, FromDateTime_txtbox.Text,
+                    var filtered = AttendanceRecordFilter.ApplyFilter(attendanceList, FromDateTime_txtbox.Text,
                         toDateTime_txtbox.Text, 0).ToList();
 
                     AddOtherUsers(filtered);

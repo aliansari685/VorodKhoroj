@@ -1,4 +1,4 @@
-﻿using VorodKhoroj.Application.Services;
+﻿using VorodKhoroj.Infrastructure.Persistence;
 
 namespace VorodKhoroj.Application.Coordinators
 {
@@ -6,17 +6,17 @@ namespace VorodKhoroj.Application.Coordinators
     /// مدیریت عملیات مربوط به جدول User
     /// </summary>
     /// <param name="repository"></param>
-    /// <param name="dbConfiguration"></param>
-    public class UserServiceCoordinator(DataRepository repository, AppDbContextConfiguration dbConfiguration)
+    /// <param name="dbInitializer"></param>
+    public class UserServiceCoordinator(UserRepository repository, DbContextInitializer dbInitializer)
     {
         public void AddUser(List<User> rec)
         {
-            if (dbConfiguration.DbContext != null) repository.AddAttendanceUser(rec, dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null) repository.AddAttendanceUser(rec, dbInitializer.DbContext);
         }
 
         public void UpdateUser(User rec)
         {
-            if (dbConfiguration.DbContext != null) repository.UpdateAttendanceUser([rec], dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null) repository.UpdateAttendanceUser([rec], dbInitializer.DbContext);
         }
     }
 }

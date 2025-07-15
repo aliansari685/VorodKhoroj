@@ -1,4 +1,6 @@
 ﻿
+using VorodKhoroj.Infrastructure;
+
 namespace VorodKhoroj
 {
     public partial class FrmMain : Form
@@ -18,11 +20,11 @@ namespace VorodKhoroj
         /// <summary>
         /// سرویس محاسبه‌ی کامل حضور و غیاب
         /// </summary>
-        private readonly AttendanceFullCalculationService _calcServices;
+        private readonly AttendanceAnalyzer _calcServices;
 
         #endregion
 
-        public FrmMain(MainCoordinator mainCoordinator, AttendanceFullCalculationService calculationService)
+        public FrmMain(MainCoordinator mainCoordinator, AttendanceAnalyzer calculationService)
         {
             InitializeComponent();
             _appCoordinator = mainCoordinator;
@@ -85,7 +87,7 @@ namespace VorodKhoroj
                 if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
                     throw new NullReferenceException("داده ای وجود ندارد");
 
-                var filtered = DataFilterService.ApplyFilter(
+                var filtered = AttendanceRecordFilter.ApplyFilter(
                     _appCoordinator.AttendancesList,
                     FromDateTime_txtbox.Text,
                     toDateTime_txtbox.Text,

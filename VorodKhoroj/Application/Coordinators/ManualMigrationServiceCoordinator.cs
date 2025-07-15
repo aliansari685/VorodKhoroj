@@ -1,4 +1,4 @@
-﻿using VorodKhoroj.Application.Services;
+﻿using VorodKhoroj.Infrastructure.Persistence;
 
 namespace VorodKhoroj.Application.Coordinators;
 
@@ -6,14 +6,14 @@ namespace VorodKhoroj.Application.Coordinators;
 ///     کلاس مایگریشن و اپدیت دستی دیتابیس بصورت نسخه ای
 /// </summary>
 /// <param name="migrationService"></param>
-/// <param name="dbConfiguration"></param>
-public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, AppDbContextConfiguration dbConfiguration)
+/// <param name="dbInitializer"></param>
+public class ManualMigrationServiceCoordinator(ManualMigrationService migrationService, DbContextInitializer dbInitializer)
 {
     /// <summary>
     ///     مایگریشن وجود ستون ایدی و در صورت نداشتن اضافه شود
     /// </summary>
     public void EnsureIdColumnExists()
     {
-        if (dbConfiguration.DbContext != null) migrationService.EnsureIdColumnExists(dbConfiguration.DbContext);
+        if (dbInitializer.DbContext != null) migrationService.EnsureIdColumnExists(dbInitializer.DbContext);
     }
 }

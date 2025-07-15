@@ -1,10 +1,7 @@
-﻿using VorodKhoroj.Application.Services;
-using VorodKhoroj.Domain.Interfaces;
-
-namespace VorodKhoroj.Application.Coordinators;
+﻿namespace VorodKhoroj.Application.Coordinators;
 
 // بارگذاری داده‌ها از فایل یا دیتابیس
-public class DataLoaderCoordinator(DataRepository dataRepository, AttendanceFileReader attendanceFileReader)
+public class DataLoaderCoordinator(UserRepository userRepository, IAttendanceFileReader attendanceTextFileReader)
 {
     public List<Attendance> Records { get; set; } = [];
     public IUserDataProvider? ListProvider { get; set; }
@@ -16,8 +13,8 @@ public class DataLoaderCoordinator(DataRepository dataRepository, AttendanceFile
     /// <param name="isListProvider">آیا ListProvider تنظیم شود</param>
     public void LoadFromFile(string fileName, bool isListProvider = true)
     {
-        Records = attendanceFileReader.GetRecordsFromFile(fileName);
-        ListProvider = isListProvider ? new FileProvider(dataRepository, Records) : null;
+        Records = attendanceTextFileReader.GetRecordsFromFile(fileName);
+        ListProvider = isListProvider ? new FileProvider(userRepository, Records) : null;
     }
 
     /// <summary>

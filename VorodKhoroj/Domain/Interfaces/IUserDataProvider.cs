@@ -29,7 +29,7 @@
     /// <param name="repository"></param>
     /// <param name="records"></param>
     //FileProvider:
-    public class FileProvider(DataRepository repository, List<Attendance> records) : IUserDataProvider
+    public class FileProvider(UserRepository repository, List<Attendance> records) : IUserDataProvider
     {
         public IList GetUserDataProvider()
         {

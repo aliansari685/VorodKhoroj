@@ -11,7 +11,7 @@ public partial class FrmReport : Form
         None, LateGrid, CalculateGrid
     }
     private readonly MainCoordinator _appCoordinator;
-    private readonly AttendanceFullCalculationService _calcServices;
+    private readonly AttendanceAnalyzer _calcServices;
 
     private readonly string _fromDateTime;
     private readonly string _toDateTime;
@@ -23,7 +23,7 @@ public partial class FrmReport : Form
     /// <summary>
     /// سازنده فرم محاسبه.
     /// </summary>
-    public FrmReport(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string fromDateTime,
+    public FrmReport(MainCoordinator mainCoordinator, AttendanceAnalyzer calcServices, string fromDateTime,
         string toDateTime, string userid)
     {
         InitializeComponent();

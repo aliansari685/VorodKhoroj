@@ -19,7 +19,7 @@ public partial class FrmFilter : Form
     /// <summary>
     ///     سرویس محاسبه کامل حضور و غیاب.
     /// </summary>
-    private readonly AttendanceFullCalculationService _calcServices;
+    private readonly AttendanceAnalyzer _calcServices;
 
     /// <summary>
     ///     مشخص می‌کند که فقط خروجی اکسل مورد نیاز
@@ -33,7 +33,7 @@ public partial class FrmFilter : Form
     /// <summary>
     ///     سازنده فرم فیلتر.
     /// </summary>
-    public FrmFilter(MainCoordinator service, AttendanceFullCalculationService calculationService, string fromDateTime,
+    public FrmFilter(MainCoordinator service, AttendanceAnalyzer calculationService, string fromDateTime,
         string toDateTime, string userid, FrmReport.XGridExport exportType = FrmReport.XGridExport.None)
     {
         InitializeComponent();

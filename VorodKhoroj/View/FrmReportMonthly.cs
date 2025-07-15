@@ -16,7 +16,7 @@ namespace VorodKhoroj.View
         /// <summary>
         /// سرویس محاسبات کامل حضور و غیاب
         /// </summary>
-        private readonly AttendanceFullCalculationService _calcServices;
+        private readonly AttendanceAnalyzer _calcServices;
 
         /// <summary>
         /// شناسه‌ی کاربر انتخاب شده
@@ -29,7 +29,7 @@ namespace VorodKhoroj.View
         /// <summary>
         /// سازنده فرم فیلتر ماهانه
         /// </summary>
-        public FrmFilterMonthly(MainCoordinator mainCoordinator, AttendanceFullCalculationService calcServices, string userId)
+        public FrmFilterMonthly(MainCoordinator mainCoordinator, AttendanceAnalyzer calcServices, string userId)
         {
             InitializeComponent();
             _appCoordinator = mainCoordinator;

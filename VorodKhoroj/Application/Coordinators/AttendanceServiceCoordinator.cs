@@ -1,15 +1,15 @@
-﻿using VorodKhoroj.Application.Services;
+﻿using VorodKhoroj.Infrastructure.Persistence;
 
 namespace VorodKhoroj.Application.Coordinators
 {
     // مدیریت عملیات مربوط به داده‌های Attendance با استفاده از Repository و DbContext
-    public class AttendanceServiceCoordinator(DataRepository repository, AppDbContextConfiguration dbConfiguration)
+    public class AttendanceServiceCoordinator(UserRepository repository, DbContextInitializer dbInitializer)
     {
         // کپی کردن لیستی از رکوردهای Attendance به دیتابیس
         public void CopyRecords(List<Attendance> recs)
         {
-            if (dbConfiguration.DbContext != null)
-                repository.AddAttendancesAndUsers(recs, dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null)
+                repository.AddAttendancesAndUsers(recs, dbInitializer.DbContext);
             else
                 throw new Exception("خطای دیتابیس");
         }
@@ -17,8 +17,8 @@ namespace VorodKhoroj.Application.Coordinators
         // افزودن لیستی از رکوردهای Attendance به دیتابیس
         public void AddAttendance(List<Attendance> rec)
         {
-            if (dbConfiguration.DbContext != null)
-                repository.AddAttendance(rec, dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null)
+                repository.AddAttendance(rec, dbInitializer.DbContext);
             else
                 throw new Exception("خطای دیتابیس");
         }
@@ -26,8 +26,8 @@ namespace VorodKhoroj.Application.Coordinators
         // به‌روزرسانی یک رکورد Attendance
         public void UpdateAttendance(Attendance rec)
         {
-            if (dbConfiguration.DbContext != null)
-                repository.UpdateAttendance([rec], dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null)
+                repository.UpdateAttendance([rec], dbInitializer.DbContext);
             else
                 throw new Exception("خطای دیتابیس");
         }
@@ -35,8 +35,8 @@ namespace VorodKhoroj.Application.Coordinators
         // حذف یک رکورد Attendance
         public void DeleteAttendance(Attendance rec)
         {
-            if (dbConfiguration.DbContext != null)
-                repository.DeleteAttendance([rec], dbConfiguration.DbContext);
+            if (dbInitializer.DbContext != null)
+                repository.DeleteAttendance([rec], dbInitializer.DbContext);
             else
                 throw new Exception("خطای دیتابیس");
         }
