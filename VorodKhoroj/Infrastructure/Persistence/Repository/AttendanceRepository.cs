@@ -1,7 +1,9 @@
 ﻿namespace VorodKhoroj.Infrastructure.Persistence.Repository
 {
-    public class AttendanceRepository
+    public class AttendanceRepository(AppDbContext context) //: IRepository<Attendance>
     {
+        private readonly AppDbContext _context = context;
+
         /// <summary>
         /// استخراج آرایه‌ی شناسه‌ی یکتای کاربران از لیست حضور و غیاب
         /// </summary>
@@ -16,8 +18,7 @@
         /// افزودن کاربران و حضور و غیاب آنها به دیتابیس با اجرای ایمن
         /// </summary>
         /// <param name="records">لیست رکوردهای حضور و غیاب</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void AddAttendancesWithUsers(List<Attendance> records, AppDbContext context)
+        public void AddAttendancesWithUsers(List<Attendance> records )
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -39,8 +40,7 @@
         /// افزودن لیست حضور و غیاب به دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void Add(List<Attendance> records, AppDbContext context)
+        public void Add(List<Attendance> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -53,8 +53,7 @@
         /// حذف لیست حضور و غیاب از دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void Delete(List<Attendance> records, AppDbContext context)
+        public void Delete(List<Attendance> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -67,8 +66,7 @@
         /// بروزرسانی لیست حضور و غیاب در دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void Update(List<Attendance> records, AppDbContext context)
+        public void Update(List<Attendance> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
