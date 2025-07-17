@@ -272,7 +272,7 @@ namespace VorodKhoroj.View
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
             };
-            _appCoordinator.AddAttendanceRecord([at]);
+            _appCoordinator.AttendanceServiceCoordinator.AddAttendance([at]);
             DataReloadOperation();
         }
 
@@ -281,14 +281,14 @@ namespace VorodKhoroj.View
         {
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
-            _appCoordinator.UpdateAttendanceRecord(attendances[index]);
+            _appCoordinator.AttendanceServiceCoordinator.UpdateAttendance(attendances[index]);
             DataReloadOperation();
         }
 
         //حذف رکورد
         private void DeleteAttendance(Attendance attendance)
         {
-            _appCoordinator.DeleteAttendanceRecord(attendance);
+            _appCoordinator.AttendanceServiceCoordinator.DeleteAttendance(attendance);
             DataReloadOperation();
         }
 

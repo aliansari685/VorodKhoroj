@@ -1,4 +1,6 @@
-﻿namespace VorodKhoroj.Domain.Interfaces
+﻿using VorodKhoroj.Infrastructure.Persistence.Repository;
+
+namespace VorodKhoroj.Domain.Interfaces
 {
     /// <summary>
     /// عملیات دریافت کربران از پروایدر های مشخص شده

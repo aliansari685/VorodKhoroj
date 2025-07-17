@@ -1,7 +1,7 @@
 ﻿namespace VorodKhoroj.Application.Coordinators;
 
 // بارگذاری داده‌ها از فایل یا دیتابیس
-public class DataLoaderCoordinator(UserRepository userRepository, IAttendanceFileReader attendanceTextFileReader)
+public class DataLoaderCoordinator(UserRepository userRepository, IAttendanceFileReader attendanceTextFileReader) : IDataLoader
 {
     public List<Attendance> Records { get; set; } = [];
     public IUserDataProvider? ListProvider { get; set; }

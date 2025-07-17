@@ -2,8 +2,8 @@
 
 public interface IRepository<T>
 {
-    void Add(T entity);
-    void Update(T entity);
-    void Remove(T entity);
+    void Add(List<T> entity);
+    void Update(List<T> entity);
+    void Remove(List<T> entity);
 
 }

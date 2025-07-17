@@ -1,14 +1,13 @@
-﻿namespace VorodKhoroj.Application.Services
+﻿namespace VorodKhoroj.Infrastructure.Persistence.Repository
 {
-    public class UserRepository
+    public class UserRepository(AppDbContext context) : IRepository<User>
     {
-       
+
         /// <summary>
         /// افزودن لیست کاربران به دیتابیس
         /// </summary>
         /// <param name="records">لیست کاربران</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void AddAttendanceUser(List<User> records, AppDbContext context)
+        public void Add(List<User> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -21,14 +20,18 @@
         /// بروزرسانی لیست کاربران در دیتابیس
         /// </summary>
         /// <param name="records">لیست کاربران</param>
-        /// <param name="context">کانتکست دیتابیس</param>
-        public void UpdateAttendanceUser(List<User> records, AppDbContext context)
+        public void Update(List<User> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
                 context.Users.UpdateRange(records);
                 _ = context.SaveChanges();
             });
+        }
+
+        public void Remove(List<User> entity)
+        {
+            throw new NotImplementedException("عملیات تعریف نشده");
         }
     }
 }

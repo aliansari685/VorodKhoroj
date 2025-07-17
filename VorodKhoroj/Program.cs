@@ -23,8 +23,11 @@ global using VorodKhoroj.Application.Coordinators;
 global using VorodKhoroj.Domain.Interfaces;
 global using System.Data.Common;
 global using VorodKhoroj.Domain;
-using VorodKhoroj.Infrastructure;
-using VorodKhoroj.Infrastructure.Persistence;
+global using VorodKhoroj.Infrastructure;
+global using VorodKhoroj.Infrastructure.Persistence;
+global using VorodKhoroj.Infrastructure.Persistence.Repository;
+global using VorodKhoroj.Infrastructure.Persistence.Migrations;
+global using VorodKhoroj.Infrastructure.Persistence;
 
 namespace VorodKhoroj
 {
@@ -87,9 +90,9 @@ namespace VorodKhoroj
                     services.AddScoped<IDbContextConfiguration, DbContextInitializer>();
 
                     // Services:
-                    services.AddSingleton<ManualMigrationService>();
+                    services.AddSingleton<DbStructureFixer>();
                     services.AddSingleton<UserRepository>();
-                    services.AddSingleton<DatabaseInitializerService>();
+                    services.AddSingleton<DatabaseInitializer>();
                     services.AddSingleton<IAttendanceFileReader, AttendanceTextFileReader>();
                     services.AddTransient<AttendanceAnalyzer>();
 

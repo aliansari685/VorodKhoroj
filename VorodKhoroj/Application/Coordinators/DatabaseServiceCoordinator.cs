@@ -2,7 +2,7 @@
 
 namespace VorodKhoroj.Application.Coordinators;
 
-public class DatabaseServiceCoordinator(DatabaseInitializerService databaseInitializerService, DbContextInitializer dbInitializer)
+public class DatabaseServiceCoordinator(DatabaseInitializer databaseInitializer, IDbContextConfiguration dbInitializer)
 {
     /// <summary>
     /// ایجاد دیتابیس جدید با مسیر و نام مشخص
@@ -10,7 +10,7 @@ public class DatabaseServiceCoordinator(DatabaseInitializerService databaseIniti
     public void CreateDatabase(string dbPath, string dbName)
     {
         if (dbInitializer.DbContextMaster != null)
-            databaseInitializerService.CreateDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
+            databaseInitializer.CreateDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -21,7 +21,7 @@ public class DatabaseServiceCoordinator(DatabaseInitializerService databaseIniti
     public void DetachDatabase(string dbPath, string dbName)
     {
         if (dbInitializer.DbContextMaster != null)
-            databaseInitializerService.DetachDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
+            databaseInitializer.DetachDatabase(dbPath, dbName, dbInitializer.DbContextMaster);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -32,7 +32,7 @@ public class DatabaseServiceCoordinator(DatabaseInitializerService databaseIniti
     public void CreateTables()
     {
         if (dbInitializer.DbContext != null)
-            databaseInitializerService.CreateTables(dbInitializer.DbContext);
+            databaseInitializer.CreateTables(dbInitializer.DbContext);
         else
             throw new Exception("خطای دیتابیس");
     }
@@ -43,7 +43,7 @@ public class DatabaseServiceCoordinator(DatabaseInitializerService databaseIniti
     public bool TestServerName(string server)
     {
         if (dbInitializer.DbContextMaster != null)
-            return databaseInitializerService.TestServerName(server, dbInitializer.DbContextMaster);
+            return databaseInitializer.TestServerName(server, dbInitializer.DbContextMaster);
 
         throw new Exception("خطای دیتابیس");
     }

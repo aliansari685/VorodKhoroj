@@ -3,7 +3,7 @@
     /// <summary>
     /// تنظمیات پایه و اولیه دیتابیس مثل ایجاد کردن
     /// </summary>
-    public class DatabaseInitializerService
+    public class DatabaseInitializer
     {
         /// <summary>
         /// ایجاد دیتابیس جدید با نام و مسیر مشخص

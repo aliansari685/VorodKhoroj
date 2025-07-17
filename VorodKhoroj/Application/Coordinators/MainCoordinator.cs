@@ -62,23 +62,6 @@
         /// </summary>
         public IUserDataProvider? UsersListProvider => DataLoaderCoordinator.ListProvider;
 
-        /// <summary>
-        /// بروزرسانی رکورد یک کاربر 
-        /// </summary>
-        public void UpdateUserRecord(User user)
-        {
-            UserServiceCoordinator.UpdateUser(user);
-            LoadRecordsFromDb();
-        }
-
-        /// <summary>
-        /// افزودن لیستی از کاربران جدید
-        /// </summary>
-        public void AddUserRecord(List<User> newUsers)
-        {
-            UserServiceCoordinator.AddUser(newUsers);
-            LoadRecordsFromDb();
-        }
 
 
         /// <summary>
@@ -112,37 +95,6 @@
         public bool TestServerName(string server) => DatabaseServiceCoordinator.TestServerName(server);
 
 
-        /// <summary>
-        /// بروزرسانی رکورد حضور و غیاب خاص
-        /// </summary>
-        public void UpdateAttendanceRecord(Attendance attendance)
-        {
-            AttendanceServiceCoordinator.UpdateAttendance(attendance);
-            LoadRecordsFromDb();
-        }
-
-        /// <summary>
-        /// کپی کردن لیست رکوردهای حضور و غیاب
-        /// </summary>
-        public void CopyAttendancesRecord(List<Attendance> records) => AttendanceServiceCoordinator.CopyRecords(records);
-
-        /// <summary>
-        /// افزودن رکوردهای جدید حضور و غیاب
-        /// </summary>
-        public void AddAttendanceRecord(List<Attendance> attendances)
-        {
-            AttendanceServiceCoordinator.AddAttendance(attendances);
-            LoadRecordsFromDb();
-        }
-
-        /// <summary>
-        /// حذف یک رکورد حضور و غیاب
-        /// </summary>
-        public void DeleteAttendanceRecord(Attendance attendances)
-        {
-            AttendanceServiceCoordinator.DeleteAttendance(attendances);
-            LoadRecordsFromDb();
-        }
 
         /// <summary>
         /// اطمینان از بروزرسانی ساختار دیتابیس و وجود ستون Id

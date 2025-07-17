@@ -1,7 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Infrastructure;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmAttendanceAddRange : Form
     {
@@ -101,7 +98,7 @@ namespace VorodKhoroj.View
                 .Where(a => !existingKeys.Contains((a.UserId, a.DateTime)))
                 .ToList();
 
-            _appCoordinator.AddAttendanceRecord(newRecords);
+            _appCoordinator.AttendanceServiceCoordinator.AddAttendance(newRecords);
             count = newRecords.Count;
         }
 
@@ -128,7 +125,7 @@ namespace VorodKhoroj.View
                 .Select(id => new User { UserId = id })
                 .ToList();
 
-            _appCoordinator.AddUserRecord(newUsers);
+            _appCoordinator.UserServiceCoordinator.AddUser(newUsers);
         }
         #endregion
     }

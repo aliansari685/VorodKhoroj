@@ -1,6 +1,6 @@
-﻿namespace VorodKhoroj.Application.Services
+﻿namespace VorodKhoroj.Infrastructure.Persistence.Migrations
 {
-    public class ManualMigrationService
+    public class DbStructureFixer
     {
         /// <summary>
         /// برای دیتابیس های قدیمی که ستون ایدی ندارن ستون ایدی با امنیت اطلاعات قدیمی اضافه میشود

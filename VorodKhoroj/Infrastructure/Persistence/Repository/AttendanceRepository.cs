@@ -1,9 +1,7 @@
 ﻿namespace VorodKhoroj.Infrastructure.Persistence.Repository
 {
-    public class AttendanceRepository(AppDbContext context) //: IRepository<Attendance>
+    public class AttendanceRepository(AppDbContext context) : IRepository<Attendance>
     {
-        private readonly AppDbContext _context = context;
-
         /// <summary>
         /// استخراج آرایه‌ی شناسه‌ی یکتای کاربران از لیست حضور و غیاب
         /// </summary>
@@ -18,7 +16,7 @@
         /// افزودن کاربران و حضور و غیاب آنها به دیتابیس با اجرای ایمن
         /// </summary>
         /// <param name="records">لیست رکوردهای حضور و غیاب</param>
-        public void AddAttendancesWithUsers(List<Attendance> records )
+        public void AddAttendancesWithUsers(List<Attendance> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -53,7 +51,7 @@
         /// حذف لیست حضور و غیاب از دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        public void Delete(List<Attendance> records)
+        public void Remove(List<Attendance> records)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
