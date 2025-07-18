@@ -1,14 +1,11 @@
-﻿using VorodKhoroj.Infrastructure.Persistence;
-using VorodKhoroj.Infrastructure.Persistence.Migrations;
-
-namespace VorodKhoroj.Application.Coordinators;
+﻿namespace VorodKhoroj.Application.Coordinators;
 
 /// <summary>
 ///     کلاس مایگریشن و اپدیت دستی دیتابیس بصورت نسخه ای
 /// </summary>
 /// <param name="migrationService"></param>
 /// <param name="dbInitializer"></param>
-public class ManualMigrationServiceCoordinator(DbStructureFixer migrationService, DbContextInitializer dbInitializer)
+public class DbStructureFixerCoordinator(DbStructureFixerEngine migrationService, IDbContextConfiguration dbInitializer) : IDbStructureFixer
 {
     /// <summary>
     ///     مایگریشن وجود ستون ایدی و در صورت نداشتن اضافه شود

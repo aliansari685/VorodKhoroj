@@ -1,6 +1,6 @@
 ﻿namespace VorodKhoroj.Infrastructure.Persistence.Repository
 {
-    public class AttendanceRepository(AppDbContext context) : IRepository<Attendance>
+    public class AttendanceRepository : IAttendanceRepository
     {
         /// <summary>
         /// استخراج آرایه‌ی شناسه‌ی یکتای کاربران از لیست حضور و غیاب
@@ -16,7 +16,8 @@
         /// افزودن کاربران و حضور و غیاب آنها به دیتابیس با اجرای ایمن
         /// </summary>
         /// <param name="records">لیست رکوردهای حضور و غیاب</param>
-        public void AddAttendancesWithUsers(List<Attendance> records)
+        /// <param name="dbContext"></param>
+        public void AddAttendancesWithUsers(List<Attendance> records, AppDbContext dbContext)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
@@ -24,13 +25,13 @@
                     .Select(id => new User { UserId = id })
                     .ToList();
 
-                context.Users.AddRange(users);
-                _ = context.SaveChanges();
+                dbContext.Users.AddRange(users);
+                _ = dbContext.SaveChanges();
 
-                context.Attendances.AddRange(records);
-                _ = context.SaveChanges();
+                dbContext.Attendances.AddRange(records);
+                _ = dbContext.SaveChanges();
 
-                context.Database.GetDbConnection().Close();
+                dbContext.Database.GetDbConnection().Close();
             });
         }
 
@@ -38,12 +39,13 @@
         /// افزودن لیست حضور و غیاب به دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        public void Add(List<Attendance> records)
+        /// <param name="dbContext"></param>
+        public void Add(List<Attendance> records, AppDbContext dbContext)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
-                context.Attendances.AddRange(records);
-                context.SaveChanges();
+                dbContext.Attendances.AddRange(records);
+                dbContext.SaveChanges();
             });
         }
 
@@ -51,12 +53,13 @@
         /// حذف لیست حضور و غیاب از دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        public void Remove(List<Attendance> records)
+        /// <param name="dbContext"></param>
+        public void Remove(List<Attendance> records, AppDbContext dbContext)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
-                context.Attendances.RemoveRange(records);
-                _ = context.SaveChanges();
+                dbContext.Attendances.RemoveRange(records);
+                _ = dbContext.SaveChanges();
             });
         }
 
@@ -64,12 +67,13 @@
         /// بروزرسانی لیست حضور و غیاب در دیتابیس
         /// </summary>
         /// <param name="records">لیست حضور و غیاب</param>
-        public void Update(List<Attendance> records)
+        /// <param name="dbContext"></param>
+        public void Update(List<Attendance> records, AppDbContext dbContext)
         {
             CommonHelper.ExecuteSafeQuery(() =>
             {
-                context.Attendances.UpdateRange(records);
-                _ = context.SaveChanges();
+                dbContext.Attendances.UpdateRange(records);
+                _ = dbContext.SaveChanges();
             });
         }
 

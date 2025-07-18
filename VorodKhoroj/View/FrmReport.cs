@@ -10,7 +10,7 @@ public partial class FrmReport : Form
     {
         None, LateGrid, CalculateGrid
     }
-    private readonly MainCoordinator _appCoordinator;
+    private readonly AppServices _appCoordinator;
     private readonly AttendanceAnalyzer _calcServices;
 
     private readonly string _fromDateTime;
@@ -23,11 +23,11 @@ public partial class FrmReport : Form
     /// <summary>
     /// سازنده فرم محاسبه.
     /// </summary>
-    public FrmReport(MainCoordinator mainCoordinator, AttendanceAnalyzer calcServices, string fromDateTime,
+    public FrmReport(AppServices appServices, AttendanceAnalyzer calcServices, string fromDateTime,
         string toDateTime, string userid)
     {
         InitializeComponent();
-        _appCoordinator = mainCoordinator;
+        _appCoordinator = appServices;
         _calcServices = calcServices;
         _fromDateTime = fromDateTime;
         _toDateTime = toDateTime;
@@ -114,9 +114,9 @@ public partial class FrmReport : Form
     /// </summary>
     public void Configure()
     {
-        userid_txtbox.DataSource = _appCoordinator.UsersList;
+        userid_txtbox.DataSource = _appCoordinator.DataLoaderCoordinator.UserList;
 
-        if (_appCoordinator.UsersListProvider is DbProvider)
+        if (_appCoordinator.DataLoaderCoordinator.ListProvider is DbProvider)
             CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
 
         ReloadGrid();
@@ -181,16 +181,16 @@ public partial class FrmReport : Form
     {
         try
         {
-            if (_appCoordinator is { UsersList: null }) return;
+            if (_appCoordinator is { DataLoaderCoordinator.UserList: null }) return;
 
             List<int> users = [];
             switch (_appCoordinator)
             {
-                case { UsersListProvider: DbProvider, DbContextConfiguration.DbContext: not null }:
-                    users.AddRange((_appCoordinator.UsersList as List<User> ?? []).Select(u => u.UserId));
+                case { DataLoaderCoordinator.ListProvider: DbProvider, DbContextConfiguration.DbContext: not null }:
+                    users.AddRange((_appCoordinator.DataLoaderCoordinator.UserList as List<User> ?? []).Select(u => u.UserId));
                     break;
-                case { UsersListProvider: FileProvider }:
-                    users = (_appCoordinator.UsersList as int[])?.ToList() ?? [];
+                case { DataLoaderCoordinator.ListProvider: FileProvider }:
+                    users = (_appCoordinator.DataLoaderCoordinator.UserList as int[])?.ToList() ?? [];
                     break;
             }
 
@@ -239,10 +239,10 @@ public partial class FrmReport : Form
         try
         {
             //بررسی منبع دریافت کاربران 
-            if (_appCoordinator is { UsersListProvider: FileProvider })
+            if (_appCoordinator is { DataLoaderCoordinator.ListProvider: FileProvider })
                 _username = userid_txtbox.Text = _userid;
             else
-                userid_txtbox.Text = _username = (_appCoordinator.UsersList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
+                userid_txtbox.Text = _username = (_appCoordinator.DataLoaderCoordinator.UserList as List<User>)!.First(x => x.UserId == int.Parse(_userid)).Name;
 
             dataView_Calculate.DataSource = _calcServices
                 .Calculate(_userid, _fromDateTime, _toDateTime, checkBox_AutoEdit.Checked)

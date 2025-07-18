@@ -1,13 +1,10 @@
-﻿
-using VorodKhoroj.Infrastructure;
-
-namespace VorodKhoroj.Application.Services;
+﻿namespace VorodKhoroj.Application.Services;
 
 /// <summary>
 ///     سرویس محاسبه کامل حضور و غیاب بر اساس بازه تاریخی و کاربر مشخص.
 ///     از ساختار Fluent برای تنظیم مقادیر پیش‌فرض استفاده می‌کند.
 /// </summary>
-public class AttendanceAnalyzer(MainCoordinator recordService)
+public class AttendanceAnalyzer(AppServices appServices)
 {
     public AttendanceReport? Report { get; private set; }
 
@@ -92,7 +89,7 @@ public class AttendanceAnalyzer(MainCoordinator recordService)
     {
         if (Validation.IsValid(userId) == false) userId = "0";
         var filtered = AttendanceRecordFilter
-            .ApplyFilter(recordService.AttendancesList, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
+            .ApplyFilter(appServices.DataLoaderCoordinator.AttendancesRecords, fromDateTime, toDateTime, int.Parse(userId)).ToArray();
         if (filtered.Length == 0) return [];
 
         // دریافت روزهای کاری فروردین (تقویم شمسی)

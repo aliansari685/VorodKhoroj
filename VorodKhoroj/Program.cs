@@ -27,7 +27,10 @@ global using VorodKhoroj.Infrastructure;
 global using VorodKhoroj.Infrastructure.Persistence;
 global using VorodKhoroj.Infrastructure.Persistence.Repository;
 global using VorodKhoroj.Infrastructure.Persistence.Migrations;
-global using VorodKhoroj.Infrastructure.Persistence;
+global using VorodKhoroj.Application;
+global using VorodKhoroj.Infrastructure.UserProvider;
+
+
 
 namespace VorodKhoroj
 {
@@ -79,20 +82,22 @@ namespace VorodKhoroj
             Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) =>
                 {
-                    // Coordinators:
-                    services.AddSingleton<ManualMigrationServiceCoordinator>();
-                    services.AddSingleton<DatabaseServiceCoordinator>();
-                    services.AddSingleton<AttendanceServiceCoordinator>();
-                    services.AddSingleton<DataLoaderCoordinator>();
-                    services.AddSingleton<UserServiceCoordinator>();
-                    services.AddSingleton<MainCoordinator>();
+                    // Coordinator And Service:
+                    services.AddSingleton<IDbStructureFixer, DbStructureFixerCoordinator>();
+                    services.AddSingleton<IDataBaseInitializer, DataBaseInitializerCoordinator>();
+                    services.AddSingleton<IAttendanceDataService, AttendanceDataService>();
+                    services.AddSingleton<IDataLoader, DataLoaderCoordinator>();
+                    services.AddSingleton<IUserDataService, UserDataService>();
+
+                    services.AddSingleton<AppServices>();
 
                     services.AddScoped<IDbContextConfiguration, DbContextInitializer>();
 
-                    // Services:
-                    services.AddSingleton<DbStructureFixer>();
-                    services.AddSingleton<UserRepository>();
-                    services.AddSingleton<DatabaseInitializer>();
+                    services.AddSingleton<DbStructureFixerEngine>();
+                    services.AddSingleton<IRepository<User>, UserRepository>();
+                    services.AddSingleton<IRepository<Attendance>, AttendanceRepository>();
+                    services.AddSingleton<IAttendanceRepository, AttendanceRepository>();
+                    services.AddSingleton<IDataBaseEngine, DataBaseEngine>();
                     services.AddSingleton<IAttendanceFileReader, AttendanceTextFileReader>();
                     services.AddTransient<AttendanceAnalyzer>();
 

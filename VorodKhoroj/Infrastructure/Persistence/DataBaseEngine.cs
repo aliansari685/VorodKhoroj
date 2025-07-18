@@ -3,15 +3,14 @@
     /// <summary>
     /// تنظمیات پایه و اولیه دیتابیس مثل ایجاد کردن
     /// </summary>
-    public class DatabaseInitializer
+    public class DataBaseEngine(IDbContextConfiguration contextConfiguration) : IDataBaseEngine
     {
         /// <summary>
         /// ایجاد دیتابیس جدید با نام و مسیر مشخص
         /// </summary>
         /// <param name="filePath">مسیر فایل دیتابیس (mdf)</param>
         /// <param name="dbname">نام دیتابیس</param>
-        /// <param name="dbContext">کانتکست دیتابیس</param>
-        public void CreateDatabase(string filePath, string dbname, AppDbContext dbContext)
+        public void CreateDatabase(string filePath, string dbname)
         {
             string createDbQuery = $@"
                               CREATE DATABASE {dbname}
@@ -20,14 +19,13 @@
                                   FILENAME = '{filePath}',
                                   SIZE = 5MB );";
 
-            dbContext.Database.ExecuteSqlRaw(createDbQuery);
+            contextConfiguration.DbContextMaster?.Database.ExecuteSqlRaw(createDbQuery);
         }
 
         /// <summary>
         /// ایجاد جداول دیتابیس در صورت عدم وجود
         /// </summary>
-        /// <param name="dbContext">کانتکست دیتابیس</param>
-        public void CreateTables(AppDbContext dbContext) => dbContext.Database.EnsureCreated();
+        public void CreateTables() => contextConfiguration.DbContext?.Database.EnsureCreated();
 
 
         /// <summary>
@@ -35,8 +33,7 @@
         /// </summary>
         /// <param name="dbPathName">نام یا مسیر دیتابیس برای شناسایی session ها</param>
         /// <param name="dbName">نام دیتابیس</param>
-        /// <param name="dbContext">کانتکست دیتابیس</param>
-        public void DetachDatabase(string dbPathName, string dbName, AppDbContext dbContext)
+        public void DetachDatabase(string dbPathName, string dbName)
         {
             try
             {
@@ -47,17 +44,17 @@
             WHERE database_id = DB_ID('{dbName}');
             EXEC(@kill);";
 
-                dbContext.Database.ExecuteSqlRaw(killQuery);
+                contextConfiguration.DbContextMaster?.Database.ExecuteSqlRaw(killQuery);
 
                 var qur = $@" DECLARE @kill VARCHAR(MAX) = '';
                           SELECT @kill = @kill + 'KILL ' + CAST(session_id AS VARCHAR(5)) + ';'
                           FROM sys.dm_exec_sessions
                           WHERE database_id = DB_ID('{dbPathName}');
                           EXEC(@kill);";
-                dbContext.Database.ExecuteSqlRaw(qur);
+                contextConfiguration.DbContextMaster?.Database.ExecuteSqlRaw(qur);
 
                 var detachDbQuery = $"EXEC sp_detach_db '{dbName}', 'true';";
-                dbContext.Database.ExecuteSqlRaw(detachDbQuery);
+                contextConfiguration.DbContextMaster?.Database.ExecuteSqlRaw(detachDbQuery);
             }
             catch (Exception ex)
             {
@@ -66,13 +63,14 @@
         }
         /// <summary>
         /// تست ارتباط با سرور SQL
+        /// <param name="server">نام سرور اس کیو ال</param>
         /// </summary>
-        public bool TestServerName(string server, AppDbContext dbContextMaster)
+        public bool TestServerConnection(string server)
         {
             try
             {
-                _ = dbContextMaster.Database.ExecuteSql($"SELECT 1");
-                return dbContextMaster.Database.CanConnect();
+                _ = contextConfiguration.DbContextMaster?.Database.ExecuteSql($"SELECT 1");
+                return contextConfiguration.DbContextMaster!.Database.CanConnect();
             }
             catch
             {

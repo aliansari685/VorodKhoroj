@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Domain.Interfaces;
+﻿using VorodKhoroj.Infrastructure.UserProvider;
 
 namespace VorodKhoroj.View
 {
@@ -9,13 +7,13 @@ namespace VorodKhoroj.View
     /// </summary>
     public partial class FrmSetSource : Form
     {
-        private readonly MainCoordinator _appCoordinator;
+        private readonly AppServices _appCoordinator;
         private readonly CommonItems _cm = new();
 
-        public FrmSetSource(MainCoordinator mainCoordinator)
+        public FrmSetSource(AppServices appServices)
         {
             InitializeComponent();
-            _appCoordinator = mainCoordinator;
+            _appCoordinator = appServices;
         }
 
         #region Events
@@ -70,7 +68,7 @@ namespace VorodKhoroj.View
             using var openFile = CommonItems.CreateOpenFileDialog("Output Files|*.txt;*.dat;");
             if (openFile.ShowDialog() == DialogResult.OK)
             {
-                _appCoordinator.LoadRecordsFromFile(openFile.FileName);
+                _appCoordinator.DataLoaderCoordinator.LoadFromFile(openFile.FileName);
 
                 CommonHelper.ShowMessage("با موفقیت بارگذاری شد");
                 Close();
@@ -82,7 +80,9 @@ namespace VorodKhoroj.View
         /// </summary>
         private void HandleDatabaseSource()
         {
-            if (_appCoordinator is { UsersListProvider: DbProvider })
+            //TODO: please check problem for connect to db:
+
+            if (_appCoordinator is { DataLoaderCoordinator.ListProvider: DbProvider })
                 throw new InvalidOperationException("لطفا ارتباط قبلی را قطع کنید (با استفاده از راه‌اندازی مجدد)");
 
             if (!Validation.IsValid(txt_ServerName.Text))
@@ -90,7 +90,7 @@ namespace VorodKhoroj.View
 
             _appCoordinator.DbContextConfiguration.InitializeDbContextMaster(txt_ServerName.Text);
 
-            if (!_appCoordinator.TestServerName(txt_ServerName.Text))
+            if (!_appCoordinator.DataBaseInitializerCoordinator.TestServerName(txt_ServerName.Text))
                 throw new ArgumentNullException($"خطا در نام سرور پایگاه داده");
 
             using var openFile = CommonItems.CreateOpenFileDialog("DB Files|*.mdf");
@@ -98,11 +98,11 @@ namespace VorodKhoroj.View
             {
                 string dbPath = openFile.FileName;
 
-                _appCoordinator.SetDbPath(dbPath);
-                _appCoordinator.SetDbName(dbPath);
-                _appCoordinator.DbContextConfiguration.InitializeDbContext(txt_ServerName.Text, _appCoordinator.DbPathName, _appCoordinator.DbName, Enums.DataBaseLocation.AttachDbFilename);
-                _appCoordinator.MigrationsEnsureDatabaseUpToDate();
-                _appCoordinator.LoadRecordsFromDb();
+                _appCoordinator.DataBaseInitializerCoordinator.SetDbPath(dbPath);
+                _appCoordinator.DataBaseInitializerCoordinator.SetDbName(dbPath);
+                _appCoordinator.DbContextConfiguration.InitializeDbContext(txt_ServerName.Text, _appCoordinator.DataBaseInitializerCoordinator.DbPathName, _appCoordinator.DataBaseInitializerCoordinator.DbName, Enums.DataBaseLocation.AttachDbFilename);
+                _appCoordinator.MigrationServiceCoordinator.EnsureIdColumnExists();
+                _appCoordinator.DataLoaderCoordinator.LoadFromDb();
 
                 CommonHelper.ShowMessage("با موفقیت بارگذاری شد");
                 Close();

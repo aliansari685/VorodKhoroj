@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 /// <summary>
 /// فرم مدیریت کاربران (ویرایش نام کاربران ثبت‌شده).
@@ -10,16 +8,16 @@ public partial class FrmUsers : Form
     /// <summary>
     /// هماهنگ‌کننده اصلی برنامه برای دسترسی به دیتابیس و لیست کاربران.
     /// </summary>
-    private readonly MainCoordinator _appCoordinator;
+    private readonly AppServices _appCoordinator;
 
     /// <summary>
     /// سازنده فرم مدیریت کاربران.
     /// </summary>
-    /// <param name="mainCoordinator">هماهنگ‌کننده اصلی برنامه</param>
-    public FrmUsers(MainCoordinator mainCoordinator)
+    /// <param name="appServices">هماهنگ‌کننده اصلی برنامه</param>
+    public FrmUsers(AppServices appServices)
     {
         InitializeComponent();
-        _appCoordinator = mainCoordinator;
+        _appCoordinator = appServices;
     }
 
     #region Events
@@ -47,10 +45,10 @@ public partial class FrmUsers : Form
                 return;
 
             var userId = int.Parse(Userid_txtbox.Text);
-            var user = ((List<User>)_appCoordinator.UsersList!).First(x => x.UserId == userId);
+            var user = ((List<User>)_appCoordinator.DataLoaderCoordinator.UserList).First(x => x.UserId == userId);
             user.Name = UserName_txtbox.Text;
 
-            _appCoordinator.UpdateUserRecord(user);
+            _appCoordinator.UserDataService.UpdateUser(user);
 
             RefreshUserGrid();
             CommonHelper.ShowMessage("انجام شد");
@@ -71,7 +69,7 @@ public partial class FrmUsers : Form
         try
         {
             var userId = int.Parse(Userid_txtbox.Text);
-            var user = ((List<User>)_appCoordinator.UsersList!).First(x => x.UserId == userId);
+            var user = ((List<User>)_appCoordinator.DataLoaderCoordinator.UserList).First(x => x.UserId == userId);
             UserName_txtbox.Text = user.Name;
         }
         catch (Exception ex)
@@ -89,7 +87,7 @@ public partial class FrmUsers : Form
     private void RefreshUserGrid()
     {
         UserName_txtbox.Text = null;
-        var userList = _appCoordinator.UsersList;
+        var userList = _appCoordinator.DataLoaderCoordinator.UserList;
         dataView_User.DataSource = userList;
         Userid_txtbox.DataSource = userList;
     }

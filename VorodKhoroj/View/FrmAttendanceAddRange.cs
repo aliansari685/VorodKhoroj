@@ -7,7 +7,7 @@
         /// <summary>
         /// هماهنگ‌کننده‌ی اصلی برنامه برای ارتباط بین لایه‌ها
         /// </summary>
-        private readonly MainCoordinator _appCoordinator;
+        private readonly AppServices _appCoordinator;
 
         #endregion
 
@@ -16,11 +16,11 @@
         /// <summary>
         /// سازنده‌ی فرم و مقداردهی اولیه هماهنگ‌کننده‌ی برنامه
         /// </summary>
-        /// <param name="mainCoordinator">هماهنگ‌کننده‌ی برنامه</param>
-        public FrmAttendanceAddRange(MainCoordinator mainCoordinator)
+        /// <param name="appServices">هماهنگ‌کننده‌ی برنامه</param>
+        public FrmAttendanceAddRange(AppServices appServices)
         {
             InitializeComponent();
-            _appCoordinator = mainCoordinator;
+            _appCoordinator = appServices;
         }
 
         /// <summary>
@@ -49,9 +49,9 @@
 
                 await Task.Run(() =>
                 {
-                    _appCoordinator.LoadRecordsFromFile(openFile.FileName, false);
+                    _appCoordinator.DataLoaderCoordinator.LoadFromFile(openFile.FileName, false);
 
-                    var attendanceList = _appCoordinator.AttendancesList;
+                    var attendanceList = _appCoordinator.DataLoaderCoordinator.AttendancesRecords;
 
                     var filtered = AttendanceRecordFilter.ApplyFilter(attendanceList, FromDateTime_txtbox.Text,
                         toDateTime_txtbox.Text, 0).ToList();
@@ -87,7 +87,7 @@
         private void AddOtherAttendances(List<Attendance> filtered, out int count)
         {
             // هش ست خیلی پرسرعت برای جستجو
-            var existingKeys = _appCoordinator.AttendancesList
+            var existingKeys = _appCoordinator.DataLoaderCoordinator.AttendancesRecords
                 .Select(a => new { a.UserId, a.DateTime })
                 .ToList()
                 .Select(x => (x.UserId, x.DateTime))
@@ -98,7 +98,7 @@
                 .Where(a => !existingKeys.Contains((a.UserId, a.DateTime)))
                 .ToList();
 
-            _appCoordinator.AttendanceServiceCoordinator.AddAttendance(newRecords);
+            _appCoordinator.AttendanceDataService.AddAttendance(newRecords);
             count = newRecords.Count;
         }
 
@@ -109,7 +109,8 @@
         private void AddOtherUsers(List<Attendance> filtered)
         {
             // کاربران موجود در دیتابیس
-            var existingUsers = ((List<User>)_appCoordinator.UsersList! ?? throw new InvalidOperationException("خطای داخلی"))
+
+            var existingUsers = ((List<User>)_appCoordinator.DataLoaderCoordinator.UserList ?? throw new InvalidOperationException("خطای داخلی"))
                 .Select(u => u.UserId)
                 .ToHashSet();
 
@@ -125,7 +126,8 @@
                 .Select(id => new User { UserId = id })
                 .ToList();
 
-            _appCoordinator.UserServiceCoordinator.AddUser(newUsers);
+            _appCoordinator.UserDataService.AddUser(newUsers);
+
         }
         #endregion
     }

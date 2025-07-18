@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Infrastructure;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmAttendance : Form
     {
@@ -9,20 +7,20 @@ namespace VorodKhoroj.View
         private readonly TimeSpan _lastArrivalTime = TimeSpan.Parse("12:00:00");
         private string _user = "";
         private string _datetime = "";
-        private readonly MainCoordinator _appCoordinator;
+        private readonly AppServices _appCoordinator;
         private readonly AttendanceAnalyzer _calcService;
 
         // لیست موقت رکوردهای کاری پس از محاسبه (برای نمایش در دیتاگرید)
         private List<WorkRecord> _tempRecords = [];
 
         // لیست موقت حضور و غیاب که از Coordinator گرفته می‌شود
-        private List<Attendance> TempRecordsAttendances => _appCoordinator.AttendancesList;
+        private List<Attendance> TempRecordsAttendances => _appCoordinator.DataLoaderCoordinator.AttendancesRecords;
 
         // لیست موقت رکوردهای حضور و غیاب (استفاده در پردازش و ویرایش)
         private List<Attendance> _tempAttendances = [];
         #endregion
 
-        public FrmAttendance(MainCoordinator service, AttendanceAnalyzer calcServices)
+        public FrmAttendance(AppServices service, AttendanceAnalyzer calcServices)
         {
             InitializeComponent();
             _appCoordinator = service;
@@ -34,7 +32,7 @@ namespace VorodKhoroj.View
         {
             DataGridConfig(PersianDateHelper.PersianCalenderDateNow());
 
-            Userid_txtbox.DataSource = _appCoordinator.UsersList;
+            Userid_txtbox.DataSource = _appCoordinator.DataLoaderCoordinator.UserList;
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
         }
 
@@ -272,7 +270,7 @@ namespace VorodKhoroj.View
                 LoginType = attendances[index].LoginType,
                 UserId = attendances[index].UserId
             };
-            _appCoordinator.AttendanceServiceCoordinator.AddAttendance([at]);
+            _appCoordinator.AttendanceDataService.AddAttendance([at]);
             DataReloadOperation();
         }
 
@@ -281,14 +279,14 @@ namespace VorodKhoroj.View
         {
             var newDateTime = attendances[index].DateTime.Date + tm;
             attendances[index].DateTime = newDateTime;
-            _appCoordinator.AttendanceServiceCoordinator.UpdateAttendance(attendances[index]);
+            _appCoordinator.AttendanceDataService.UpdateAttendance(attendances[index]);
             DataReloadOperation();
         }
 
         //حذف رکورد
         private void DeleteAttendance(Attendance attendance)
         {
-            _appCoordinator.AttendanceServiceCoordinator.DeleteAttendance(attendance);
+            _appCoordinator.AttendanceDataService.DeleteAttendance(attendance);
             DataReloadOperation();
         }
 

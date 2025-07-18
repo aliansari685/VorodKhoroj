@@ -1,8 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
-using VorodKhoroj.Domain.Interfaces;
-
-namespace VorodKhoroj.View
+﻿namespace VorodKhoroj.View
 {
     public partial class FrmFilterMonthly : Form
     {
@@ -11,7 +7,7 @@ namespace VorodKhoroj.View
         /// <summary>
         /// هماهنگ‌کننده‌ی اصلی برنامه برای مدیریت کاربران
         /// </summary>
-        private readonly MainCoordinator _appCoordinator;
+        private readonly AppServices _appCoordinator;
 
         /// <summary>
         /// سرویس محاسبات کامل حضور و غیاب
@@ -29,10 +25,10 @@ namespace VorodKhoroj.View
         /// <summary>
         /// سازنده فرم فیلتر ماهانه
         /// </summary>
-        public FrmFilterMonthly(MainCoordinator mainCoordinator, AttendanceAnalyzer calcServices, string userId)
+        public FrmFilterMonthly(AppServices appServices, AttendanceAnalyzer calcServices, string userId)
         {
             InitializeComponent();
-            _appCoordinator = mainCoordinator;
+            _appCoordinator = appServices;
             _calcServices = calcServices;
             _userId = userId;
         }
@@ -42,9 +38,9 @@ namespace VorodKhoroj.View
         /// </summary>
         private void FrmFilter_Monthly_Load(object sender, EventArgs e)
         {
-            userid_txtbox.DataSource = _appCoordinator.UsersList;
+            userid_txtbox.DataSource = _appCoordinator.DataLoaderCoordinator.UserList;
 
-            if (_appCoordinator is { UsersListProvider: DbProvider })
+            if (_appCoordinator is { DataLoaderCoordinator.ListProvider: DbProvider })
                 CommonItems.SetDisplayAndValueMemberComboBox(ref userid_txtbox);
         }
 
@@ -121,7 +117,7 @@ namespace VorodKhoroj.View
         /// </summary>
         private async Task ExportForAllUsersAsync(string fileName, List<int> monthList)
         {
-            var userList = _appCoordinator.UsersList ?? throw new NullReferenceException("شی خالی است");
+            var userList = _appCoordinator.DataLoaderCoordinator.UserList ?? throw new NullReferenceException("شی خالی است");
 
             var directory = Path.GetDirectoryName(fileName);
             var baseName = Path.GetFileNameWithoutExtension(fileName);

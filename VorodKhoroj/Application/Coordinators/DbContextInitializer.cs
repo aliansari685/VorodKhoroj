@@ -1,11 +1,11 @@
-﻿namespace VorodKhoroj.Infrastructure.Persistence;
+﻿namespace VorodKhoroj.Application.Coordinators;
 
 public class DbContextInitializer : IDbContextConfiguration
 {
     /// <summary>
     /// کانتکست  مرکزی برای فراخوانی
     /// </summary>
-    public AppDbContext? DbContext { get; private set; }
+    public AppDbContext? DbContext { get; private set; } 
 
     /// <summary>
     /// کانتکست مستر مرکزی برای فراخوانی

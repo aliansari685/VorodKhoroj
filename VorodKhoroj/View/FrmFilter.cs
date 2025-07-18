@@ -1,8 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-using VorodKhoroj.Application.Services;
-using VorodKhoroj.Domain.Interfaces;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 /// <summary>
 ///     فرم فیلتر داده‌ها جهت نمایش گزارش ورود و خروج.
@@ -14,7 +10,7 @@ public partial class FrmFilter : Form
     /// <summary>
     ///     هماهنگ‌کننده اصلی برای دسترسی به داده‌ها و کاربران.
     /// </summary>
-    private readonly MainCoordinator _appCoordinator;
+    private readonly AppServices _appCoordinator;
 
     /// <summary>
     ///     سرویس محاسبه کامل حضور و غیاب.
@@ -33,7 +29,7 @@ public partial class FrmFilter : Form
     /// <summary>
     ///     سازنده فرم فیلتر.
     /// </summary>
-    public FrmFilter(MainCoordinator service, AttendanceAnalyzer calculationService, string fromDateTime,
+    public FrmFilter(AppServices service, AttendanceAnalyzer calculationService, string fromDateTime,
         string toDateTime, string userid, FrmReport.XGridExport exportType = FrmReport.XGridExport.None)
     {
         InitializeComponent();
@@ -82,9 +78,9 @@ public partial class FrmFilter : Form
     /// </summary>
     private void FrmFilter_Load(object sender, EventArgs e)
     {
-        Userid_txtbox.DataSource = _appCoordinator.UsersList;
+        Userid_txtbox.DataSource = _appCoordinator.DataLoaderCoordinator.UserList;
 
-        if (_appCoordinator is { UsersListProvider: DbProvider })
+        if (_appCoordinator.DataLoaderCoordinator.ListProvider is DbProvider)
             CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
     }
 

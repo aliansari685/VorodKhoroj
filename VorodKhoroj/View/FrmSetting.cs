@@ -1,6 +1,4 @@
-﻿using VorodKhoroj.Application.Coordinators;
-
-namespace VorodKhoroj.View;
+﻿namespace VorodKhoroj.View;
 
 /// <summary>
 /// فرم تنظیمات دیتابیس برای تست اتصال و ایجاد دیتابیس جدید.
@@ -15,7 +13,7 @@ public partial class FrmSetting : Form
     /// <summary>
     /// هماهنگ‌کننده اصلی برنامه 
     /// </summary>
-    private readonly MainCoordinator _appCoordinator;
+    private readonly AppServices _appCoordinator;
 
     /// <summary>
     /// آیتم‌های مشترک فرم
@@ -25,11 +23,11 @@ public partial class FrmSetting : Form
     /// <summary>
     /// سازنده فرم تنظیمات.
     /// </summary>
-    /// <param name="mainCoordinator">هماهنگ‌کننده برنامه</param>
-    public FrmSetting(MainCoordinator mainCoordinator)
+    /// <param name="appServices">هماهنگ‌کننده برنامه</param>
+    public FrmSetting(AppServices appServices)
     {
         InitializeComponent();
-        _appCoordinator = mainCoordinator;
+        _appCoordinator = appServices;
     }
 
     #region Events
@@ -53,7 +51,7 @@ public partial class FrmSetting : Form
         {
             _appCoordinator.DbContextConfiguration.InitializeDbContextMaster(txt_ServerName.Text);
 
-            if (_appCoordinator.TestServerName(txt_ServerName.Text) == false)
+            if (_appCoordinator.DataBaseInitializerCoordinator.TestServerName(txt_ServerName.Text) == false)
             {
                 throw new NullReferenceException("ارتباط برقرار نشد");
             }
@@ -125,13 +123,13 @@ public partial class FrmSetting : Form
     {
         return Task.Run(() =>
         {
-            _appCoordinator.SetDbName(dbFilePath);
-            _appCoordinator.SetDbPath(dbFilePath);
-            _appCoordinator.HandleCreateDatabase();
-            _appCoordinator.DbContextConfiguration.InitializeDbContext(serverName, _appCoordinator.DbPathName, _appCoordinator.DbName, Enums.DataBaseLocation.InternalDataBase);
-            _appCoordinator.HandleCreateTables();
-            _appCoordinator.CopyAttendancesRecord(_appCoordinator.AttendancesList);
-            _appCoordinator.HandleDetachDatabase();
+            _appCoordinator.DataBaseInitializerCoordinator.SetDbName(dbFilePath);
+            _appCoordinator.DataBaseInitializerCoordinator.SetDbPath(dbFilePath);
+            _appCoordinator.DataBaseInitializerCoordinator.CreateTables();
+            _appCoordinator.DbContextConfiguration.InitializeDbContext(serverName, _appCoordinator.DataBaseInitializerCoordinator.DbPathName, _appCoordinator.DataBaseInitializerCoordinator.DbName, Enums.DataBaseLocation.InternalDataBase);
+            _appCoordinator.DataBaseInitializerCoordinator.CreateTables();
+            _appCoordinator.AttendanceDataService.CopyRecords(_appCoordinator.DataLoaderCoordinator.AttendancesRecords);
+            _appCoordinator.DataBaseInitializerCoordinator.DetachDatabase();
         });
     }
 

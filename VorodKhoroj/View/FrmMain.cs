@@ -1,7 +1,4 @@
-﻿
-using VorodKhoroj.Infrastructure;
-
-namespace VorodKhoroj
+﻿namespace VorodKhoroj
 {
     public partial class FrmMain : Form
     {
@@ -15,7 +12,7 @@ namespace VorodKhoroj
         /// <summary>
         /// هماهنگ‌کننده‌ی اصلی برنامه برای مدیریت داده‌ها
         /// </summary>
-        private readonly MainCoordinator _appCoordinator;
+        private readonly AppServices _appCoordinator;
 
         /// <summary>
         /// سرویس محاسبه‌ی کامل حضور و غیاب
@@ -24,10 +21,10 @@ namespace VorodKhoroj
 
         #endregion
 
-        public FrmMain(MainCoordinator mainCoordinator, AttendanceAnalyzer calculationService)
+        public FrmMain(AppServices appServices, AttendanceAnalyzer calculationService)
         {
             InitializeComponent();
-            _appCoordinator = mainCoordinator;
+            _appCoordinator = appServices;
             _calcServices = calculationService;
         }
         private void Frm_Main_Load(object sender, EventArgs e) => TextBoxClear();
@@ -38,12 +35,12 @@ namespace VorodKhoroj
         /// </summary>
         public void DataGridConfig()
         {
-            if (!Validation.IsValid(_appCoordinator.AttendancesList.Count)) return;
+            if (!Validation.IsValid(_appCoordinator.DataLoaderCoordinator.AttendancesRecords.Count)) return;
 
-            dataView.DataSource = _appCoordinator.AttendancesList.ToDataTableWithDisplayedName();
-            Userid_txtbox.DataSource = _appCoordinator.UsersList;
+            dataView.DataSource = _appCoordinator.DataLoaderCoordinator.AttendancesRecords.ToDataTableWithDisplayedName();
+            Userid_txtbox.DataSource = _appCoordinator.DataLoaderCoordinator.UserList;
 
-            if (_appCoordinator is { UsersListProvider: DbProvider })
+            if (_appCoordinator.DataLoaderCoordinator.ListProvider is DbProvider)
                 CommonItems.SetDisplayAndValueMemberComboBox(ref Userid_txtbox);
 
             DataGridViewConfig();
@@ -84,11 +81,11 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.DataLoaderCoordinator.AttendancesRecords.Count))
                     throw new NullReferenceException("داده ای وجود ندارد");
 
                 var filtered = AttendanceRecordFilter.ApplyFilter(
-                    _appCoordinator.AttendancesList,
+                    _appCoordinator.DataLoaderCoordinator.AttendancesRecords,
                     FromDateTime_txtbox.Text,
                     toDateTime_txtbox.Text,
                     int.Parse(CommonItems.GetUserIdValueToString(Userid_txtbox))
@@ -125,7 +122,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.DataLoaderCoordinator.AttendancesRecords.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text);
@@ -147,7 +144,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.DataLoaderCoordinator.AttendancesRecords.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 var date = $"{PersianDateHelper.PersianCalendar.GetYear(DateTime.Now)}/{PersianDateHelper.PersianCalendar.GetMonth(DateTime.Now):D2}/{(PersianDateHelper.PersianCalendar.GetDayOfMonth(DateTime.Now) - 1):D2}";
@@ -197,7 +194,7 @@ namespace VorodKhoroj
 
         private void UsersEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { UsersListProvider: DbProvider, DbContextConfiguration.DbContext: not null })
+            if (_appCoordinator is { DataLoaderCoordinator.ListProvider: DbProvider, DbContextConfiguration.DbContext: not null })
             {
                 using var frm = new FrmUsers(_appCoordinator);
                 frm.ShowDialog();
@@ -211,7 +208,7 @@ namespace VorodKhoroj
 
         private void AttendanceEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, DataLoaderCoordinator.ListProvider: DbProvider, DataLoaderCoordinator.AttendancesRecords.Count: not 0 })
             {
                 using var frm = new FrmAttendance(_appCoordinator, _calcServices);
                 frm.ShowDialog();
@@ -225,7 +222,7 @@ namespace VorodKhoroj
 
         private void AddAttendanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, UsersListProvider: DbProvider, AttendancesList.Count: not 0 })
+            if (_appCoordinator is { DbContextConfiguration.DbContext: not null, DataLoaderCoordinator.ListProvider: DbProvider, DataLoaderCoordinator.AttendancesRecords.Count: not 0 })
             {
                 using var frm = new FrmAttendanceAddRange(_appCoordinator);
                 frm.ShowDialog();
@@ -255,7 +252,7 @@ namespace VorodKhoroj
         {
             try
             {
-                if (!Validation.IsValid(_appCoordinator.AttendancesList.Count))
+                if (!Validation.IsValid(_appCoordinator.DataLoaderCoordinator.AttendancesRecords.Count))
                     throw new ArgumentNullException($"داده ای وجود ندارد");
 
                 using FrmFilter frm = new(_appCoordinator, _calcServices, FromDateTime_txtbox.Text, toDateTime_txtbox.Text, Userid_txtbox.Text, FrmReport.XGridExport.LateGrid);
