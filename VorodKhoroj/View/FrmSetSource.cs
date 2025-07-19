@@ -68,6 +68,11 @@ namespace VorodKhoroj.View
             using var openFile = CommonItems.CreateOpenFileDialog("Output Files|*.txt;*.dat;");
             if (openFile.ShowDialog() == DialogResult.OK)
             {
+                if (_appCoordinator.DbContextConfiguration.DbContext != null)
+                {
+                    _appCoordinator.DataBaseInitializerCoordinator.DetachDatabase();
+
+                }
                 _appCoordinator.DataLoaderCoordinator.LoadFromFile(openFile.FileName);
 
                 CommonHelper.ShowMessage("با موفقیت بارگذاری شد");
@@ -80,8 +85,6 @@ namespace VorodKhoroj.View
         /// </summary>
         private void HandleDatabaseSource()
         {
-            //TODO: please check problem for connect to db:
-
             if (_appCoordinator is { DataLoaderCoordinator.ListProvider: DbProvider })
                 throw new InvalidOperationException("لطفا ارتباط قبلی را قطع کنید (با استفاده از راه‌اندازی مجدد)");
 

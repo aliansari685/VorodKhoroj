@@ -14,7 +14,7 @@
         private readonly string? _connectionString = typeDataBaseLocation switch
         {
             Enums.DataBaseLocation.AttachDbFilename =>
-                $"Data Source={serverName};Integrated Security=True;AttachDbFilename={dbpath};TrustServerCertificate=True;Encrypt=False;Connection Timeout=5;User Instance=True;",
+                $"Data Source={serverName};Integrated Security=True;AttachDbFilename={dbpath};TrustServerCertificate=True;Encrypt=False;Connection Timeout=30;",
 
             Enums.DataBaseLocation.InternalDataBase =>
                 $"Data Source={serverName};Database={dbname};Integrated Security=True;TrustServerCertificate=True;Connection Timeout=5;",

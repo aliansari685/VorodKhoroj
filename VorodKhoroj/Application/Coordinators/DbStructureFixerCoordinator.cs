@@ -12,6 +12,8 @@ public class DbStructureFixerCoordinator(DbStructureFixerEngine migrationService
     /// </summary>
     public void EnsureIdColumnExists()
     {
-        if (dbInitializer.DbContext != null) migrationService.EnsureIdColumnExists(dbInitializer.DbContext);
+        if (dbInitializer.DbContext == null)
+            throw new NullReferenceException("خطای دیتابیس");
+        migrationService.EnsureIdColumnExists(dbInitializer.DbContext);
     }
 }

@@ -125,7 +125,7 @@ public partial class FrmSetting : Form
         {
             _appCoordinator.DataBaseInitializerCoordinator.SetDbName(dbFilePath);
             _appCoordinator.DataBaseInitializerCoordinator.SetDbPath(dbFilePath);
-            _appCoordinator.DataBaseInitializerCoordinator.CreateTables();
+            _appCoordinator.DataBaseInitializerCoordinator.CreateDatabase();
             _appCoordinator.DbContextConfiguration.InitializeDbContext(serverName, _appCoordinator.DataBaseInitializerCoordinator.DbPathName, _appCoordinator.DataBaseInitializerCoordinator.DbName, Enums.DataBaseLocation.InternalDataBase);
             _appCoordinator.DataBaseInitializerCoordinator.CreateTables();
             _appCoordinator.AttendanceDataService.CopyRecords(_appCoordinator.DataLoaderCoordinator.AttendancesRecords);
